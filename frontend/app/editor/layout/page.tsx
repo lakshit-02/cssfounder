@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -43,6 +43,7 @@ import {
   resolveTemplateSectionVariant,
   withTopbarLayoutSkin,
   applyTopbarLayoutSkins,
+  withCoolFixContent,
 } from "./src/data/templateFlow";
 import { sectionRegistry } from "./src/lib/sectionRegistry";
 import { site as petDefaultSite } from "./src/components/sections/data/pet/petDefaults";
@@ -2258,6 +2259,87 @@ const expandPetAboutPageSections = (sections: SectionItem[]): SectionItem[] => {
   return changed ? next : sections;
 };
 
+const ensureCoolFixServicePageCompanions = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  const pages: Array<{
+    variant: string;
+    sectionType: string;
+    extras: Array<"CTA" | "Highlights">;
+  }> = [
+    {
+      variant: "CoolFixServicePage1",
+      sectionType: "ServicePage",
+      extras: ["CTA", "Highlights"],
+    },
+    {
+      variant: "CoolFixGalleryPage1",
+      sectionType: "GalleryPage",
+      extras: ["CTA"],
+    },
+  ];
+  let next = sections;
+  for (const spec of pages) {
+    if (template.sectionVariants[spec.sectionType] !== spec.variant) continue;
+    const pageDefinition = getTemplatePages(template).find(
+      (page) => page.sectionType === spec.sectionType,
+    );
+    if (!pageDefinition) continue;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex(
+      (section) =>
+        normalizePageSlug(section.page || "") === slug &&
+        (section.type === spec.sectionType || section.variant === spec.variant),
+    );
+    if (bodyIndex === -1) continue;
+    const onPage = (type: string) =>
+      next.some(
+        (section) =>
+          section.type === type && normalizePageSlug(section.page || "") === slug,
+      );
+    const extras: SectionItem[] = [];
+    if (spec.extras.includes("CTA") && !onPage("CTA")) {
+      const ctaVariant = template.sectionVariants.CTA || "CoolFixCTA1";
+      extras.push({
+        id: `CTA-${pageDefinition.id}`,
+        page: pageDefinition.id,
+        type: "CTA",
+        variant: ctaVariant,
+        data: { [ctaVariant]: {} },
+      });
+    }
+    if (spec.extras.includes("Highlights") && !onPage("Highlights")) {
+      const highlightsVariant =
+        template.sectionVariants.Highlights || "CoolFixHighlights1";
+      extras.push({
+        id: `Highlights-${pageDefinition.id}`,
+        page: pageDefinition.id,
+        type: "Highlights",
+        variant: highlightsVariant,
+        data: { [highlightsVariant]: {} },
+      });
+    }
+    if (!extras.length) continue;
+    const ctaIndex = next.findIndex(
+      (section) =>
+        section.type === "CTA" && normalizePageSlug(section.page || "") === slug,
+    );
+    const insertAt =
+      extras[0]?.type === "Highlights" && ctaIndex !== -1
+        ? ctaIndex + 1
+        : bodyIndex + 1;
+    next = [
+      ...next.slice(0, insertAt),
+      ...extras,
+      ...next.slice(insertAt),
+    ];
+  }
+  return next;
+};
+
 const ensureMissingAboutPageCompanions = (
   sections: SectionItem[],
   templateId: string,
@@ -2284,7 +2366,28 @@ const ensureMissingAboutPageCompanions = (
     });
     if (bodyIndex === -1) return;
     const body = next[bodyIndex];
-    if (String(body.variant || "").startsWith("Pet")) return;
+    const aboutVariant = String(
+      body.variant || template.sectionVariants.AboutPage || "",
+    );
+    if (aboutVariant.startsWith("CoolFix")) {
+      const stripped = next.filter((section) => {
+        if (normalizePageSlug(section.page || "") !== slug) return true;
+        return section.type !== "Stats" && section.type !== "CTA";
+      });
+      if (stripped.length !== next.length) {
+        next = stripped;
+        changed = true;
+      }
+      return;
+    }
+    if (
+      pageBodyHasOwnBreadcrumb(String(body.variant || "")) ||
+      pageBodyHasOwnBreadcrumb(
+        String(template.sectionVariants.AboutPage || ""),
+      )
+    ) {
+      return;
+    }
 
     const pageBodyData = (body.data?.[body.variant] ?? {}) as Record<
       string,
@@ -2362,6 +2465,180 @@ const ensureMissingAboutPageCompanions = (
     ];
     changed = true;
   });
+
+  return changed ? next : sections;
+};
+
+const DEDICATED_PAGE_SHELL_TYPES = new Set([
+  "Topbar",
+  "Header",
+  "Footer",
+  "Breadcrumb",
+  "Stats",
+  "CTA",
+  "MissionValues",
+  "CsrPrograms",
+  "CareerJobs",
+  "CountriesServe",
+]);
+
+/** CoolFix inner pages must keep their own component, even if a draft stored About there. */
+const ensureDedicatedThemePageBodies = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.type === "Single Page Website") return sections;
+
+  const typeAlias: Record<string, string> = {
+    AboutPage: "About",
+    ServicePage: "Service",
+    GalleryPage: "Gallery",
+    ContactPage: "Contact",
+  };
+
+  let next = sections;
+  let changed = false;
+
+  getTemplatePages(template).forEach((pageDefinition) => {
+    const variant = template.sectionVariants[pageDefinition.sectionType];
+    if (!variant || !variant.startsWith("CoolFix")) return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      if (DEDICATED_PAGE_SHELL_TYPES.has(section.type)) return false;
+      return normalizePageSlug(section.page || "") === slug;
+    });
+    if (bodyIndex >= 0 && next[bodyIndex].variant === variant) return;
+
+    const existing = bodyIndex >= 0 ? next[bodyIndex] : undefined;
+    const body: SectionItem = {
+      id: existing?.id || pageDefinition.sectionType,
+      page: pageDefinition.id,
+      type: typeAlias[pageDefinition.sectionType] || pageDefinition.sectionType,
+      variant,
+      data: {
+        ...(existing?.data || {}),
+        [variant]: existing?.data?.[variant] || ({} as SectionData),
+      },
+    };
+
+    if (bodyIndex >= 0) {
+      next = next.map((section, index) => (index === bodyIndex ? body : section));
+    } else {
+      const footerIndex = next.findIndex((section) => section.type === "Footer");
+      next =
+        footerIndex === -1
+          ? [...next, body]
+          : [...next.slice(0, footerIndex), body, ...next.slice(footerIndex)];
+    }
+    changed = true;
+  });
+
+  const dedicatedSlug = new Map<string, string>();
+  getTemplatePages(template).forEach((pageDefinition) => {
+    const variant = template.sectionVariants[pageDefinition.sectionType];
+    if (!variant || !variant.startsWith("CoolFix")) return;
+    dedicatedSlug.set(normalizePageSlug(pageDefinition.id), variant);
+  });
+
+  const stripped = next.filter((section) => {
+    const slug = normalizePageSlug(section.page || "");
+    const expected = dedicatedSlug.get(slug);
+    if (!expected) return true;
+    if (DEDICATED_PAGE_SHELL_TYPES.has(section.type)) return true;
+    if (section.variant === expected) return true;
+    const id = String(section.id || "").toLowerCase();
+    const isGenericCopy =
+      section.type === "CustomSection" ||
+      id.startsWith("custompage") ||
+      String(section.variant || "").startsWith("AboutPage");
+    return !isGenericCopy;
+  });
+  if (stripped.length !== next.length) {
+    next = stripped;
+    changed = true;
+  }
+
+  // CoolFix gallery is its own page. A draft can still store CoolFixGallery1
+  // with no page, and the home canvas shows every section that has no page.
+  const galleryOnHome = next.filter(
+    (section) =>
+      !section.page &&
+      (section.variant === "CoolFixGallery1" ||
+        section.variant === "CoolFixGalleryPage1" ||
+        (section.type === "Gallery" &&
+          String(section.variant || "").startsWith("CoolFix"))),
+  );
+  if (galleryOnHome.length) {
+    next = next.filter((section) => !galleryOnHome.includes(section));
+    changed = true;
+  }
+
+  if (template.sectionVariants.Highlights === "CoolFixHighlights1") {
+    let replacedWhy = next.some(
+      (section) =>
+        !section.page &&
+        (section.type === "Highlights" || section.variant === "CoolFixHighlights1"),
+    );
+    const swapped = next.flatMap((section) => {
+      if (section.page) return [section];
+      const isWhyChoose =
+        section.type === "WhyChooseUs" ||
+        section.variant === "CoolFixWhyChooseUs1";
+      if (!isWhyChoose) return [section];
+      changed = true;
+      if (replacedWhy) return [];
+      replacedWhy = true;
+      return [
+        {
+          ...section,
+          id: "Highlights",
+          type: "Highlights",
+          variant: "CoolFixHighlights1",
+          data: {
+            ...(section.data || {}),
+            CoolFixHighlights1:
+              section.data?.CoolFixHighlights1 || ({} as SectionData),
+          },
+        },
+      ];
+    });
+    next = swapped;
+  }
+
+  if (template.sectionVariants.Header === "CoolFixHeader1") {
+    const homeOrder = [
+      "Topbar",
+      "Header",
+      "Banner",
+      "HowWeWork",
+      "About",
+      "Service",
+      "Stats",
+      "Testimonial",
+      "CTA",
+      "Highlights",
+      "Footer",
+    ];
+    const rank = new Map(homeOrder.map((type, index) => [type, index]));
+    const pages = next.filter((section) => section.page);
+    const home = next.filter((section) => !section.page);
+    const ordered = [...home].sort(
+      (left, right) =>
+        (rank.get(left.type) ?? 50) - (rank.get(right.type) ?? 50),
+    );
+    const footer = ordered.filter((section) => section.type === "Footer");
+    const body = ordered.filter((section) => section.type !== "Footer");
+    const arranged = [...body, ...pages, ...footer];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  }
 
   return changed ? next : sections;
 };
@@ -2569,8 +2846,12 @@ const ensureMissingPageBreadcrumbs = (
     ];
     changed = true;
   });
-  return ensureMissingAboutPageCompanions(
+  return ensureCoolFixServicePageCompanions(
+    ensureMissingAboutPageCompanions(
     expandPetAboutPageSections(changed ? next : sections),
+    templateId,
+    category,
+  ),
     templateId,
     category,
   );
@@ -4513,6 +4794,20 @@ const addCustomPageSectionsForLinks = (
         return samePage && managerTypes.includes(section.type);
       });
       if (hasManagerBody) return nextSections;
+    }
+
+    const template = getBuilderTemplate(templateId, category);
+    const templatePage = getTemplatePages(template).find(
+      (page) => normalizePageSlug(page.id) === normalizedSlug,
+    );
+    const dedicatedVariant = templatePage
+      ? template.sectionVariants[templatePage.sectionType]
+      : "";
+    if (
+      dedicatedVariant &&
+      /^(CoolFix|Pet|Plumbing)/.test(dedicatedVariant)
+    ) {
+      return nextSections;
     }
 
     const hasTypedTemplateBody = nextSections.some((section) => {
@@ -7720,7 +8015,11 @@ function EditorPage({
     }
 
     return applyTopbarLayoutSkins(
-      ensureMissingPageBreadcrumbs(branded, templateId, category),
+      ensureDedicatedThemePageBodies(
+        ensureMissingPageBreadcrumbs(branded, templateId, category),
+        templateId,
+        category,
+      ),
     );
   });
   const sectionsRef = useRef(sections);
@@ -7750,9 +8049,13 @@ function EditorPage({
   useEffect(() => {
     setSections((current) =>
       applyTopbarLayoutSkins(
-        ensureMissingPageBreadcrumbs(
-          syncPageBreadcrumbsToTemplate(
-            stripHomeSectionsMissingFromTheme(current, templateId, category),
+        ensureDedicatedThemePageBodies(
+          ensureMissingPageBreadcrumbs(
+            syncPageBreadcrumbsToTemplate(
+              stripHomeSectionsMissingFromTheme(current, templateId, category),
+              templateId,
+              category,
+            ),
             templateId,
             category,
           ),
@@ -16469,6 +16772,7 @@ function EditorPage({
     (isSinglePageTemplate ? "home" : normalizePageSlug(page));
   const pageShellSectionTypes = ["Topbar", "Header", "Footer"];
   const petTheme = editorTemplate?.sectionVariants?.Header === "PetHeader1";
+  const coolFixTheme = editorTemplate?.sectionVariants?.Header === "CoolFixHeader1";
   const countriesServeSection = petTheme
     ? null
     : findEnabledCountriesServeSection(syncedSections);
@@ -16532,6 +16836,42 @@ function EditorPage({
         ),
   );
   const visibleSections = (() => {
+    if (coolFixTheme && (!currentPageSlug || currentPageSlug === "home")) {
+      const homeTypes = [
+        "Topbar",
+        "Header",
+        "Banner",
+        "HowWeWork",
+        "About",
+        "Service",
+        "Stats",
+        "Testimonial",
+        "CTA",
+        "Highlights",
+        "Footer",
+      ];
+      return homeTypes.flatMap((type) => {
+        const variant = editorTemplate?.sectionVariants?.[type];
+        const match = syncedSections.find((section) => {
+          const slug = normalizePageSlug(section.page || "");
+          if (slug && slug !== "home") return false;
+          return (
+            section.type === type ||
+            (Boolean(variant) && section.variant === variant)
+          );
+        });
+        if (match) return [match];
+        if (!variant) return [];
+        return [
+          {
+            id: type,
+            type,
+            variant,
+            data: { [variant]: {} as SectionData },
+          },
+        ];
+      });
+    }
     if (!petTheme || !currentPageSlug || currentPageSlug === "home") {
       return orderedSections;
     }
@@ -17038,18 +17378,63 @@ function EditorPage({
     <main
       data-editor-live-surface
       data-site-theme-root
-      className="editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere]"
+      className={`editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere] ${coolFixTheme ? "coolfix-theme" : ""}`}
       style={
         {
           ...templateVariables,
-          fontFamily:
-            templateVariables["--font-body"] ||
-            templateVariables.fontFamily ||
-            undefined,
+          fontFamily: coolFixTheme
+            ? '"Geist", Arial, Helvetica, sans-serif'
+            : templateVariables["--font-body"] ||
+              templateVariables.fontFamily ||
+              undefined,
         } as React.CSSProperties
       }
     >
-      <style dangerouslySetInnerHTML={{ __html: SITE_THEME_GLOBAL_CSS }} />
+      {coolFixTheme && (
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap"
+        />
+      )}
+      <style dangerouslySetInnerHTML={{ __html: SITE_THEME_GLOBAL_CSS + (coolFixTheme ? `
+        .coolfix-theme, .coolfix-theme * { font-family: "Geist", Arial, Helvetica, sans-serif !important; }
+        .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3 { font-weight: 800; letter-spacing: -0.02em; }
+        .coolfix-theme button, .coolfix-theme a { font-weight: 600; }
+        .coolfix-theme .cf-page-crumb {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          min-height: 200px;
+          border: 0;
+          background: #10284d url("/services/images/page-header-bg.jpg") center / cover no-repeat;
+          color: #fff;
+        }
+        .coolfix-theme .cf-page-crumb::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(28, 28, 28, 0.75);
+          z-index: 0;
+        }
+        .coolfix-theme .cf-page-crumb::after {
+          content: "";
+          position: absolute;
+          top: -260px;
+          bottom: -260px;
+          left: 120px;
+          width: 240px;
+          background: linear-gradient(180deg, rgba(254, 88, 0, 0.15) 0%, rgba(254, 88, 0, 0.95) 46%, rgba(254, 88, 0, 0.2) 100%);
+          opacity: 0.6;
+          transform: rotate(34deg);
+          z-index: 1;
+        }
+        .coolfix-theme .cf-page-crumb > div { position: relative; z-index: 2; }
+        .coolfix-theme .cf-page-crumb nav,
+        .coolfix-theme .cf-page-crumb h1,
+        .coolfix-theme .cf-page-crumb li { color: #fff !important; }
+      ` : "") }} />
       {visibleSections.map((section) => {
         const sectionId = section.id ?? section.type;
         const sectionIndex = visibleSections.findIndex(
@@ -17076,7 +17461,13 @@ function EditorPage({
           section.data?.[section.variant] ??
           section.data?.[defaultVariant];
 
-        const rawVariantData = isRecord(variantData) ? variantData : section.data;
+        const storedVariantData = isRecord(variantData) ? variantData : undefined;
+        const filledVariantData = withCoolFixContent(renderVariant, storedVariantData);
+        const rawVariantData = isRecord(filledVariantData)
+          ? filledVariantData
+          : isRecord(variantData)
+            ? variantData
+            : section.data;
         const isServiceListing =
           section.type === "ServicePage" ||
           (section.type === "Service" &&

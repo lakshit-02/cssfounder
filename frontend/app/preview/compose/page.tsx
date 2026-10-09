@@ -309,6 +309,46 @@ function sortVariants(keys: string[]) {
   return [...keys];
 }
 
+const COOLFIX_HOME_KEYS = [
+  "CoolFixTopbar1",
+  "CoolFixHeader1",
+  "CoolFixBanner1",
+  "CoolFixHowWeWork1",
+  "CoolFixAbout1",
+  "CoolFixService1",
+  "CoolFixStats1",
+  "CoolFixTestimonial1",
+  "CoolFixCTA1",
+  "CoolFixHighlights1",
+  "CoolFixFooter1",
+];
+
+function coolFixHomeKeys(pageId: string, keys: string[]) {
+  if (pageId && pageId !== "home") return keys;
+  if (!keys.some((key) => key.startsWith("CoolFix"))) return keys;
+  return COOLFIX_HOME_KEYS;
+}
+
+function withCoolFixPageCompanions(keys: string[]) {
+  const extras: string[] = [];
+  if (keys.includes("CoolFixServicePage1")) {
+    if (!keys.includes("CoolFixCTA1")) extras.push("CoolFixCTA1");
+    if (!keys.includes("CoolFixHighlights1")) extras.push("CoolFixHighlights1");
+  } else if (keys.includes("CoolFixGalleryPage1") && !keys.includes("CoolFixCTA1")) {
+    extras.push("CoolFixCTA1");
+  }
+  if (!extras.length) return keys;
+  const footerIndex = keys.findIndex(
+    (key) => key.startsWith("Footer") || key.startsWith("CoolFixFooter"),
+  );
+  if (footerIndex === -1) return [...keys, ...extras];
+  return [
+    ...keys.slice(0, footerIndex),
+    ...extras,
+    ...keys.slice(footerIndex),
+  ];
+}
+
 function sitePagesToMenu(pages: SitePage[]): PageLink[] {
   return pages.map((page) => ({
     label: page.label,
@@ -542,7 +582,11 @@ function ComposeInner() {
             ?.variants || [],
         )
       : sortVariants(parseVariants(searchParams));
-    if (!previewDetail) return pageKeys;
+    const withServiceExtras = coolFixHomeKeys(
+      showNav ? activePageId : "home",
+      withCoolFixPageCompanions(pageKeys),
+    );
+    if (!previewDetail) return withServiceExtras;
     const chrome = pageKeys.filter((key) =>
       /^(Topbar|Header|Footer)-\d+$/.test(key),
     );
@@ -841,8 +885,68 @@ function ComposeInner() {
     );
   }
 
+  const coolFixTheme = variantKeys.some((key) => key.startsWith("CoolFix"));
   const body = (
-    <main className="min-h-dvh bg-white" style={cssVars} data-template-scroll>
+    <main
+      className={`min-h-dvh bg-white${coolFixTheme ? " coolfix-theme" : ""}`}
+      style={
+        coolFixTheme
+          ? { ...cssVars, fontFamily: '"Geist", Arial, Helvetica, sans-serif' }
+          : cssVars
+      }
+      data-template-scroll
+    >
+      {coolFixTheme && (
+        <>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap"
+          />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                .coolfix-theme, .coolfix-theme * { font-family: "Geist", Arial, Helvetica, sans-serif !important; }
+                .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3 { font-weight: 800; letter-spacing: -0.02em; }
+                .coolfix-theme button, .coolfix-theme a { font-weight: 600; }
+                .coolfix-theme .cf-page-crumb {
+                  position: relative;
+                  isolation: isolate;
+                  overflow: hidden;
+                  display: flex;
+                  align-items: center;
+                  min-height: 200px;
+                  border: 0;
+                  background: #10284d url("/services/images/page-header-bg.jpg") center / cover no-repeat;
+                  color: #fff;
+                }
+                .coolfix-theme .cf-page-crumb::before {
+                  content: "";
+                  position: absolute;
+                  inset: 0;
+                  background: rgba(28, 28, 28, 0.75);
+                  z-index: 0;
+                }
+                .coolfix-theme .cf-page-crumb::after {
+                  content: "";
+                  position: absolute;
+                  top: -260px;
+                  bottom: -260px;
+                  left: 120px;
+                  width: 240px;
+                  background: linear-gradient(180deg, rgba(254, 88, 0, 0.15) 0%, rgba(254, 88, 0, 0.95) 46%, rgba(254, 88, 0, 0.2) 100%);
+                  opacity: 0.6;
+                  transform: rotate(34deg);
+                  z-index: 1;
+                }
+                .coolfix-theme .cf-page-crumb > div { position: relative; z-index: 2; }
+                .coolfix-theme .cf-page-crumb nav,
+                .coolfix-theme .cf-page-crumb h1,
+                .coolfix-theme .cf-page-crumb li { color: #fff !important; }
+              `,
+            }}
+          />
+        </>
+      )}
       {!showNav && !hideChrome ? (
         <div className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 px-4 py-2 backdrop-blur">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">

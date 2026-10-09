@@ -4160,7 +4160,14 @@ function PublishedSiteContent({
                 normalizeContentPageSlug(section.page || ""),
               ),
           )
-        : payload.sections.filter((section) => !section.page);
+        : payload.sections.filter((section) => {
+            if (section.page) return false;
+            const variant = String(section.variant || "");
+            return (
+              variant !== "CoolFixGallery1" &&
+              variant !== "CoolFixGalleryPage1"
+            );
+          });
 
     if (!hasPublishedPortfolioPage(payload)) {
       pageSections = pageSections.filter(

@@ -8,7 +8,7 @@ export default function BreadcrumbOne({ data = {} }: SectionProps) {
   const pretitle = String(data.pretitle || "");
 
   return (
-    <section className="border-b border-slate-200 bg-slate-50">
+    <section className="cf-page-crumb border-b border-slate-200 bg-slate-50">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-5 py-8 md:px-8">
         {pretitle ? (
           <p

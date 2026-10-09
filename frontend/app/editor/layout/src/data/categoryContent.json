@@ -22753,5 +22753,2543 @@
         }
       }
     }
+,
+    "Services": {
+      "slug": "services",
+      "description": "AC repair and home services website.",
+      "templates": [
+        "template-coolfix-1"
+      ],
+      "templateComponents": {
+        "template-coolfix-1": {
+          "shared": {
+            "Topbar": "CoolFixTopbar1",
+            "Header": "CoolFixHeader1",
+            "Footer": "CoolFixFooter1"
+          },
+          "pages": {
+            "home": {
+              "components": [
+                {
+                  "key": "Banner",
+                  "component": "CoolFixBanner1"
+                },
+                {
+                  "key": "HowWeWork",
+                  "component": "CoolFixHowWeWork1"
+                },
+                {
+                  "key": "About",
+                  "component": "CoolFixAbout1"
+                },
+                {
+                  "key": "Service",
+                  "component": "CoolFixService1"
+                },
+                {
+                  "key": "Stats",
+                  "component": "CoolFixStats1"
+                },
+                {
+                  "key": "Testimonial",
+                  "component": "CoolFixTestimonial1"
+                },
+                {
+                  "key": "CTA",
+                  "component": "CoolFixCTA1"
+                },
+                {
+                  "key": "Highlights",
+                  "component": "CoolFixHighlights1"
+                }
+              ]
+            },
+            "about-us": {
+              "components": [
+                {
+                  "key": "About",
+                  "component": "CoolFixAboutPage1"
+                }
+              ]
+            },
+            "services": {
+              "components": [
+                {
+                  "key": "Service",
+                  "component": "CoolFixServicePage1"
+                }
+              ]
+            },
+            "service-detail": {
+              "components": [
+                {
+                  "key": "ServiceDetail",
+                  "component": "CoolFixServiceDetailPage1"
+                }
+              ]
+            },
+            "gallery": {
+              "components": [
+                {
+                  "key": "Gallery",
+                  "component": "CoolFixGalleryPage1"
+                }
+              ]
+            },
+            "contact-us": {
+              "components": [
+                {
+                  "key": "Contact",
+                  "component": "CoolFixContactPage1"
+                }
+              ]
+            },
+            "get-a-quote": {
+              "components": [
+                {
+                  "key": "GetQuote",
+                  "component": "CoolFixGetQuote1"
+                }
+              ]
+            },
+            "book-service": {
+              "components": [
+                {
+                  "key": "BookService",
+                  "component": "CoolFixBookService1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "sections": {
+        "Global": {
+          "variants": {
+            "CoolFixGlobal1": {
+              "companyName": "CoolFix AC Repair & Services",
+              "logo": {
+                "src": "/services/images/coolfix-logo.png",
+                "alt": "CoolFix Logo",
+                "width": 2167,
+                "height": 726
+              },
+              "contact": {
+                "address": "1234 Elm Street, Suite 200, Austin, TX 78701, USA",
+                "phone": "+91 0000000000",
+                "email": "info@xyz.com"
+              },
+              "socials": [
+                {
+                  "name": "Facebook",
+                  "url": "#",
+                  "icon": "FaFacebookF"
+                },
+                {
+                  "name": "Instagram",
+                  "url": "#",
+                  "icon": "FaInstagram"
+                },
+                {
+                  "name": "LinkedIn",
+                  "url": "#",
+                  "icon": "FaLinkedinIn"
+                },
+                {
+                  "name": "YouTube",
+                  "url": "#",
+                  "icon": "FaYoutube"
+                }
+              ],
+              "site": {
+                "title": "CoolFix AC Repair & Services",
+                "description": "CoolFix provides fast, reliable and affordable AC repair, installation, gas refill and maintenance services for homes and offices."
+              }
+            }
+          }
+        },
+        "Topbar": {
+          "variants": {
+            "CoolFixTopbar1": {
+              "tagline": "Professional AC Repair & Installation Services",
+              "highlights": [
+                {
+                  "icon": "shield",
+                  "label": "Trusted Service"
+                },
+                {
+                  "icon": "team",
+                  "label": "Experienced Team"
+                },
+                {
+                  "icon": "star",
+                  "label": "Affordable Pricing"
+                }
+              ],
+              "socials": [
+                {
+                  "icon": "facebook",
+                  "label": "Facebook",
+                  "href": "https://facebook.com"
+                },
+                {
+                  "icon": "twitter",
+                  "label": "Twitter",
+                  "href": "https://twitter.com"
+                },
+                {
+                  "icon": "instagram",
+                  "label": "Instagram",
+                  "href": "https://instagram.com"
+                },
+                {
+                  "icon": "youtube",
+                  "label": "YouTube",
+                  "href": "https://youtube.com"
+                }
+              ]
+            }
+          }
+        },
+        "Header": {
+          "variants": {
+            "CoolFixHeader1": {
+              "logo": {
+                "src": "/services/images/coolfix-logo.png",
+                "alt": "CoolFix Logo",
+                "width": 2167,
+                "height": 726
+              },
+              "contacts": [
+                {
+                  "icon": "phoneFill",
+                  "tone": "orange",
+                  "label": "Call Us Anytime",
+                  "value": "+91 0000000000",
+                  "href": "tel:+91 0000000000"
+                },
+                {
+                  "icon": "mail",
+                  "tone": "blue",
+                  "label": "Email Support",
+                  "value": "info@xyz.com",
+                  "href": "mailto:info@xyz.com"
+                },
+                {
+                  "icon": "pin",
+                  "tone": "orange",
+                  "label": "Our Location",
+                  "value": "1234 Elm St, Austin, TX",
+                  "href": "#"
+                }
+              ],
+              "menu": [
+                {
+                  "label": "Home",
+                  "href": "/",
+                  "icon": "home"
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about"
+                },
+                {
+                  "label": "Our Services",
+                  "href": "/services"
+                },
+                {
+                  "label": "Gallery",
+                  "href": "/gallery"
+                },
+                {
+                  "label": "Get a Quote",
+                  "href": "/get-a-quote"
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact"
+                }
+              ],
+              "cta": {
+                "label": "Book a Service",
+                "href": "/book"
+              }
+            }
+          }
+        },
+        "PageBanners": {
+          "variants": {
+            "CoolFixPageBanners1": {
+              "backgroundImage": "/services/images/page-header-bg.jpg",
+              "homeLabel": "Home",
+              "homeHref": "/",
+              "pages": {
+                "about": {
+                  "title": "About Us"
+                },
+                "services": {
+                  "title": "Our Services"
+                },
+                "serviceDetails": {
+                  "title": "Service Details",
+                  "parent": {
+                    "label": "Our Services",
+                    "href": "/services"
+                  }
+                },
+                "gallery": {
+                  "title": "Our Gallery"
+                },
+                "contact": {
+                  "title": "Contact Us"
+                },
+                "book": {
+                  "title": "Book A Service"
+                },
+                "getAQuote": {
+                  "title": "Get A Quote"
+                }
+              }
+            }
+          }
+        },
+        "HeroBanner": {
+          "variants": {
+            "CoolFixHeroBanner1": {
+              "slides": [
+                {
+                  "id": 1,
+                  "badge": "Professional AC Repair & Installation Services",
+                  "heading": {
+                    "main": "Fast & Reliable",
+                    "highlight": "AC Repair",
+                    "end": "at Your Doorstep"
+                  },
+                  "description": "Expert AC repair, installation, and maintenance services for homes and offices. Quick response, skilled technicians, and affordable pricing.",
+                  "image": {
+                    "src": "/services/images/image_01.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                },
+                {
+                  "id": 2,
+                  "badge": "Certified & Experienced Technicians",
+                  "heading": {
+                    "main": "Expert",
+                    "highlight": "AC Installation",
+                    "end": "Done Right"
+                  },
+                  "description": "Split, window, or central AC — we install every type with precision and care, so your system runs efficiently for years.",
+                  "image": {
+                    "src": "/services/images/image_02.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                },
+                {
+                  "id": 3,
+                  "badge": "Same-Day Service Available",
+                  "heading": {
+                    "main": "Keep Your Home",
+                    "highlight": "Cool & Fresh",
+                    "end": "All Year Round"
+                  },
+                  "description": "Regular AC cleaning and maintenance plans that improve cooling, cut power bills, and extend the life of your AC.",
+                  "image": {
+                    "src": "/services/images/image_03.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "Banner": {
+          "variants": {
+            "CoolFixBanner1": {
+              "slides": [
+                {
+                  "id": 1,
+                  "badge": "Professional AC Repair & Installation Services",
+                  "heading": {
+                    "main": "Fast & Reliable",
+                    "highlight": "AC Repair",
+                    "end": "at Your Doorstep"
+                  },
+                  "description": "Expert AC repair, installation, and maintenance services for homes and offices. Quick response, skilled technicians, and affordable pricing.",
+                  "image": {
+                    "src": "/services/images/image_01.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                },
+                {
+                  "id": 2,
+                  "badge": "Certified & Experienced Technicians",
+                  "heading": {
+                    "main": "Expert",
+                    "highlight": "AC Installation",
+                    "end": "Done Right"
+                  },
+                  "description": "Split, window, or central AC — we install every type with precision and care, so your system runs efficiently for years.",
+                  "image": {
+                    "src": "/services/images/image_02.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                },
+                {
+                  "id": 3,
+                  "badge": "Same-Day Service Available",
+                  "heading": {
+                    "main": "Keep Your Home",
+                    "highlight": "Cool & Fresh",
+                    "end": "All Year Round"
+                  },
+                  "description": "Regular AC cleaning and maintenance plans that improve cooling, cut power bills, and extend the life of your AC.",
+                  "image": {
+                    "src": "/services/images/image_03.jpg"
+                  },
+                  "primaryBtn": {
+                    "label": "Book a Service",
+                    "href": "/book"
+                  },
+                  "secondaryBtn": {
+                    "label": "Get a Quote",
+                    "href": "/get-a-quote"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "AboutUs": {
+          "variants": {
+            "CoolFixAboutUs1": {
+              "badge": "About Us",
+              "heading": {
+                "main": "Your Trusted AC",
+                "middle": "Service",
+                "highlight": "Experts"
+              },
+              "description": "We are a professional AC repair and installation company committed to providing reliable, affordable and high-quality cooling solutions for homes and businesses. With years of experience and a skilled team of technicians, we ensure your AC runs efficiently all year round.",
+              "stats": [
+                {
+                  "icon": "technician",
+                  "value": "250+",
+                  "label": "AC Services Completed"
+                },
+                {
+                  "icon": "snowflake",
+                  "value": "15+ Years",
+                  "label": "of Experience"
+                }
+              ],
+              "goal": "Our goal is to deliver fast, dependable and customer-focused AC services that keep your space cool, comfortable and energy-efficient.",
+              "cta": {
+                "label": "Read More",
+                "href": "/about"
+              },
+              "image": {
+                "main": "/services/images/image_04.jpg",
+                "secondary": "/services/images/image_05.jpg"
+              },
+              "videoUrl": "/services/air-conditioner.webm",
+              "page": {
+                "title": "About Us",
+                "subtitle": "Know more about the team that keeps your home cool and comfortable.",
+                "image": "/services/images/image_06.jpg"
+              }
+            }
+          }
+        },
+        "About": {
+          "variants": {
+            "CoolFixAbout1": {
+              "badge": "About Us",
+              "heading": {
+                "main": "Your Trusted AC",
+                "middle": "Service",
+                "highlight": "Experts"
+              },
+              "description": "We are a professional AC repair and installation company committed to providing reliable, affordable and high-quality cooling solutions for homes and businesses. With years of experience and a skilled team of technicians, we ensure your AC runs efficiently all year round.",
+              "stats": [
+                {
+                  "icon": "technician",
+                  "value": "250+",
+                  "label": "AC Services Completed"
+                },
+                {
+                  "icon": "snowflake",
+                  "value": "15+ Years",
+                  "label": "of Experience"
+                }
+              ],
+              "goal": "Our goal is to deliver fast, dependable and customer-focused AC services that keep your space cool, comfortable and energy-efficient.",
+              "cta": {
+                "label": "Read More",
+                "href": "/about"
+              },
+              "image": {
+                "main": "/services/images/image_04.jpg",
+                "secondary": "/services/images/image_05.jpg"
+              },
+              "videoUrl": "/services/air-conditioner.webm"
+            },
+            "CoolFixAboutPage1": {
+              "banner": {
+                "title": "About Us",
+                "current": "About Us",
+                "image": "/services/images/image_06.jpg"
+              },
+              "about": {
+                "badge": "About Us",
+                "heading": {
+                  "main": "Your Trusted AC",
+                  "middle": "Service",
+                  "highlight": "Experts"
+                },
+                "description": "We are a professional AC repair and installation company committed to providing reliable, affordable and high-quality cooling solutions for homes and businesses. With years of experience and a skilled team of technicians, we ensure your AC runs efficiently all year round.",
+                "stats": [
+                  {
+                    "icon": "technician",
+                    "value": "250+",
+                    "label": "AC Services Completed"
+                  },
+                  {
+                    "icon": "snowflake",
+                    "value": "15+ Years",
+                    "label": "of Experience"
+                  }
+                ],
+                "goal": "Our goal is to deliver fast, dependable and customer-focused AC services that keep your space cool, comfortable and energy-efficient.",
+                "cta": {
+                  "label": "Read More",
+                  "href": "/about"
+                },
+                "image": {
+                  "main": "/services/images/image_04.jpg",
+                  "secondary": "/services/images/image_05.jpg"
+                },
+                "videoUrl": "/services/air-conditioner.webm"
+              },
+              "stats": {
+                "list": [
+                  {
+                    "label": "Happy Customers",
+                    "value": "250+",
+                    "icon": "/services/icons/stat-customers.svg"
+                  },
+                  {
+                    "label": "AC Services Completed",
+                    "value": "500+",
+                    "icon": "/services/icons/stat-services.svg"
+                  },
+                  {
+                    "label": "Years of Experience",
+                    "value": "15+",
+                    "icon": "/services/icons/stat-experience.svg"
+                  },
+                  {
+                    "label": "Customer Satisfaction",
+                    "value": "99%",
+                    "icon": "/services/icons/stat-satisfaction.svg"
+                  }
+                ]
+              },
+              "whyChooseUs": {
+                "badge": "Why Choose Us",
+                "heading": {
+                  "main": "Reliable AC Repair",
+                  "middle": "Service with a",
+                  "highlight": "Personal Touch"
+                },
+                "list": [
+                  {
+                    "icon": "technician",
+                    "title": "Personal Technician",
+                    "description": "Get expert support from our trained and trusted technicians for all your AC service needs."
+                  },
+                  {
+                    "icon": "acUnit",
+                    "title": "Smart Technology",
+                    "description": "We use advanced tools and modern techniques to ensure accurate diagnosis and long-lasting results."
+                  },
+                  {
+                    "icon": "rupee",
+                    "title": "Affordable Packages",
+                    "description": "High-quality AC repair and service at competitive and transparent pricing with no hidden charges."
+                  }
+                ],
+                "image": "/services/images/image_10.jpg"
+              },
+              "steps": {
+                "badge": "How it works",
+                "heading": {
+                  "main": "Get Your AC Serviced in",
+                  "highlight": "4 Easy Steps"
+                },
+                "list": [
+                  {
+                    "id": 1,
+                    "title": "Book a Service",
+                    "description": "Schedule a service online or call us.",
+                    "image": "/services/icons/step-01.png"
+                  },
+                  {
+                    "id": 2,
+                    "title": "Technician Visit",
+                    "description": "Our expert visits your location.",
+                    "image": "/services/icons/step-02.png"
+                  },
+                  {
+                    "id": 3,
+                    "title": "Inspection & Repair",
+                    "description": "We diagnose and fix the issue.",
+                    "image": "/services/icons/step-03.png"
+                  },
+                  {
+                    "id": 4,
+                    "title": "Enjoy Cool Air",
+                    "description": "Relax with a perfectly working AC.",
+                    "image": "/services/icons/air.svg"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Services": {
+          "variants": {
+            "CoolFixServices1": {
+              "badge": "Our Services",
+              "heading": {
+                "main": "Complete AC",
+                "highlight": "Service Solutions"
+              },
+              "description": "We provide professional AC repair, installation, cleaning and maintenance services to keep your space cool and comfortable all year round.",
+              "readMoreLabel": "Read More",
+              "list": [
+                {
+                  "id": 1,
+                  "title": "AC Repair",
+                  "icon": "technician",
+                  "image": "/services/images/image_07.jpg",
+                  "href": "/service-details/ac-repair-maintenance"
+                },
+                {
+                  "id": 2,
+                  "title": "AC Installation",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_08.jpg",
+                  "href": "/service-details/ac-installation"
+                },
+                {
+                  "id": 3,
+                  "title": "AC Cleaning",
+                  "icon": "tools",
+                  "image": "/services/images/image_09.jpg",
+                  "href": "/service-details/ac-cleaning-sanitization"
+                },
+                {
+                  "id": 4,
+                  "title": "AC Filter Replacement",
+                  "icon": "snowflake",
+                  "image": "/services/images/image_10.jpg",
+                  "href": "/service-details/ac-filter-replacement"
+                },
+                {
+                  "id": 5,
+                  "title": "Gas Refilling",
+                  "icon": "snowflake",
+                  "image": "/services/images/image_11.jpg",
+                  "href": "/service-details/ac-gas-refilling"
+                },
+                {
+                  "id": 6,
+                  "title": "AC Maintenance",
+                  "icon": "gear",
+                  "image": "/services/images/image_12.jpg",
+                  "href": "/service-details/ac-amc"
+                },
+                {
+                  "id": 7,
+                  "title": "Ducted AC Service",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_01.jpg",
+                  "href": "/service-details/ac-ducted-system"
+                },
+                {
+                  "id": 8,
+                  "title": "Commercial AC Service",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_02.jpg",
+                  "href": "/service-details/ac-repair-maintenance"
+                }
+              ],
+              "serviceDetails": {
+                "sidebar": {
+                  "title": "Our Services",
+                  "assistance": {
+                    "title": "Need Assistance?",
+                    "description": "We're here to help you with all your AC service needs.",
+                    "phone": "+91 0000000000",
+                    "btnText": "Contact Us",
+                    "btnLink": "/contact"
+                  }
+                },
+                "items": [
+                  {
+                    "slug": "ac-repair-maintenance",
+                    "label": "AC Repair & Maintenance",
+                    "icon": "acUnit",
+                    "hero": {
+                      "badge": "PROFESSIONAL",
+                      "heading": {
+                        "main": "AC Repair &",
+                        "highlight": "Maintenance"
+                      },
+                      "subtitle": "Reliable AC Services for a Cooler and Healthier Tomorrow",
+                      "image": "/services/images/image_10.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Expert Technicians"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Quality Service"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Quick Response"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Affordable Pricing"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Repair & Maintenance Service",
+                        "text": "We provide professional AC repair and maintenance services for homes, offices and commercial spaces. Our experienced technicians ensure your AC runs efficiently with high performance, lower power consumption and longer life. From minor issues to major repairs, we handle everything with precision and care."
+                      },
+                      {
+                        "title": "Residential AC Repair",
+                        "text": "From cooling problems and water leakage to unusual noise and gas refilling, we provide complete AC repair solutions for homes. Our certified technicians ensure safe and reliable service to keep your indoor spaces cool and comfortable."
+                      },
+                      {
+                        "title": "Commercial AC Repair",
+                        "text": "We offer comprehensive AC repair and maintenance services for offices, shops, showrooms and industrial spaces. Our solutions are designed to meet higher cooling demands while ensuring minimal downtime and maximum efficiency."
+                      },
+                      {
+                        "title": "Quality & Safety Assurance",
+                        "text": "We use genuine parts, high-quality refrigerant gas and advanced tools to ensure safe and long-lasting performance. All services are carried out by skilled and trained professionals who follow industry standards and safety guidelines."
+                      },
+                      {
+                        "title": "Why Choose Our AC Repair & Maintenance?",
+                        "text": "With years of experience, skilled technicians and a customer-first approach, we have become a trusted name in AC repair and maintenance services. We provide transparent pricing, on-time service and dedicated support to ensure your complete satisfaction."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-installation",
+                    "label": "AC Installation",
+                    "icon": "acInstall",
+                    "hero": {
+                      "badge": "EXPERT",
+                      "heading": {
+                        "main": "AC",
+                        "highlight": "Installation"
+                      },
+                      "subtitle": "Perfect Fitting for Maximum Cooling and Efficiency",
+                      "image": "/services/images/image_08.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Certified Installers"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Safe Mounting"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Same Day Setup"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Fair Pricing"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Installation Service",
+                        "text": "We install split, window, cassette and ducted air conditioners for homes, offices and commercial spaces. Our technicians assess your room size, wall strength and power supply to recommend the ideal placement for the best cooling and lowest power consumption."
+                      },
+                      {
+                        "title": "Split & Window AC Installation",
+                        "text": "From wall-mounted indoor units to outdoor compressor brackets, copper piping, insulation and drain lines, we take care of every detail. Every installation is leak-tested and performance-checked before we hand it over."
+                      },
+                      {
+                        "title": "Uninstallation & Reinstallation",
+                        "text": "Shifting homes or offices? We safely uninstall, pack and reinstall your AC at the new location with proper gas pumping, so you do not lose refrigerant or cooling performance."
+                      },
+                      {
+                        "title": "Why Choose Our Installation Service?",
+                        "text": "Neat workmanship, genuine accessories, clear pricing and a post-installation service warranty make us the trusted choice for AC installation in your city."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-cleaning-sanitization",
+                    "label": "AC Cleaning & Sanitization",
+                    "icon": "spray",
+                    "hero": {
+                      "badge": "DEEP",
+                      "heading": {
+                        "main": "AC Cleaning &",
+                        "highlight": "Sanitization"
+                      },
+                      "subtitle": "Fresh, Germ-Free Air for a Healthier Home",
+                      "image": "/services/images/image_09.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Trained Experts"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Safe Chemicals"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Quick Service"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Budget Friendly"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Cleaning & Sanitization Service",
+                        "text": "Dust, mould and bacteria build up inside your AC over time, reducing cooling and affecting air quality. Our deep cleaning service removes dirt from filters, coils, blower and drain tray using foam jet and pressure wash techniques."
+                      },
+                      {
+                        "title": "Jet Pump Deep Cleaning",
+                        "text": "We use high-pressure jet pumps to clean the evaporator and condenser coils thoroughly without damaging the fins, restoring airflow and improving cooling efficiency by up to 30%."
+                      },
+                      {
+                        "title": "Anti-Bacterial Sanitization",
+                        "text": "After cleaning, we apply safe, eco-friendly anti-bacterial sprays that kill germs and eliminate bad odour, so your family breathes clean and fresh air."
+                      },
+                      {
+                        "title": "Why Regular Cleaning Matters",
+                        "text": "Regular cleaning lowers electricity bills, prevents water leakage, reduces breakdowns and extends the life of your AC. We recommend a deep clean at least twice a year."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-gas-refilling",
+                    "label": "AC Gas Refilling",
+                    "icon": "gasCylinder",
+                    "hero": {
+                      "badge": "GENUINE",
+                      "heading": {
+                        "main": "AC Gas",
+                        "highlight": "Refilling"
+                      },
+                      "subtitle": "Restore Powerful Cooling with Genuine Refrigerant",
+                      "image": "/services/images/image_11.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Skilled Technicians"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Leak Tested"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Fast Refill"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Transparent Rates"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Gas Refilling Service",
+                        "text": "If your AC is running but not cooling, low refrigerant could be the reason. We refill R32, R410A and R22 gases using calibrated gauges to ensure the exact pressure recommended by the manufacturer."
+                      },
+                      {
+                        "title": "Leak Detection & Repair",
+                        "text": "Before refilling, we detect and fix leaks in pipes, joints and coils using nitrogen pressure testing, so the new gas stays in and your AC keeps cooling for longer."
+                      },
+                      {
+                        "title": "Genuine Refrigerant Only",
+                        "text": "We use only branded, high-purity refrigerant gas that is safe for your compressor and the environment, avoiding the damage caused by adulterated gas."
+                      },
+                      {
+                        "title": "Why Choose Our Gas Refilling?",
+                        "text": "Accurate pressure checks, complete leak repair, clear pricing per unit and a service warranty make our gas refilling reliable and worry-free."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-ducted-system",
+                    "label": "AC Ducted System",
+                    "icon": "duct",
+                    "hero": {
+                      "badge": "COMPLETE",
+                      "heading": {
+                        "main": "AC Ducted",
+                        "highlight": "System"
+                      },
+                      "subtitle": "Uniform Cooling for Large Homes and Commercial Spaces",
+                      "image": "/services/images/image_01.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "HVAC Experts"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Quality Ducting"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "On-Time Delivery"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Cost Effective"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "Ducted AC System Service",
+                        "text": "Ducted air conditioning delivers even, quiet cooling to every room through hidden ducts. We design, install and service ducted systems for villas, offices, showrooms and restaurants."
+                      },
+                      {
+                        "title": "Design & Installation",
+                        "text": "Our HVAC engineers calculate heat load, plan duct routes and select the right capacity units, ensuring balanced airflow, minimal noise and maximum energy efficiency."
+                      },
+                      {
+                        "title": "Duct Cleaning & Maintenance",
+                        "text": "We clean ducts, grilles and diffusers, check insulation and balance dampers to keep the air clean and the system running at peak performance."
+                      },
+                      {
+                        "title": "Why Choose Our Ducted Solutions?",
+                        "text": "End-to-end project handling, quality materials, skilled HVAC teams and dedicated after-sales support make us the right partner for ducted AC systems."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-amc",
+                    "label": "AC AMC (Annual Maintenance)",
+                    "icon": "docGear",
+                    "hero": {
+                      "badge": "HASSLE-FREE",
+                      "heading": {
+                        "main": "AC Annual",
+                        "highlight": "Maintenance"
+                      },
+                      "subtitle": "Year-Round Care with Priority Support and Savings",
+                      "image": "/services/images/image_12.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Dedicated Team"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Covered Repairs"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Priority Visits"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Big Savings"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Annual Maintenance Contract",
+                        "text": "Our AMC plans keep your air conditioners in top condition all year with scheduled preventive services, priority breakdown support and discounted repairs for homes and businesses."
+                      },
+                      {
+                        "title": "What Our AMC Covers",
+                        "text": "Each plan includes periodic deep cleaning, gas pressure checks, electrical inspection, drain line cleaning and performance testing, with free visits for any breakdowns during the contract."
+                      },
+                      {
+                        "title": "Plans for Homes & Businesses",
+                        "text": "Choose from flexible plans for a single AC at home or multiple units across offices, shops and commercial buildings, with custom schedules to suit your operations."
+                      },
+                      {
+                        "title": "Why Choose Our AMC?",
+                        "text": "Fewer breakdowns, lower power bills, longer AC life and predictable yearly costs. Our AMC customers also get priority booking during peak summer months."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-filter-replacement",
+                    "label": "AC Filter Replacement",
+                    "icon": "filter",
+                    "hero": {
+                      "badge": "CLEAN AIR",
+                      "heading": {
+                        "main": "AC Filter",
+                        "highlight": "Replacement"
+                      },
+                      "subtitle": "Breathe Cleaner Air with High-Quality Filters",
+                      "image": "/services/images/image_07.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Expert Advice"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Genuine Filters"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Quick Swap"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Low Cost"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Filter Replacement Service",
+                        "text": "Clogged or damaged filters block airflow, reduce cooling and circulate dust and allergens. We replace old filters with genuine, correctly sized filters for all major AC brands."
+                      },
+                      {
+                        "title": "HEPA & Anti-Bacterial Filters",
+                        "text": "Upgrade to HEPA, carbon or anti-bacterial filters that trap fine dust, smoke, pollen and germs, ideal for families with kids, elderly members or allergy sufferers."
+                      },
+                      {
+                        "title": "When to Replace Your Filter",
+                        "text": "If you notice weak airflow, bad odour, more dust indoors or higher electricity bills, it is time to replace your filter. We recommend checking filters every 2-3 months."
+                      },
+                      {
+                        "title": "Why Choose Our Filter Service?",
+                        "text": "Genuine parts, the right fit for your model, quick doorstep service and honest advice on whether a clean or a replacement is really needed."
+                      }
+                    ]
+                  },
+                  {
+                    "slug": "ac-electrical-work",
+                    "label": "AC Electrical Work",
+                    "icon": "plug",
+                    "hero": {
+                      "badge": "SAFE",
+                      "heading": {
+                        "main": "AC Electrical",
+                        "highlight": "Work"
+                      },
+                      "subtitle": "Safe Wiring and Power Solutions for Your AC",
+                      "image": "/services/images/image_02.jpg",
+                      "features": [
+                        {
+                          "icon": "users",
+                          "label": "Licensed Electricians"
+                        },
+                        {
+                          "icon": "shieldCheck",
+                          "label": "Safety First"
+                        },
+                        {
+                          "icon": "clock",
+                          "label": "Quick Fix"
+                        },
+                        {
+                          "icon": "rupee",
+                          "label": "Honest Pricing"
+                        }
+                      ]
+                    },
+                    "sections": [
+                      {
+                        "title": "AC Electrical Work Service",
+                        "text": "Faulty wiring, tripping MCBs and voltage problems can damage your AC and create safety hazards. Our trained electricians handle all AC-related electrical work safely and professionally."
+                      },
+                      {
+                        "title": "Wiring, MCB & Stabilizer Setup",
+                        "text": "We install dedicated power points, correctly rated MCBs, earthing and voltage stabilizers to protect your AC compressor and electronics from power fluctuations."
+                      },
+                      {
+                        "title": "PCB & Component Repair",
+                        "text": "From PCB faults and capacitor failures to fan motor and thermostat issues, we diagnose and repair electrical components using genuine spare parts."
+                      },
+                      {
+                        "title": "Why Choose Our Electrical Service?",
+                        "text": "Certified electricians, strict safety standards, quality materials and clear pricing ensure your AC runs safely and reliably for years."
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Service": {
+          "variants": {
+            "CoolFixService1": {
+              "badge": "Our Services",
+              "heading": {
+                "main": "Complete AC",
+                "highlight": "Service Solutions"
+              },
+              "description": "We provide professional AC repair, installation, cleaning and maintenance services to keep your space cool and comfortable all year round.",
+              "readMoreLabel": "Read More",
+              "list": [
+                {
+                  "id": 1,
+                  "title": "AC Repair",
+                  "icon": "technician",
+                  "image": "/services/images/image_07.jpg",
+                  "href": "/service-details/ac-repair-maintenance"
+                },
+                {
+                  "id": 2,
+                  "title": "AC Installation",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_08.jpg",
+                  "href": "/service-details/ac-installation"
+                },
+                {
+                  "id": 3,
+                  "title": "AC Cleaning",
+                  "icon": "tools",
+                  "image": "/services/images/image_09.jpg",
+                  "href": "/service-details/ac-cleaning-sanitization"
+                },
+                {
+                  "id": 4,
+                  "title": "AC Filter Replacement",
+                  "icon": "snowflake",
+                  "image": "/services/images/image_10.jpg",
+                  "href": "/service-details/ac-filter-replacement"
+                },
+                {
+                  "id": 5,
+                  "title": "Gas Refilling",
+                  "icon": "snowflake",
+                  "image": "/services/images/image_11.jpg",
+                  "href": "/service-details/ac-gas-refilling"
+                },
+                {
+                  "id": 6,
+                  "title": "AC Maintenance",
+                  "icon": "gear",
+                  "image": "/services/images/image_12.jpg",
+                  "href": "/service-details/ac-amc"
+                },
+                {
+                  "id": 7,
+                  "title": "Ducted AC Service",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_01.jpg",
+                  "href": "/service-details/ac-ducted-system"
+                },
+                {
+                  "id": 8,
+                  "title": "Commercial AC Service",
+                  "icon": "acUnit",
+                  "image": "/services/images/image_02.jpg",
+                  "href": "/service-details/ac-repair-maintenance"
+                }
+              ]
+            },
+            "CoolFixServiceDetailPage1": {
+              "banner": {
+                "image": "/services/images/page-header-bg.jpg"
+              },
+              "sidebar": {
+                "title": "Our Services",
+                "assistance": {
+                  "title": "Need Assistance?",
+                  "description": "We're here to help you with all your AC service needs.",
+                  "phone": "+91 0000000000",
+                  "btnText": "Contact Us",
+                  "btnLink": "/contact"
+                }
+              },
+              "items": [
+                {
+                  "slug": "ac-repair-maintenance",
+                  "label": "AC Repair & Maintenance",
+                  "icon": "acUnit",
+                  "hero": {
+                    "badge": "PROFESSIONAL",
+                    "heading": {
+                      "main": "AC Repair &",
+                      "highlight": "Maintenance"
+                    },
+                    "subtitle": "Reliable AC Services for a Cooler and Healthier Tomorrow",
+                    "image": "/services/images/image_10.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Expert Technicians"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Quality Service"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Quick Response"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Affordable Pricing"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Repair & Maintenance Service",
+                      "text": "We provide professional AC repair and maintenance services for homes, offices and commercial spaces. Our experienced technicians ensure your AC runs efficiently with high performance, lower power consumption and longer life. From minor issues to major repairs, we handle everything with precision and care."
+                    },
+                    {
+                      "title": "Residential AC Repair",
+                      "text": "From cooling problems and water leakage to unusual noise and gas refilling, we provide complete AC repair solutions for homes. Our certified technicians ensure safe and reliable service to keep your indoor spaces cool and comfortable."
+                    },
+                    {
+                      "title": "Commercial AC Repair",
+                      "text": "We offer comprehensive AC repair and maintenance services for offices, shops, showrooms and industrial spaces. Our solutions are designed to meet higher cooling demands while ensuring minimal downtime and maximum efficiency."
+                    },
+                    {
+                      "title": "Quality & Safety Assurance",
+                      "text": "We use genuine parts, high-quality refrigerant gas and advanced tools to ensure safe and long-lasting performance. All services are carried out by skilled and trained professionals who follow industry standards and safety guidelines."
+                    },
+                    {
+                      "title": "Why Choose Our AC Repair & Maintenance?",
+                      "text": "With years of experience, skilled technicians and a customer-first approach, we have become a trusted name in AC repair and maintenance services. We provide transparent pricing, on-time service and dedicated support to ensure your complete satisfaction."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-installation",
+                  "label": "AC Installation",
+                  "icon": "acInstall",
+                  "hero": {
+                    "badge": "EXPERT",
+                    "heading": {
+                      "main": "AC",
+                      "highlight": "Installation"
+                    },
+                    "subtitle": "Perfect Fitting for Maximum Cooling and Efficiency",
+                    "image": "/services/images/image_08.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Certified Installers"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Safe Mounting"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Same Day Setup"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Fair Pricing"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Installation Service",
+                      "text": "We install split, window, cassette and ducted air conditioners for homes, offices and commercial spaces. Our technicians assess your room size, wall strength and power supply to recommend the ideal placement for the best cooling and lowest power consumption."
+                    },
+                    {
+                      "title": "Split & Window AC Installation",
+                      "text": "From wall-mounted indoor units to outdoor compressor brackets, copper piping, insulation and drain lines, we take care of every detail. Every installation is leak-tested and performance-checked before we hand it over."
+                    },
+                    {
+                      "title": "Uninstallation & Reinstallation",
+                      "text": "Shifting homes or offices? We safely uninstall, pack and reinstall your AC at the new location with proper gas pumping, so you do not lose refrigerant or cooling performance."
+                    },
+                    {
+                      "title": "Why Choose Our Installation Service?",
+                      "text": "Neat workmanship, genuine accessories, clear pricing and a post-installation service warranty make us the trusted choice for AC installation in your city."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-cleaning-sanitization",
+                  "label": "AC Cleaning & Sanitization",
+                  "icon": "spray",
+                  "hero": {
+                    "badge": "DEEP",
+                    "heading": {
+                      "main": "AC Cleaning &",
+                      "highlight": "Sanitization"
+                    },
+                    "subtitle": "Fresh, Germ-Free Air for a Healthier Home",
+                    "image": "/services/images/image_09.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Trained Experts"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Safe Chemicals"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Quick Service"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Budget Friendly"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Cleaning & Sanitization Service",
+                      "text": "Dust, mould and bacteria build up inside your AC over time, reducing cooling and affecting air quality. Our deep cleaning service removes dirt from filters, coils, blower and drain tray using foam jet and pressure wash techniques."
+                    },
+                    {
+                      "title": "Jet Pump Deep Cleaning",
+                      "text": "We use high-pressure jet pumps to clean the evaporator and condenser coils thoroughly without damaging the fins, restoring airflow and improving cooling efficiency by up to 30%."
+                    },
+                    {
+                      "title": "Anti-Bacterial Sanitization",
+                      "text": "After cleaning, we apply safe, eco-friendly anti-bacterial sprays that kill germs and eliminate bad odour, so your family breathes clean and fresh air."
+                    },
+                    {
+                      "title": "Why Regular Cleaning Matters",
+                      "text": "Regular cleaning lowers electricity bills, prevents water leakage, reduces breakdowns and extends the life of your AC. We recommend a deep clean at least twice a year."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-gas-refilling",
+                  "label": "AC Gas Refilling",
+                  "icon": "gasCylinder",
+                  "hero": {
+                    "badge": "GENUINE",
+                    "heading": {
+                      "main": "AC Gas",
+                      "highlight": "Refilling"
+                    },
+                    "subtitle": "Restore Powerful Cooling with Genuine Refrigerant",
+                    "image": "/services/images/image_11.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Skilled Technicians"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Leak Tested"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Fast Refill"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Transparent Rates"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Gas Refilling Service",
+                      "text": "If your AC is running but not cooling, low refrigerant could be the reason. We refill R32, R410A and R22 gases using calibrated gauges to ensure the exact pressure recommended by the manufacturer."
+                    },
+                    {
+                      "title": "Leak Detection & Repair",
+                      "text": "Before refilling, we detect and fix leaks in pipes, joints and coils using nitrogen pressure testing, so the new gas stays in and your AC keeps cooling for longer."
+                    },
+                    {
+                      "title": "Genuine Refrigerant Only",
+                      "text": "We use only branded, high-purity refrigerant gas that is safe for your compressor and the environment, avoiding the damage caused by adulterated gas."
+                    },
+                    {
+                      "title": "Why Choose Our Gas Refilling?",
+                      "text": "Accurate pressure checks, complete leak repair, clear pricing per unit and a service warranty make our gas refilling reliable and worry-free."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-ducted-system",
+                  "label": "AC Ducted System",
+                  "icon": "duct",
+                  "hero": {
+                    "badge": "COMPLETE",
+                    "heading": {
+                      "main": "AC Ducted",
+                      "highlight": "System"
+                    },
+                    "subtitle": "Uniform Cooling for Large Homes and Commercial Spaces",
+                    "image": "/services/images/image_01.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "HVAC Experts"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Quality Ducting"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "On-Time Delivery"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Cost Effective"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "Ducted AC System Service",
+                      "text": "Ducted air conditioning delivers even, quiet cooling to every room through hidden ducts. We design, install and service ducted systems for villas, offices, showrooms and restaurants."
+                    },
+                    {
+                      "title": "Design & Installation",
+                      "text": "Our HVAC engineers calculate heat load, plan duct routes and select the right capacity units, ensuring balanced airflow, minimal noise and maximum energy efficiency."
+                    },
+                    {
+                      "title": "Duct Cleaning & Maintenance",
+                      "text": "We clean ducts, grilles and diffusers, check insulation and balance dampers to keep the air clean and the system running at peak performance."
+                    },
+                    {
+                      "title": "Why Choose Our Ducted Solutions?",
+                      "text": "End-to-end project handling, quality materials, skilled HVAC teams and dedicated after-sales support make us the right partner for ducted AC systems."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-amc",
+                  "label": "AC AMC (Annual Maintenance)",
+                  "icon": "docGear",
+                  "hero": {
+                    "badge": "HASSLE-FREE",
+                    "heading": {
+                      "main": "AC Annual",
+                      "highlight": "Maintenance"
+                    },
+                    "subtitle": "Year-Round Care with Priority Support and Savings",
+                    "image": "/services/images/image_12.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Dedicated Team"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Covered Repairs"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Priority Visits"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Big Savings"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Annual Maintenance Contract",
+                      "text": "Our AMC plans keep your air conditioners in top condition all year with scheduled preventive services, priority breakdown support and discounted repairs for homes and businesses."
+                    },
+                    {
+                      "title": "What Our AMC Covers",
+                      "text": "Each plan includes periodic deep cleaning, gas pressure checks, electrical inspection, drain line cleaning and performance testing, with free visits for any breakdowns during the contract."
+                    },
+                    {
+                      "title": "Plans for Homes & Businesses",
+                      "text": "Choose from flexible plans for a single AC at home or multiple units across offices, shops and commercial buildings, with custom schedules to suit your operations."
+                    },
+                    {
+                      "title": "Why Choose Our AMC?",
+                      "text": "Fewer breakdowns, lower power bills, longer AC life and predictable yearly costs. Our AMC customers also get priority booking during peak summer months."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-filter-replacement",
+                  "label": "AC Filter Replacement",
+                  "icon": "filter",
+                  "hero": {
+                    "badge": "CLEAN AIR",
+                    "heading": {
+                      "main": "AC Filter",
+                      "highlight": "Replacement"
+                    },
+                    "subtitle": "Breathe Cleaner Air with High-Quality Filters",
+                    "image": "/services/images/image_07.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Expert Advice"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Genuine Filters"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Quick Swap"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Low Cost"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Filter Replacement Service",
+                      "text": "Clogged or damaged filters block airflow, reduce cooling and circulate dust and allergens. We replace old filters with genuine, correctly sized filters for all major AC brands."
+                    },
+                    {
+                      "title": "HEPA & Anti-Bacterial Filters",
+                      "text": "Upgrade to HEPA, carbon or anti-bacterial filters that trap fine dust, smoke, pollen and germs, ideal for families with kids, elderly members or allergy sufferers."
+                    },
+                    {
+                      "title": "When to Replace Your Filter",
+                      "text": "If you notice weak airflow, bad odour, more dust indoors or higher electricity bills, it is time to replace your filter. We recommend checking filters every 2-3 months."
+                    },
+                    {
+                      "title": "Why Choose Our Filter Service?",
+                      "text": "Genuine parts, the right fit for your model, quick doorstep service and honest advice on whether a clean or a replacement is really needed."
+                    }
+                  ]
+                },
+                {
+                  "slug": "ac-electrical-work",
+                  "label": "AC Electrical Work",
+                  "icon": "plug",
+                  "hero": {
+                    "badge": "SAFE",
+                    "heading": {
+                      "main": "AC Electrical",
+                      "highlight": "Work"
+                    },
+                    "subtitle": "Safe Wiring and Power Solutions for Your AC",
+                    "image": "/services/images/image_02.jpg",
+                    "features": [
+                      {
+                        "icon": "users",
+                        "label": "Licensed Electricians"
+                      },
+                      {
+                        "icon": "shieldCheck",
+                        "label": "Safety First"
+                      },
+                      {
+                        "icon": "clock",
+                        "label": "Quick Fix"
+                      },
+                      {
+                        "icon": "rupee",
+                        "label": "Honest Pricing"
+                      }
+                    ]
+                  },
+                  "sections": [
+                    {
+                      "title": "AC Electrical Work Service",
+                      "text": "Faulty wiring, tripping MCBs and voltage problems can damage your AC and create safety hazards. Our trained electricians handle all AC-related electrical work safely and professionally."
+                    },
+                    {
+                      "title": "Wiring, MCB & Stabilizer Setup",
+                      "text": "We install dedicated power points, correctly rated MCBs, earthing and voltage stabilizers to protect your AC compressor and electronics from power fluctuations."
+                    },
+                    {
+                      "title": "PCB & Component Repair",
+                      "text": "From PCB faults and capacitor failures to fan motor and thermostat issues, we diagnose and repair electrical components using genuine spare parts."
+                    },
+                    {
+                      "title": "Why Choose Our Electrical Service?",
+                      "text": "Certified electricians, strict safety standards, quality materials and clear pricing ensure your AC runs safely and reliably for years."
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Testimonials": {
+          "variants": {
+            "CoolFixTestimonials1": {
+              "badge": "Testimonials",
+              "heading": {
+                "main": "The Best Customers Say About Our",
+                "highlight": "Services"
+              },
+              "image": "/services/images/image_03.jpg",
+              "videoUrl": "/services/air-conditioner.webm",
+              "source": "Google",
+              "list": [
+                {
+                  "id": 1,
+                  "name": "Rohit Sharma",
+                  "role": "Homeowner",
+                  "avatar": "/services/images/image_04.jpg",
+                  "quote": "Excellent service! The technician arrived on time, quickly identified the issue and fixed it. Very professional, polite and knowledgeable. Highly recommend for any AC repair or maintenance work."
+                },
+                {
+                  "id": 2,
+                  "name": "Priya Verma",
+                  "role": "Office Manager",
+                  "avatar": "/services/images/image_05.jpg",
+                  "quote": "CoolFix installed new split ACs across our office in a single day. Clean work, no mess left behind, and the pricing was exactly as quoted. Our team is finally comfortable again!"
+                },
+                {
+                  "id": 3,
+                  "name": "Amit Patel",
+                  "role": "Restaurant Owner",
+                  "avatar": "/services/images/image_06.jpg",
+                  "quote": "Our AC broke down on the hottest day of the year. They sent someone within two hours and had it running the same evening. Fast, reliable and fairly priced service."
+                },
+                {
+                  "id": 4,
+                  "name": "Neha Kapoor",
+                  "role": "Homeowner",
+                  "avatar": "/services/images/image_07.jpg",
+                  "quote": "I've been using their annual maintenance plan for two years now. The cooling is better than ever and my electricity bills have dropped noticeably. Great team to work with."
+                }
+              ]
+            }
+          }
+        },
+        "Testimonial": {
+          "variants": {
+            "CoolFixTestimonial1": {
+              "badge": "Testimonials",
+              "heading": {
+                "main": "The Best Customers Say About Our",
+                "highlight": "Services"
+              },
+              "image": "/services/images/image_03.jpg",
+              "videoUrl": "/services/air-conditioner.webm",
+              "source": "Google",
+              "list": [
+                {
+                  "id": 1,
+                  "name": "Rohit Sharma",
+                  "role": "Homeowner",
+                  "avatar": "/services/images/image_04.jpg",
+                  "quote": "Excellent service! The technician arrived on time, quickly identified the issue and fixed it. Very professional, polite and knowledgeable. Highly recommend for any AC repair or maintenance work."
+                },
+                {
+                  "id": 2,
+                  "name": "Priya Verma",
+                  "role": "Office Manager",
+                  "avatar": "/services/images/image_05.jpg",
+                  "quote": "CoolFix installed new split ACs across our office in a single day. Clean work, no mess left behind, and the pricing was exactly as quoted. Our team is finally comfortable again!"
+                },
+                {
+                  "id": 3,
+                  "name": "Amit Patel",
+                  "role": "Restaurant Owner",
+                  "avatar": "/services/images/image_06.jpg",
+                  "quote": "Our AC broke down on the hottest day of the year. They sent someone within two hours and had it running the same evening. Fast, reliable and fairly priced service."
+                },
+                {
+                  "id": 4,
+                  "name": "Neha Kapoor",
+                  "role": "Homeowner",
+                  "avatar": "/services/images/image_07.jpg",
+                  "quote": "I've been using their annual maintenance plan for two years now. The cooling is better than ever and my electricity bills have dropped noticeably. Great team to work with."
+                }
+              ]
+            }
+          }
+        },
+        "Highlights": {
+          "variants": {
+            "CoolFixHighlights1": {
+              "badge": "Our Service Highlights",
+              "heading": {
+                "main": "Why Homeowners",
+                "highlight": "Trust Us"
+              },
+              "description": "We provide fast, reliable and affordable AC services to keep your home cool and comfortable all year round.",
+              "list": [
+                {
+                  "icon": "phone",
+                  "title": "24/7 Support",
+                  "description": "We're always here to help, anytime you need.",
+                  "color": "orange"
+                },
+                {
+                  "icon": "clock",
+                  "title": "Same Day Service",
+                  "description": "Quick & reliable response for your AC issues.",
+                  "color": "blue"
+                },
+                {
+                  "icon": "users",
+                  "title": "Experienced Team",
+                  "description": "Certified & skilled technicians for quality service.",
+                  "color": "orange"
+                },
+                {
+                  "icon": "shield",
+                  "title": "Service Warranty",
+                  "description": "Quality service guaranteed for your peace of mind.",
+                  "color": "blue"
+                }
+              ]
+            }
+          }
+        },
+        "WorkingProcess": {
+          "variants": {
+            "CoolFixWorkingProcess1": {
+              "badge": "How it works",
+              "heading": {
+                "main": "Get Your AC Serviced in",
+                "highlight": "4 Easy Steps"
+              },
+              "list": [
+                {
+                  "id": 1,
+                  "title": "Book a Service",
+                  "description": "Schedule a service online or call us.",
+                  "image": "/services/icons/step-01.png"
+                },
+                {
+                  "id": 2,
+                  "title": "Technician Visit",
+                  "description": "Our expert visits your location.",
+                  "image": "/services/icons/step-02.png"
+                },
+                {
+                  "id": 3,
+                  "title": "Inspection & Repair",
+                  "description": "We diagnose and fix the issue.",
+                  "image": "/services/icons/step-03.png"
+                },
+                {
+                  "id": 4,
+                  "title": "Enjoy Cool Air",
+                  "description": "Relax with a perfectly working AC.",
+                  "image": "/services/icons/air.svg"
+                }
+              ]
+            }
+          }
+        },
+        "HowWeWork": {
+          "variants": {
+            "CoolFixHowWeWork1": {
+              "badge": "How it works",
+              "heading": {
+                "main": "Get Your AC Serviced in",
+                "highlight": "4 Easy Steps"
+              },
+              "list": [
+                {
+                  "id": 1,
+                  "title": "Book a Service",
+                  "description": "Schedule a service online or call us.",
+                  "image": "/services/icons/step-01.png"
+                },
+                {
+                  "id": 2,
+                  "title": "Technician Visit",
+                  "description": "Our expert visits your location.",
+                  "image": "/services/icons/step-02.png"
+                },
+                {
+                  "id": 3,
+                  "title": "Inspection & Repair",
+                  "description": "We diagnose and fix the issue.",
+                  "image": "/services/icons/step-03.png"
+                },
+                {
+                  "id": 4,
+                  "title": "Enjoy Cool Air",
+                  "description": "Relax with a perfectly working AC.",
+                  "image": "/services/icons/air.svg"
+                }
+              ]
+            }
+          }
+        },
+        "Stats": {
+          "variants": {
+            "CoolFixStats1": {
+              "list": [
+                {
+                  "label": "Happy Customers",
+                  "value": "250+",
+                  "icon": "/services/icons/stat-customers.svg"
+                },
+                {
+                  "label": "AC Services Completed",
+                  "value": "500+",
+                  "icon": "/services/icons/stat-services.svg"
+                },
+                {
+                  "label": "Years of Experience",
+                  "value": "15+",
+                  "icon": "/services/icons/stat-experience.svg"
+                },
+                {
+                  "label": "Customer Satisfaction",
+                  "value": "99%",
+                  "icon": "/services/icons/stat-satisfaction.svg"
+                }
+              ]
+            }
+          }
+        },
+        "CtaBanner": {
+          "variants": {
+            "CoolFixCtaBanner1": {
+              "badge": "Need Quick Assistance?",
+              "heading": {
+                "main": "AC Not Cooling?",
+                "highlight": "We're Just One Call Away."
+              },
+              "description": "Get fast, reliable and affordable AC repair and service at your doorstep.",
+              "image": "/services/images/image_08.jpg",
+              "primaryBtn": {
+                "label": "Call Now 1234567890",
+                "href": "tel:1234567890",
+                "icon": "phone"
+              },
+              "secondaryBtn": {
+                "label": "Book a Service",
+                "href": "/book",
+                "icon": "arrowRight"
+              }
+            }
+          }
+        },
+        "CTA": {
+          "variants": {
+            "CoolFixCTA1": {
+              "badge": "Need Quick Assistance?",
+              "heading": {
+                "main": "AC Not Cooling?",
+                "highlight": "We're Just One Call Away."
+              },
+              "description": "Get fast, reliable and affordable AC repair and service at your doorstep.",
+              "image": "/services/images/image_08.jpg",
+              "primaryBtn": {
+                "label": "Call Now 1234567890",
+                "href": "tel:1234567890",
+                "icon": "phone"
+              },
+              "secondaryBtn": {
+                "label": "Book a Service",
+                "href": "/book",
+                "icon": "arrowRight"
+              }
+            }
+          }
+        },
+        "WhyChooseUs": {
+          "variants": {
+            "CoolFixWhyChooseUs1": {
+              "badge": "Why Choose Us",
+              "heading": {
+                "main": "Reliable AC Repair",
+                "middle": "Service with a",
+                "highlight": "Personal Touch"
+              },
+              "list": [
+                {
+                  "icon": "technician",
+                  "title": "Personal Technician",
+                  "description": "Get expert support from our trained and trusted technicians for all your AC service needs."
+                },
+                {
+                  "icon": "acUnit",
+                  "title": "Smart Technology",
+                  "description": "We use advanced tools and modern techniques to ensure accurate diagnosis and long-lasting results."
+                },
+                {
+                  "icon": "rupee",
+                  "title": "Affordable Packages",
+                  "description": "High-quality AC repair and service at competitive and transparent pricing with no hidden charges."
+                }
+              ],
+              "image": "/services/images/image_10.jpg"
+            }
+          }
+        },
+        "Gallery": {
+          "variants": {
+            "CoolFixGallery1": {
+              "badge": "OUR GALLERY",
+              "heading": {
+                "main": "Our AC Repair",
+                "highlight": "Work Gallery"
+              },
+              "description": "Take a look at some of our recent AC repair, installation, cleaning and maintenance work. We take pride in delivering quality service to our customers.",
+              "photos": [
+                "/services/images/image_01.jpg",
+                "/services/images/image_02.jpg",
+                "/services/images/image_03.jpg",
+                "/services/images/image_04.jpg",
+                "/services/images/image_05.jpg",
+                "/services/images/image_06.jpg",
+                "/services/images/image_07.jpg",
+                "/services/images/image_08.jpg",
+                "/services/images/image_09.jpg",
+                "/services/images/image_10.jpg",
+                "/services/images/image_11.jpg",
+                "/services/images/image_12.jpg",
+                "/services/images/image_01.jpg",
+                "/services/images/image_02.jpg",
+                "/services/images/image_03.jpg",
+                "/services/images/image_04.jpg",
+                "/services/images/image_05.jpg",
+                "/services/images/image_06.jpg"
+              ],
+              "initialCount": 9,
+              "loadMoreCount": 3,
+              "loadMoreBtn": "Load More Photos →"
+            }
+          }
+        },
+        "GetQuote": {
+          "variants": {
+            "CoolFixGetQuote1": {
+              "badge": "GET A QUOTE",
+              "heading": {
+                "main": "Get a Free Quote for",
+                "highlight": "AC Repair & Services"
+              },
+              "description": "Fill out the form and get a customized quote for your AC repair, installation, cleaning or maintenance service. Our team will get back to you shortly with the best solution and price.",
+              "featuresTop": [
+                {
+                  "label": "Quick Response",
+                  "icon": "clipboardCheck"
+                },
+                {
+                  "label": "Transparent Pricing",
+                  "icon": "shieldCheck"
+                },
+                {
+                  "label": "Certified Technicians",
+                  "icon": "technician"
+                },
+                {
+                  "label": "Customized Solutions",
+                  "icon": "gear"
+                }
+              ],
+              "image": "/services/images/image_10.jpg",
+              "helpBadge": {
+                "title": "Need Help?",
+                "subtitle": "Call Us Anytime",
+                "phone": "+91 00000 00000"
+              },
+              "featuresBottom": [
+                {
+                  "label": "Same Day Service",
+                  "icon": "stopwatch"
+                },
+                {
+                  "label": "Genuine Parts",
+                  "icon": "gear"
+                },
+                {
+                  "label": "Affordable Pricing",
+                  "icon": "rupee"
+                },
+                {
+                  "label": "Satisfaction Guaranteed",
+                  "icon": "handshake"
+                }
+              ],
+              "form": {
+                "heading": {
+                  "main": "Request a",
+                  "highlight": "Free Quote"
+                },
+                "description": "Share your details and service requirements. We'll provide the best quote for your AC service.",
+                "fields": {
+                  "name": {
+                    "label": "Full Name",
+                    "placeholder": "Enter your full name",
+                    "required": true
+                  },
+                  "phone": {
+                    "label": "Phone Number",
+                    "placeholder": "Enter your phone number",
+                    "required": true
+                  },
+                  "email": {
+                    "label": "Email Address",
+                    "placeholder": "Enter your email address",
+                    "required": false
+                  },
+                  "serviceType": {
+                    "label": "Service Type",
+                    "placeholder": "Select service",
+                    "required": true,
+                    "options": [
+                      "AC Repair",
+                      "AC Installation",
+                      "AC Cleaning",
+                      "AC Gas Refilling",
+                      "AC Maintenance",
+                      "AC Uninstallation",
+                      "AC AMC Services"
+                    ]
+                  },
+                  "acType": {
+                    "label": "AC Type",
+                    "placeholder": "Select AC type",
+                    "required": false,
+                    "options": [
+                      "Split AC",
+                      "Window AC",
+                      "Cassette AC",
+                      "Central AC",
+                      "Ducted AC"
+                    ]
+                  },
+                  "date": {
+                    "label": "Preferred Date",
+                    "placeholder": "Select date",
+                    "required": false
+                  },
+                  "address": {
+                    "label": "Address",
+                    "placeholder": "Enter your address",
+                    "required": false
+                  },
+                  "message": {
+                    "label": "Message / Requirements",
+                    "placeholder": "Tell us about your requirement..."
+                  }
+                },
+                "submitBtn": "Get a Free Quote",
+                "privacyText": "Your information is safe with us. We do not share it with anyone."
+              }
+            }
+          }
+        },
+        "ContactPage": {
+          "variants": {
+            "CoolFixContactPage1": {
+              "badge": "GET IN TOUCH",
+              "heading": {
+                "main": "Contact Us for",
+                "highlight": "AC Repair",
+                "end": "& Services"
+              },
+              "description": "Have questions or need assistance? We're here to help. Reach out to our team for AC repair, installation, cleaning or maintenance services. We'll get back to you as soon as possible.",
+              "info": [
+                {
+                  "id": "phone",
+                  "icon": "phone",
+                  "title": "Call Us",
+                  "value": "+91 00000 00000",
+                  "subText": "Mon - Sat: 9:00 AM - 7:00 PM",
+                  "color": "orange"
+                },
+                {
+                  "id": "email",
+                  "icon": "envelope",
+                  "title": "Email Us",
+                  "value": "info@xyz.com",
+                  "subText": "We reply within 24 hours",
+                  "color": "blue"
+                },
+                {
+                  "id": "address",
+                  "icon": "location",
+                  "title": "Our Location",
+                  "value": "1234 Elm Street, Suite 200, Austin, TX 78701, USA",
+                  "subText": "",
+                  "color": "orange"
+                }
+              ],
+              "image": "/services/images/image_10.jpg",
+              "form": {
+                "heading": {
+                  "main": "Send Us a",
+                  "highlight": "Message"
+                },
+                "description": "Fill out the form and our team will get back to you shortly with the best solution for your AC service needs.",
+                "fields": {
+                  "name": {
+                    "label": "Full Name",
+                    "placeholder": "Enter your full name",
+                    "required": true
+                  },
+                  "phone": {
+                    "label": "Phone Number",
+                    "placeholder": "Enter your phone number",
+                    "required": true
+                  },
+                  "email": {
+                    "label": "Email Address",
+                    "placeholder": "Enter your email address",
+                    "required": true
+                  },
+                  "date": {
+                    "label": "Preferred Date",
+                    "placeholder": "Select date",
+                    "required": false
+                  },
+                  "serviceType": {
+                    "label": "Service Type",
+                    "placeholder": "Select service type",
+                    "required": false,
+                    "options": [
+                      "AC Repair",
+                      "AC Installation",
+                      "AC Cleaning",
+                      "AC Gas Refilling",
+                      "AC Maintenance"
+                    ]
+                  },
+                  "acType": {
+                    "label": "AC Type",
+                    "placeholder": "Select AC type",
+                    "required": false,
+                    "options": [
+                      "Split AC",
+                      "Window AC",
+                      "Cassette AC",
+                      "Central AC"
+                    ]
+                  },
+                  "message": {
+                    "label": "Message",
+                    "placeholder": "Tell us about your requirement...",
+                    "required": true
+                  }
+                },
+                "submitBtn": "Send Message",
+                "resetBtn": "Reset"
+              },
+              "map": {
+                "embedQuery": "1234 Elm Street, Austin, TX 78701",
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=1234+Elm+Street,+Austin,+TX+78701",
+                "locationTitle": "Our Location",
+                "address": "1234 Elm Street, Suite 200, Austin, TX 78701, USA",
+                "cardTitle": "Find Us Here",
+                "cardText": "Visit our office for any inquiries or service support. We are conveniently located and easily accessible.",
+                "btnText": "Get Directions"
+              }
+            }
+          }
+        },
+        "Contact": {
+          "variants": {
+            "CoolFixContactPage1": {
+              "badge": "GET IN TOUCH",
+              "heading": {
+                "main": "Contact Us for",
+                "highlight": "AC Repair",
+                "end": "& Services"
+              },
+              "description": "Have questions or need assistance? We're here to help. Reach out to our team for AC repair, installation, cleaning or maintenance services. We'll get back to you as soon as possible.",
+              "info": [
+                {
+                  "id": "phone",
+                  "icon": "phone",
+                  "title": "Call Us",
+                  "value": "+91 00000 00000",
+                  "subText": "Mon - Sat: 9:00 AM - 7:00 PM",
+                  "color": "orange"
+                },
+                {
+                  "id": "email",
+                  "icon": "envelope",
+                  "title": "Email Us",
+                  "value": "info@xyz.com",
+                  "subText": "We reply within 24 hours",
+                  "color": "blue"
+                },
+                {
+                  "id": "address",
+                  "icon": "location",
+                  "title": "Our Location",
+                  "value": "1234 Elm Street, Suite 200, Austin, TX 78701, USA",
+                  "subText": "",
+                  "color": "orange"
+                }
+              ],
+              "image": "/services/images/image_10.jpg",
+              "form": {
+                "heading": {
+                  "main": "Send Us a",
+                  "highlight": "Message"
+                },
+                "description": "Fill out the form and our team will get back to you shortly with the best solution for your AC service needs.",
+                "fields": {
+                  "name": {
+                    "label": "Full Name",
+                    "placeholder": "Enter your full name",
+                    "required": true
+                  },
+                  "phone": {
+                    "label": "Phone Number",
+                    "placeholder": "Enter your phone number",
+                    "required": true
+                  },
+                  "email": {
+                    "label": "Email Address",
+                    "placeholder": "Enter your email address",
+                    "required": true
+                  },
+                  "date": {
+                    "label": "Preferred Date",
+                    "placeholder": "Select date",
+                    "required": false
+                  },
+                  "serviceType": {
+                    "label": "Service Type",
+                    "placeholder": "Select service type",
+                    "required": false,
+                    "options": [
+                      "AC Repair",
+                      "AC Installation",
+                      "AC Cleaning",
+                      "AC Gas Refilling",
+                      "AC Maintenance"
+                    ]
+                  },
+                  "acType": {
+                    "label": "AC Type",
+                    "placeholder": "Select AC type",
+                    "required": false,
+                    "options": [
+                      "Split AC",
+                      "Window AC",
+                      "Cassette AC",
+                      "Central AC"
+                    ]
+                  },
+                  "message": {
+                    "label": "Message",
+                    "placeholder": "Tell us about your requirement...",
+                    "required": true
+                  }
+                },
+                "submitBtn": "Send Message",
+                "resetBtn": "Reset"
+              },
+              "map": {
+                "embedQuery": "1234 Elm Street, Austin, TX 78701",
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=1234+Elm+Street,+Austin,+TX+78701",
+                "locationTitle": "Our Location",
+                "address": "1234 Elm Street, Suite 200, Austin, TX 78701, USA",
+                "cardTitle": "Find Us Here",
+                "cardText": "Visit our office for any inquiries or service support. We are conveniently located and easily accessible.",
+                "btnText": "Get Directions"
+              }
+            }
+          }
+        },
+        "BookService": {
+          "variants": {
+            "CoolFixBookService1": {
+              "badge": "BOOK A SERVICE",
+              "heading": {
+                "main": "Schedule Your",
+                "highlight": "AC Service",
+                "end": "Today"
+              },
+              "description": "Book a professional AC repair, installation, cleaning or maintenance service at your convenience. Our team will confirm your booking and reach you on time.",
+              "featuresLeft": [
+                {
+                  "title": "Choose Date & Time",
+                  "desc": "Pick a slot that works for you.",
+                  "icon": "calendarDays"
+                },
+                {
+                  "title": "Expert Technician",
+                  "desc": "Our professional will reach on time.",
+                  "icon": "worker"
+                },
+                {
+                  "title": "Quality Service",
+                  "desc": "Reliable and hassle-free service.",
+                  "icon": "settings"
+                }
+              ],
+              "image": "/services/images/image_05.jpg",
+              "helpBadge": {
+                "title": "Need Immediate Help?",
+                "subtitle": "Call us now for quick assistance.",
+                "phone": "+91 00000 00000"
+              },
+              "featuresBottom": [
+                {
+                  "title": "Same Day Service",
+                  "desc": "Quick & reliable support",
+                  "icon": "truck"
+                },
+                {
+                  "title": "Certified Technicians",
+                  "desc": "Trained & experienced",
+                  "icon": "shieldCheck"
+                },
+                {
+                  "title": "Affordable Pricing",
+                  "desc": "Transparent & fair rates",
+                  "icon": "rupee"
+                },
+                {
+                  "title": "Customer Satisfaction",
+                  "desc": "Our top priority",
+                  "icon": "thumbsUp"
+                }
+              ],
+              "form": {
+                "heading": {
+                  "main": "Book",
+                  "highlight": "Your AC Service"
+                },
+                "description": "Fill in the details below and we will confirm your booking shortly.",
+                "fields": {
+                  "name": {
+                    "label": "Full Name",
+                    "placeholder": "Enter your full name",
+                    "required": true
+                  },
+                  "phone": {
+                    "label": "Phone Number",
+                    "placeholder": "Enter your phone number",
+                    "required": true
+                  },
+                  "email": {
+                    "label": "Email Address",
+                    "placeholder": "Enter your email address",
+                    "required": true
+                  },
+                  "serviceType": {
+                    "label": "Service Type",
+                    "placeholder": "Select service type",
+                    "required": true,
+                    "options": [
+                      "AC Repair",
+                      "AC Installation",
+                      "AC Cleaning",
+                      "AC Gas Refilling",
+                      "AC Maintenance"
+                    ]
+                  },
+                  "acType": {
+                    "label": "AC Type",
+                    "placeholder": "Select AC type",
+                    "required": true,
+                    "options": [
+                      "Split AC",
+                      "Window AC",
+                      "Cassette AC",
+                      "Central AC"
+                    ]
+                  },
+                  "date": {
+                    "label": "Preferred Date",
+                    "placeholder": "Select date",
+                    "required": true
+                  },
+                  "time": {
+                    "label": "Preferred Time",
+                    "placeholder": "Select time",
+                    "required": true,
+                    "options": [
+                      "09:00 AM - 11:00 AM",
+                      "11:00 AM - 01:00 PM",
+                      "01:00 PM - 03:00 PM",
+                      "03:00 PM - 05:00 PM",
+                      "05:00 PM - 07:00 PM"
+                    ]
+                  },
+                  "address": {
+                    "label": "Service Address",
+                    "placeholder": "Enter your complete address",
+                    "required": true
+                  },
+                  "notes": {
+                    "label": "Additional Notes (Optional)",
+                    "placeholder": "Tell us any specific issue or requirement..."
+                  }
+                },
+                "submitBtn": "Book a Service"
+              }
+            }
+          }
+        },
+        "Footer": {
+          "variants": {
+            "CoolFixFooter1": {
+              "logo": {
+                "src": "/services/images/white-logo.png",
+                "alt": "CoolFix Logo",
+                "width": 2167,
+                "height": 726
+              },
+              "titles": {
+                "quickLinks": "Quick Links",
+                "services": "Our Services",
+                "contact": "Contact Us"
+              },
+              "socials": [
+                {
+                  "icon": "facebook",
+                  "label": "Facebook",
+                  "href": "https://facebook.com"
+                },
+                {
+                  "icon": "instagram",
+                  "label": "Instagram",
+                  "href": "https://instagram.com"
+                },
+                {
+                  "icon": "youtube",
+                  "label": "YouTube",
+                  "href": "https://youtube.com"
+                },
+                {
+                  "icon": "whatsapp",
+                  "label": "WhatsApp",
+                  "href": "https://whatsapp.com"
+                }
+              ],
+              "description": "CoolFix AC Repair & Services provides fast, reliable and affordable AC repair, installation and maintenance services for homes and offices.",
+              "quickLinks": [
+                {
+                  "label": "Home",
+                  "href": "/"
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about"
+                },
+                {
+                  "label": "Our Services",
+                  "href": "/services"
+                },
+                {
+                  "label": "Gallery",
+                  "href": "/gallery"
+                },
+                {
+                  "label": "Get a Quote",
+                  "href": "/get-a-quote"
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact"
+                }
+              ],
+              "services": [
+                {
+                  "label": "AC Repair & Service",
+                  "href": "/service-details"
+                },
+                {
+                  "label": "AC Installation",
+                  "href": "/service-details"
+                },
+                {
+                  "label": "AC Gas Refill",
+                  "href": "/service-details"
+                },
+                {
+                  "label": "AC Maintenance",
+                  "href": "/service-details"
+                },
+                {
+                  "label": "AC Uninstallation",
+                  "href": "/service-details"
+                },
+                {
+                  "label": "AC AMC Services",
+                  "href": "/service-details"
+                }
+              ],
+              "contacts": [
+                {
+                  "icon": "phone",
+                  "label": "Call Us",
+                  "value": "+91 0000000000"
+                },
+                {
+                  "icon": "mail",
+                  "label": "Email Us",
+                  "value": "info@xyz.com"
+                },
+                {
+                  "icon": "location",
+                  "label": "Our Location",
+                  "value": "1234 Elm Street, Suite 200, Austin, TX 78701, USA"
+                }
+              ],
+              "copyright": "copyright @ 2026. All Rights Reserved. Powerd by Lestow."
+            }
+          }
+        }
+      }
+    }
   }
 }

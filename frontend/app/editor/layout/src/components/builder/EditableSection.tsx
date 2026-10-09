@@ -89,8 +89,7 @@ const INLINE_TOOLBAR_WIDTH = 780;
 const INLINE_TOOLBAR_HEIGHT = 40;
 const INLINE_TOOLBAR_GAP = 12;
 const INLINE_TOOLBAR_OFFSET = 8;
-const INLINE_HIGHLIGHT_CLASS =
-  "outline outline-2 outline-blue-500 outline-offset-2 rounded-sm cursor-text";
+const INLINE_HIGHLIGHT_CLASS = "editor-inline-highlight cursor-text";
 const INLINE_FONT_SIZE_OPTIONS = [
   "12",
   "14",
@@ -2848,6 +2847,11 @@ export default function EditableSection({
             color: #94a3b8;
             font-style: normal;
             opacity: 0.72;
+          }
+
+          .editor-inline-highlight {
+            outline: none !important;
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6 !important;
           }
 
           [${INLINE_BUTTON_HOVER_ATTRIBUTE}="true"],

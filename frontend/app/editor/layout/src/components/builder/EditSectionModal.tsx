@@ -56,6 +56,7 @@ import {
   resolveLayoutPreview,
   resolveThemePortfolioNavLink,
   TOPBAR_LAYOUT_SKINS,
+  withCoolFixContent,
   withTopbarLayoutSkin,
 } from "../../data/templateFlow";
 import { PageLink, usePreview } from "../context/PreviewContext";
@@ -2551,6 +2552,43 @@ const PET_ICON_OPTIONS: Record<string, { value: string; label: string }[]> = {
   ],
 };
 
+const labelIcon = (value: string) => ({
+  value,
+  label: value.replace(/-/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2"),
+});
+
+const COOLFIX_ICON_SETS: Record<string, { value: string; label: string }[]> = {
+  highlights: ["shield-check", "users", "star"].map(labelIcon),
+  socials: ["facebook", "twitter", "instagram", "youtube", "whatsapp"].map(labelIcon),
+  contact: ["phone", "mail", "envelope", "location", "map-pin"].map(labelIcon),
+  service: ["acUnit", "snowflake", "gear", "technician"].map(labelIcon),
+  feature: ["technician", "acUnit", "rupee", "snowflake"].map(labelIcon),
+  highlightCards: ["phone", "clock", "users"].map(labelIcon),
+  menu: ["home"].map(labelIcon),
+};
+
+const coolFixIconsFor = (variant: string | undefined, path: GenericFieldPath) => {
+  if (!variant?.startsWith("CoolFix")) return null;
+  const parent = String(path[0] ?? "");
+  if (parent === "socials") return COOLFIX_ICON_SETS.socials;
+  if (parent === "highlights") return COOLFIX_ICON_SETS.highlights;
+  if (parent === "contacts" || parent === "info") return COOLFIX_ICON_SETS.contact;
+  if (parent === "menu") return COOLFIX_ICON_SETS.menu;
+  if (variant === "CoolFixHighlights1") return COOLFIX_ICON_SETS.highlightCards;
+  if (variant === "CoolFixServicePage1" || variant === "CoolFixService1") return COOLFIX_ICON_SETS.service;
+  if (
+    variant === "CoolFixWhyChooseUs1" ||
+    variant === "CoolFixAboutPage1" ||
+    variant === "CoolFixAbout1"
+  ) {
+    return COOLFIX_ICON_SETS.feature;
+  }
+  if (variant === "CoolFixFooter1" || variant === "CoolFixContactPage1") {
+    return COOLFIX_ICON_SETS.contact;
+  }
+  return null;
+};
+
 const petIconsForVariant = (variant?: string) => {
   if (variant && PET_ICON_OPTIONS[variant]) return PET_ICON_OPTIONS[variant];
   const seen = new Set<string>();
@@ -3141,6 +3179,13 @@ const GenericFieldEditor = ({
   const isFormFieldType =
     fieldName === "type" && path.length >= 2 && path[0] === "formFields";
   const isFeatureIcon = isFeatureIconPath(path);
+  const coolFixIconChoices =
+    contentVariant?.startsWith("CoolFix") && /^icon$/i.test(fieldName)
+      ? (() => {
+          const options = coolFixIconsFor(contentVariant, path);
+          return options ? withCurrentIconOption(options, stringValue) : null;
+        })()
+      : null;
   const petIconChoices =
     contentVariant?.startsWith("Pet") &&
     /^(icon|badgeIcon|iconName)$/i.test(fieldName)
@@ -3154,6 +3199,7 @@ const GenericFieldEditor = ({
     (contentVariant === "PlumbingHowWeWork1" &&
       /^icon$/i.test(fieldName.trim()));
   const isButtonIcon =
+    !coolFixIconChoices &&
     !isFeatureIcon &&
     !isWhyChooseUsIcon &&
     !isProcessIcon &&
@@ -3209,6 +3255,19 @@ const GenericFieldEditor = ({
           <option value="email">Email</option>
           <option value="tel">Phone</option>
           <option value="textarea">Textarea</option>
+        </select>
+      ) : coolFixIconChoices ? (
+        <select
+          value={stringValue || coolFixIconChoices[0]?.value || ""}
+          onChange={(event) => onChange(path, event.target.value)}
+          className={contentFieldInputClass}
+          aria-label="Icon"
+        >
+          {coolFixIconChoices.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
       ) : petIconChoices ? (
         <select
@@ -3773,8 +3832,17 @@ export default function EditSectionModal({
       formFields?: FormFieldData[];
     }
     | undefined;
-  const activeGenericData = (currentSection?.data?.[activeVariant] ??
-    fallbackVariantData) as SectionData | undefined;
+  const storedGenericData = currentSection?.data?.[activeVariant] as
+    | SectionData
+    | undefined;
+  const activeGenericData = (
+    activeVariant.startsWith("CoolFix")
+      ? withCoolFixContent(
+          activeVariant,
+          storedGenericData as Record<string, unknown> | undefined,
+        ) ?? storedGenericData
+      : storedGenericData ?? fallbackVariantData
+  ) as SectionData | undefined;
   const petBannerSlides =
     activeVariant === "PetBanner1"
       ? resolvePetBannerSlides(activeGenericData as Record<string, unknown> | undefined)
@@ -3825,7 +3893,14 @@ export default function EditSectionModal({
         ? (savedRecord.pageBanner as Record<string, unknown>)
         : undefined;
     const { pageBanner: _savedPageBanner, ...savedWithoutBanner } = savedRecord;
-    const source: Record<string, unknown> = {
+    const coolFixRecord = activeVariant.startsWith("CoolFix")
+      ? (withCoolFixContent(activeVariant, savedRecord) as
+          | Record<string, unknown>
+          | undefined)
+      : undefined;
+    const source: Record<string, unknown> = coolFixRecord
+      ? coolFixRecord
+      : {
       ...(pageBanner
         ? {
             pageBanner: {
@@ -4178,6 +4253,14 @@ export default function EditSectionModal({
     specializedContentFieldSchemas[activeSectionType];
   const automaticContentFields = activeVariant.startsWith("Plumbing")
     ? []
+    : activeVariant.startsWith("CoolFix")
+    ? Object.entries(editableGenericData ?? {})
+        .filter(([fieldName]) => isContentFieldVisible(fieldName))
+        .map(([fieldName, value]) => ({
+          fieldName,
+          value,
+          path: [fieldName] as GenericFieldPath,
+        }))
     : specializedContentSchema
     ? Object.entries(editableGenericData ?? {})
       .filter(([fieldName]) => isContentFieldVisible(fieldName))
@@ -5155,8 +5238,17 @@ export default function EditSectionModal({
     const [field, ...nestedPath] = path;
     if (typeof field !== "string") return;
 
-    const baseGenericData =
-      (currentSection?.data?.[activeVariant] as SectionData | undefined) ??
+    const storedGenericData = currentSection?.data?.[activeVariant] as
+      | SectionData
+      | undefined;
+    const baseGenericData = (
+      activeVariant.startsWith("CoolFix")
+        ? withCoolFixContent(
+            activeVariant,
+            storedGenericData as Record<string, unknown> | undefined,
+          )
+        : storedGenericData
+    ) as SectionData | undefined ??
       (fallbackVariantData as SectionData | undefined);
     if (!baseGenericData) return;
 
@@ -6765,7 +6857,8 @@ export default function EditSectionModal({
               )}
 
             {activeSectionType === "Topbar" &&
-              activeTab === "Topbar Content" && (
+              activeTab === "Topbar Content" &&
+              !activeVariant.startsWith("CoolFix") && (
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] sm:p-5">
                     <div className="flex items-center justify-between gap-3">
@@ -6910,7 +7003,8 @@ export default function EditSectionModal({
 
             {activeSectionType === "Header" &&
               activeTab === "Header Content" &&
-              !activeVariant.startsWith("Plumbing") && (
+              !activeVariant.startsWith("Plumbing") &&
+              !activeVariant.startsWith("CoolFix") && (
                 <div className="space-y-5">
                   <div className="space-y-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] sm:p-5">
                     <h4 className="text-sm font-bold text-slate-900">
@@ -7294,7 +7388,8 @@ export default function EditSectionModal({
               )}
 
             {activeSectionType === "Banner" &&
-              activeTab === "Banner Content" && (
+              activeTab === "Banner Content" &&
+              !activeVariant.startsWith("CoolFix") && (
                 <div className="space-y-4">
                   {petBannerSlides.length > 0 && (
                     <div className="space-y-3">
@@ -8816,7 +8911,7 @@ export default function EditSectionModal({
                 </div>
               )}
 
-            {([
+            {(([
               "Breadcrumb",
               "About",
               "Service",
@@ -8872,6 +8967,8 @@ export default function EditSectionModal({
                   "RefundPolicy",
                   "TestimonialPage",
                 ].includes(activeSectionType)) ||
+              (activeVariant.startsWith("CoolFix") &&
+                activeTab.endsWith("Content")) ||
               (activeVariant.startsWith("Pet") &&
                 activeTab.endsWith("Content") &&
                 ![
@@ -8889,7 +8986,7 @@ export default function EditSectionModal({
                   "Testimonial",
                   "Blog",
                 ].includes(activeSectionType))) &&
-              activeTab.endsWith("Content") && (
+              activeTab.endsWith("Content")) && (
                 <div className="space-y-5">
                   {visibleGenericContentEntries.map(([key, value]) => (
                     <GenericFieldEditor
@@ -9126,7 +9223,8 @@ export default function EditSectionModal({
 
             {activeSectionType === "Footer" &&
               activeTab === "Footer Content" &&
-              !activeVariant.startsWith("Plumbing") && (
+              !activeVariant.startsWith("Plumbing") &&
+              !activeVariant.startsWith("CoolFix") && (
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h3 className="text-xs font-semibold text-slate-800">Footer logo</h3>
@@ -9339,6 +9437,7 @@ export default function EditSectionModal({
               )}
 
             {activeTab.endsWith("Content") &&
+              !activeVariant.startsWith("CoolFix") &&
               activeSectionType !== "Topbar" &&
               activeSectionType !== "Header" &&
               automaticContentFields.filter((field) => {

@@ -18,6 +18,8 @@
     "db:setup": "npm run db:create && npm run db:migrate-admin && prisma db push --accept-data-loss && prisma generate",
     "db:seed:categories": "node prisma/seed-categories.js",
     "db:seed:layouts": "node prisma/seed-layouts.js",
+    "db:seed:coolfix-layouts": "node prisma/seed-coolfix-layouts.js",
+    "db:seed:coolfix-template": "node prisma/seed-coolfix-template.js",
     "db:seed:realestate-layouts": "node prisma/seed-realestate-layouts.js",
     "db:seed:industry-layouts": "node prisma/seed-industry-layouts.js",
     "db:seed:templates": "node prisma/seed-templates.js",

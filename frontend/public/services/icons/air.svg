@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="214" height="214" viewBox="57 41 214 214" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="96" y1="64" x2="222" y2="222" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF5FF"/>
+      <stop offset="1" stop-color="#DCEEFF"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="213" y1="61" x2="245" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6B00"/>
+      <stop offset="1" stop-color="#F04A00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- soft circular icon background -->
+  <circle cx="164" cy="148" r="78" fill="url(#bg)"/>
+
+  <!-- 04 badge -->
+  <circle cx="229" cy="85" r="27" fill="url(#orange)"/>
+  <text x="229" y="93.5" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="23" font-weight="900" fill="white">04</text>
+
+  <!-- AC body -->
+  <path d="M121 119.5C121 115.91 123.91 113 127.5 113H201.5C205.09 113 208 115.91 208 119.5V158.5C208 162.09 205.09 165 201.5 165H127.5C123.91 165 121 162.09 121 158.5V119.5Z" fill="white" stroke="#075FEA" stroke-width="4.5"/>
+
+  <!-- lower AC panel -->
+  <path d="M121 146H208V158.5C208 162.09 205.09 165 201.5 165H127.5C123.91 165 121 162.09 121 158.5V146Z" fill="white" stroke="#0B2B5E" stroke-width="4"/>
+
+  <!-- display / details -->
+  <rect x="133" y="153" width="15" height="2.5" rx="1.25" fill="#214A88"/>
+  <rect x="187" y="141" width="8" height="3" rx="1.5" fill="#214A88"/>
+
+  <!-- airflow / heat lines -->
+  <path d="M139 172C139 178 134 179 134 185C134 189 136 191 136 195" stroke="#FF5A00" stroke-width="4" stroke-linecap="round"/>
+  <path d="M153 171C153 177 148 179 148 185C148 189 151 191 151 196" stroke="#FF6A00" stroke-width="4" stroke-linecap="round"/>
+  <path d="M168 171C168 177 163 179 163 185C163 189 166 191 166 196" stroke="#F4511E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M183 171C183 177 178 179 178 185C178 189 181 191 181 195" stroke="#FF6A00" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- small side tabs -->
+  <path d="M126 164V171" stroke="#0B2B5E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M201 164V171" stroke="#0B2B5E" stroke-width="4" stroke-linecap="round"/>
+</svg>

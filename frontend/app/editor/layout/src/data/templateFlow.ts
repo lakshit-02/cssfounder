@@ -165,6 +165,7 @@ export async function refreshCategoryContentFromApi(signal?: AbortSignal) {
 
 const plumbingVariants = new Map<string, Record<string, unknown>>();
 const petVariants = new Map<string, Record<string, unknown>>();
+const coolfixVariants = new Map<string, Record<string, unknown>>();
 const industrySections =
   (
     categoryContentJson as {
@@ -205,6 +206,37 @@ for (const pack of Object.values(petSections)) {
   }
 }
 
+const coolfixSections =
+  (
+    categoryContentJson as {
+      categories?: {
+        Services?: {
+          sections?: Record<string, { variants?: Record<string, unknown> }>;
+        };
+      };
+    }
+  ).categories?.Services?.sections || {};
+for (const pack of Object.values(coolfixSections)) {
+  const variants = pack?.variants;
+  if (!variants) continue;
+  for (const [key, value] of Object.entries(variants)) {
+    if (
+      key.startsWith("CoolFix") &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      coolfixVariants.set(key, value as Record<string, unknown>);
+    }
+  }
+}
+if (!coolfixVariants.has("CoolFixGalleryPage1") && coolfixVariants.has("CoolFixGallery1")) {
+  coolfixVariants.set("CoolFixGalleryPage1", coolfixVariants.get("CoolFixGallery1")!);
+}
+if (!coolfixVariants.has("CoolFixServicePage1") && coolfixVariants.has("CoolFixService1")) {
+  coolfixVariants.set("CoolFixServicePage1", coolfixVariants.get("CoolFixService1")!);
+}
+
 /** Local multi-page pet theme. The content bundle only lists the single-page starter. */
 const localPetTemplateIds: string[] = (
   (
@@ -215,6 +247,121 @@ const localPetTemplateIds: string[] = (
 ).filter((id): id is string => typeof id === "string" && id.length > 0);
 
 export const PLUMBING_TEMPLATE_ID = "template-plumbing-1";
+const isEmptyCoolFixValue = (value: unknown) => {
+  if (value == null || value === "") return true;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === "object") return Object.keys(value as object).length === 0;
+  return false;
+};
+
+const mergeCoolFixContent = (
+  base: Record<string, unknown>,
+  stored?: Record<string, unknown>,
+): Record<string, unknown> => {
+  if (!stored) return { ...base };
+  const out: Record<string, unknown> = { ...base };
+  for (const [key, value] of Object.entries(stored)) {
+    if (isEmptyCoolFixValue(value)) continue;
+    if (key === "menu" && Array.isArray(value) && value.length <= 1) continue;
+    const current = base[key];
+    if (
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      current &&
+      typeof current === "object" &&
+      !Array.isArray(current)
+    ) {
+      out[key] = mergeCoolFixContent(
+        current as Record<string, unknown>,
+        value as Record<string, unknown>,
+      );
+      continue;
+    }
+    out[key] = value;
+  }
+  return out;
+};
+
+/** CoolFix canvas content lives in categoryContent.json. Empty drafts fall back to it. */
+export const withCoolFixContent = (
+  variant: string,
+  stored: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined => {
+  if (!variant.startsWith("CoolFix")) return stored;
+  const base = coolfixVariants.get(variant);
+  if (!base) return stored;
+  const overlap =
+    stored &&
+    Object.keys(base).some(
+      (key) => key in stored && !isEmptyCoolFixValue(stored[key]),
+    );
+  if (!overlap) return { ...base };
+  return mergeCoolFixContent(base, stored);
+};
+
+export const COOLFIX_TEMPLATE_ID = "template-coolfix-1";
+
+const coolFixTemplate: BuilderTemplate = {
+  id: COOLFIX_TEMPLATE_ID,
+  numericId: 9201,
+  title: "CoolFix",
+  type: "Multiple Pages Website",
+  image: "/services/images/image_01.jpg",
+  previewimage: "/services/images/image_01.jpg",
+  preview_description: "AC Repair & Services website",
+  prebuilt_pages: 6,
+  variables: {
+    "--font-body": '"Geist", Arial, Helvetica, sans-serif',
+    "--font-heading": '"Geist", Arial, Helvetica, sans-serif',
+    fontFamily: '"Geist", Arial, Helvetica, sans-serif',
+  },
+  homeSectionOrder: [
+    "Topbar",
+    "Header",
+    "Banner",
+    "HowWeWork",
+    "About",
+    "Service",
+    "Stats",
+    "Testimonial",
+    "CTA",
+    "Highlights",
+    "Footer",
+  ],
+  pages: [
+    { id: "about-us",       label: "About",           sectionType: "AboutPage" },
+    { id: "services",       label: "Services",         sectionType: "ServicePage" },
+    { id: "service-detail", label: "Service Detail",   sectionType: "ServiceDetailPage" },
+    { id: "gallery",        label: "Gallery",          sectionType: "GalleryPage" },
+    { id: "contact-us",     label: "Contact",          sectionType: "ContactPage" },
+    { id: "get-a-quote",    label: "Get a Quote",      sectionType: "GetQuotePage" },
+    { id: "book-service",   label: "Book Service",     sectionType: "BookServicePage" },
+  ],
+  sectionVariants: {
+    Topbar:            "CoolFixTopbar1",
+    Header:            "CoolFixHeader1",
+    Banner:            "CoolFixBanner1",
+    Stats:             "CoolFixStats1",
+    About:             "CoolFixAbout1",
+    AboutPage:         "CoolFixAboutPage1",
+    Service:           "CoolFixService1",
+    ServicePage:       "CoolFixServicePage1",
+    ServiceDetailPage: "CoolFixServiceDetailPage1",
+    WhyChooseUs:       "CoolFixWhyChooseUs1",
+    Highlights:        "CoolFixHighlights1",
+    HowWeWork:         "CoolFixHowWeWork1",
+    CTA:               "CoolFixCTA1",
+    Testimonial:       "CoolFixTestimonial1",
+    Gallery:           "CoolFixGallery1",
+    GalleryPage:       "CoolFixGalleryPage1",
+    ContactPage:       "CoolFixContactPage1",
+    GetQuotePage:      "CoolFixGetQuote1",
+    BookServicePage:   "CoolFixBookService1",
+    Footer:            "CoolFixFooter1",
+  },
+  status: "Active",
+};
 
 const plumbingTemplate: BuilderTemplate = {
   id: PLUMBING_TEMPLATE_ID,
@@ -297,8 +444,12 @@ export const isServiceProviderProfessionalCategory = (
 
 export const getBuilderTemplates = () => {
   const templates = categoryContent.templates;
-  if (templates.some((item) => item.id === plumbingTemplate.id)) return templates;
-  return [...templates, plumbingTemplate];
+  const withPlumbing = templates.some((item) => item.id === plumbingTemplate.id)
+    ? templates
+    : [...templates, plumbingTemplate];
+  return withPlumbing.some((item) => item.id === coolFixTemplate.id)
+    ? withPlumbing
+    : [...withPlumbing, coolFixTemplate];
 };
 
 /** @deprecated Prefer getBuilderTemplates() — kept for compatibility */
@@ -330,13 +481,26 @@ export const getTemplatesForCategory = (
   websiteRelated?: string | null,
 ) => {
   if (isServiceProviderProfessionalCategory(category, websiteRelated)) {
-    return [plumbingTemplate];
+    return [plumbingTemplate, coolFixTemplate];
   }
   const templateIds = [...getTemplateIdsForCategory(category)];
   if (category.trim().toLowerCase() === "pet services") {
     for (const id of localPetTemplateIds) {
       if (!templateIds.includes(id)) templateIds.push(id);
     }
+  }
+  // Include coolfix for AC / HVAC categories
+  const catLower = category.trim().toLowerCase().replace(/[_-]+/g, " ");
+  if (
+    catLower === "ac services" ||
+    catLower === "hvac" ||
+    catLower === "coolfix" ||
+    catLower === "air conditioning"
+  ) {
+    const templates = getBuilderTemplates().filter(
+      (t) => !t.status || t.status === "Active",
+    );
+    return templates.filter((t) => t.id === COOLFIX_TEMPLATE_ID);
   }
   const templates = getBuilderTemplates().filter(
     (template) => !template.status || template.status === "Active",
@@ -706,6 +870,10 @@ const mergeCategoryData = (
 
   let nextData = Object.fromEntries(
     Object.keys(section.data).map((variant) => {
+      const coolfix = variant.startsWith("CoolFix")
+        ? coolfixVariants.get(variant)
+        : undefined;
+      if (coolfix) return [variant, coolfix as SectionData];
       const plumbing = variant.startsWith("Plumbing")
         ? plumbingVariants.get(variant)
         : undefined;
@@ -1190,6 +1358,19 @@ export const createAddableSection = (
 };
 
 export const createAboutPageSection = (category: string): SectionItem => {
+  // CoolFix (Services) uses its own AboutPage component
+  if (category === "Services") {
+    return {
+      id: "AboutPage",
+      page: "about",
+      type: "About",
+      variant: "CoolFixAboutPage1",
+      data: {
+        "CoolFixAboutPage1": {} as SectionData,
+      },
+    };
+  }
+
   const commonPack = categoryContent.common.AboutPage as
     | Record<string, unknown>
     | undefined;
@@ -1792,9 +1973,14 @@ const MANAGER_THEME_LOCK_TYPES = new Set([
   "BlogPage",
 ]);
 
-/** Honor editor layout picks. Only block manager 1-4 from replacing a premium -5+ skin. */
+const isDedicatedThemeVariant = (variant: string) =>
+  variant.startsWith("Pet") ||
+  variant.startsWith("CoolFix") ||
+  variant.startsWith("Plumbing");
+
+/** Honor editor layout picks. Dedicated theme skins (Pet, CoolFix, Plumbing) stay locked. */
 export const resolveTemplateSectionVariant = (
-  section: { type?: string; id?: string; variant: string },
+  section: { type?: string; id?: string; variant: string; page?: string },
   template?: { sectionVariants?: Record<string, string> } | null,
 ) => {
   const current = section.variant;
@@ -1802,11 +1988,32 @@ export const resolveTemplateSectionVariant = (
   if (!variants) return current;
   const type = String(section.type || "");
   const id = String(section.id || "");
-  const expected =
-    variants[type] ||
-    variants[id] ||
-    variants[TEMPLATE_VARIANT_ALIAS[type] || ""] ||
-    variants[TEMPLATE_VARIANT_ALIAS[id] || ""];
+  const bareId = id.replace(/-\d+$/, "");
+  const pageScoped = Boolean(String(section.page || "").trim());
+  const fromAlias = (key: string) =>
+    variants[TEMPLATE_VARIANT_ALIAS[key] || ""] || "";
+  // Inner About is stored as type "About" (same as home). Prefer AboutPage
+  // so a stale AboutPage-1 does not beat CoolFixAboutPage1.
+  const aboutPageVariant =
+    pageScoped &&
+    (type === "About" || type === "AboutPage" || bareId === "AboutPage")
+      ? variants.AboutPage || ""
+      : "";
+  const expected = pageScoped
+    ? aboutPageVariant ||
+      variants[id] ||
+      variants[bareId] ||
+      fromAlias(type) ||
+      fromAlias(id) ||
+      fromAlias(bareId) ||
+      ""
+    : variants[type] ||
+      variants[id] ||
+      variants[bareId] ||
+      fromAlias(type) ||
+      fromAlias(id) ||
+      fromAlias(bareId) ||
+      "";
   if (!expected) return current;
   if (!current || current === expected) return expected;
 
@@ -1819,7 +2026,7 @@ export const resolveTemplateSectionVariant = (
   ) {
     return expected;
   }
-  if (expected.startsWith("Pet")) return expected;
+  if (isDedicatedThemeVariant(expected)) return expected;
   return current;
 };
 
@@ -2051,6 +2258,8 @@ const SECTION_ORDER_PREVIEW = [
   "CookiePolicyPage",
   "RefundPolicyPage",
   "CustomPage",
+  "CTA",
+  "Highlights",
   "Footer",
 ] as const;
 
@@ -2094,7 +2303,7 @@ const PAGE_SHELL_TYPES_FOR_BREADCRUMB = new Set([
 
 /** Theme skins that already embed a banner must not also render a leftover Breadcrumb. */
 export function dropExtraPageBreadcrumbs<
-  T extends { type?: string; id?: string; variant?: string },
+  T extends { type?: string; id?: string; variant?: string; page?: string },
 >(
   sections: T[],
   template?: { sectionVariants?: Record<string, string> } | null,
@@ -2108,18 +2317,34 @@ export function dropExtraPageBreadcrumbs<
       pageBodyHasOwnBreadcrumb(variant) ||
       pageBodyHasOwnBreadcrumb(
         resolveTemplateSectionVariant(
-          { type: section.type, id: section.id, variant },
+          {
+            type: section.type,
+            id: section.id,
+            variant,
+            page: section.page,
+          },
           template,
         ),
       )
     );
   });
   if (!bodyHasOwn) return sections;
-  return sections.filter(
-    (section) =>
-      section.type !== "Breadcrumb" &&
-      !String(section.variant || "").startsWith("Breadcrumb-"),
-  );
+  return sections.filter((section) => {
+    if (
+      section.type === "Breadcrumb" ||
+      String(section.variant || "").startsWith("Breadcrumb-")
+    ) {
+      return false;
+    }
+    // CoolFix/Pet about pages already include their own stats and CTA.
+    if (
+      (section.type === "Stats" || section.type === "CTA") &&
+      String(section.page || "").trim()
+    ) {
+      return false;
+    }
+    return true;
+  });
 }
 
 /** Keep Topbar/Header first and Footer last so page bodies never render after the footer. */
@@ -2340,7 +2565,9 @@ function pageVariantsFor(
   if (pageBodyType && pageBodyKey) {
     if (source.Topbar) next.Topbar = source.Topbar;
     if (source.Header) next.Header = source.Header;
-    next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
+    if (!pageBodyHasOwnBreadcrumb(pageBodyKey)) {
+      next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
+    }
     next[pageBodyType] = pageBodyKey;
     if (pageBodyType === "MissionPage") {
       next.MissionValues = source.MissionValues || "MissionValues-5";
@@ -2351,15 +2578,40 @@ function pageVariantsFor(
     if (pageBodyType === "CareerPage") {
       next.CareerJobs = source.CareerJobs || "CareerJobs-5";
     }
-    if (pageBodyType === "AboutPage" && !String(pageBodyKey || "").startsWith("Pet")) {
+    if (
+      pageBodyType === "AboutPage" &&
+      !String(pageBodyKey || "").startsWith("CoolFix") &&
+      !pageBodyHasOwnBreadcrumb(pageBodyKey)
+    ) {
       next.Stats = source.Stats || "Stats-5";
       next.CTA = source.CTA || "CTA-5";
+    }
+    if (pageBodyKey === "CoolFixServicePage1") {
+      next.CTA = source.CTA || "CoolFixCTA1";
+      next.Highlights = source.Highlights || "CoolFixHighlights1";
+    }
+    if (pageBodyKey === "CoolFixGalleryPage1") {
+      next.CTA = source.CTA || "CoolFixCTA1";
     }
     if (source.Footer) next.Footer = source.Footer;
     return next;
   }
-  const order =
-    Array.isArray(homeSectionOrder) && homeSectionOrder.length
+  const coolFixHome = String(source.Header || "").startsWith("CoolFix");
+  const order = coolFixHome
+    ? [
+        "Topbar",
+        "Header",
+        "Banner",
+        "HowWeWork",
+        "About",
+        "Service",
+        "Stats",
+        "Testimonial",
+        "CTA",
+        "Highlights",
+        "Footer",
+      ]
+    : Array.isArray(homeSectionOrder) && homeSectionOrder.length
       ? homeSectionOrder
       : [...HOME_SECTIONS_PREVIEW];
   for (const section of order) {
@@ -2486,6 +2738,15 @@ export const resolveLayoutPreview = (
   variantKey: string,
   category: string = "Business",
 ): { sectionType: string; data: SectionData } | null => {
+  if (variantKey.startsWith("CoolFix")) {
+    const coolfix = coolfixVariants.get(variantKey);
+    if (coolfix) {
+      return {
+        sectionType: variantKey.replace(/\d+$/, "") || variantKey,
+        data: coolfix as SectionData,
+      };
+    }
+  }
   if (variantKey.startsWith("Plumbing")) {
     const plumbing = plumbingVariants.get(variantKey);
     if (plumbing) {
@@ -2769,7 +3030,10 @@ export const buildSelectedConfig = (
       }
       if (
         page.sectionType === "AboutPage" &&
-        !String(builderTemplate.sectionVariants.AboutPage || "").startsWith("Pet")
+        !String(variant || "").startsWith("CoolFix") &&
+        !pageBodyHasOwnBreadcrumb(
+          String(builderTemplate.sectionVariants.AboutPage || ""),
+        )
       ) {
         const statsVariant =
           builderTemplate.sectionVariants.Stats || "Stats-5";
@@ -2787,6 +3051,29 @@ export const buildSelectedConfig = (
           },
         });
         const ctaVariant = builderTemplate.sectionVariants.CTA || "CTA-5";
+        companions.push({
+          ...makeSection("CTA", ctaVariant),
+          id: `CTA-${page.id}`,
+          page: page.id,
+        });
+      }
+      if (variant === "CoolFixServicePage1") {
+        const ctaVariant = builderTemplate.sectionVariants.CTA || "CoolFixCTA1";
+        companions.push({
+          ...makeSection("CTA", ctaVariant),
+          id: `CTA-${page.id}`,
+          page: page.id,
+        });
+        const highlightsVariant =
+          builderTemplate.sectionVariants.Highlights || "CoolFixHighlights1";
+        companions.push({
+          ...makeSection("Highlights", highlightsVariant),
+          id: `Highlights-${page.id}`,
+          page: page.id,
+        });
+      }
+      if (variant === "CoolFixGalleryPage1") {
+        const ctaVariant = builderTemplate.sectionVariants.CTA || "CoolFixCTA1";
         companions.push({
           ...makeSection("CTA", ctaVariant),
           id: `CTA-${page.id}`,

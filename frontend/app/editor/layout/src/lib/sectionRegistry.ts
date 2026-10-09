@@ -194,6 +194,28 @@ import PetServiceDetails1 from "../components/sections/service/PetServiceDetails
 import PetTeamDetails1 from "../components/sections/team/PetTeamDetails1";
 import PetServiceAreaDetails1 from "../components/sections/service-location/PetServiceAreaDetails1";
 
+// CoolFix – AC Repair & Services template
+import CoolFixTopbar1 from "../components/sections/topbar/CoolFixTopbar1";
+import CoolFixHeader1 from "../components/sections/header/CoolFixHeader1";
+import CoolFixBanner1 from "../components/sections/banner/CoolFixBanner1";
+import CoolFixStats1 from "../components/sections/stats/CoolFixStats1";
+import CoolFixAbout1 from "../components/sections/about/CoolFixAbout1";
+import CoolFixAboutPage1 from "../components/sections/about/CoolFixAboutPage1";
+import CoolFixService1 from "../components/sections/service/CoolFixService1";
+import CoolFixServicePage1 from "../components/sections/service/CoolFixServicePage1";
+import CoolFixServiceDetailPage1 from "../components/sections/service/CoolFixServiceDetailPage1";
+import CoolFixWhyChooseUs1 from "../components/sections/whychooseus/CoolFixWhyChooseUs1";
+import CoolFixHighlights1 from "../components/sections/highlight/CoolFixHighlights1";
+import CoolFixHowWeWork1 from "../components/sections/process/CoolFixHowWeWork1";
+import CoolFixCTA1 from "../components/sections/cta/CoolFixCTA1";
+import CoolFixTestimonial1 from "../components/sections/testimonial/CoolFixTestimonial1";
+import CoolFixGallery1 from "../components/sections/gallery/CoolFixGallery1";
+import CoolFixGalleryPage1 from "../components/sections/gallery/CoolFixGalleryPage1";
+import CoolFixContactPage1 from "../components/sections/contact/CoolFixContactPage1";
+import CoolFixBookService1 from "../components/sections/form/CoolFixBookService1";
+import CoolFixGetQuote1 from "../components/sections/form/CoolFixGetQuote1";
+import CoolFixFooter1 from "../components/sections/footer/CoolFixFooter1";
+
 import { SectionProps } from "../types/section";
 
 /**
@@ -539,6 +561,49 @@ export const sectionRegistry: Record<string, ComponentType<SectionProps>> = {
   PetServiceDetails1,
   PetTeamDetails1,
   PetServiceAreaDetails1,
+
+  // ── CoolFix – AC Repair & Services ──────────────────────────────────
+  "CoolFixTopbar1": CoolFixTopbar1,
+  "CoolFixHeader1": CoolFixHeader1,
+  "CoolFixBanner1": CoolFixBanner1,
+  "CoolFixStats1": CoolFixStats1,
+  "CoolFixAbout1": CoolFixAbout1,
+  "CoolFixAboutPage1": CoolFixAboutPage1,
+  "CoolFixService1": CoolFixService1,
+  "CoolFixServicePage1": CoolFixServicePage1,
+  "CoolFixServiceDetailPage1": CoolFixServiceDetailPage1,
+  "CoolFixWhyChooseUs1": CoolFixWhyChooseUs1,
+  "CoolFixHighlights1": CoolFixHighlights1,
+  "CoolFixHowWeWork1": CoolFixHowWeWork1,
+  "CoolFixCTA1": CoolFixCTA1,
+  "CoolFixTestimonial1": CoolFixTestimonial1,
+  "CoolFixGallery1": CoolFixGallery1,
+  "CoolFixGalleryPage1": CoolFixGalleryPage1,
+  "CoolFixContactPage1": CoolFixContactPage1,
+  "CoolFixBookService1": CoolFixBookService1,
+  "CoolFixGetQuote1": CoolFixGetQuote1,
+  "CoolFixFooter1": CoolFixFooter1,
+  // shorthand exports
+  CoolFixTopbar1,
+  CoolFixHeader1,
+  CoolFixBanner1,
+  CoolFixStats1,
+  CoolFixAbout1,
+  CoolFixAboutPage1,
+  CoolFixService1,
+  CoolFixServicePage1,
+  CoolFixServiceDetailPage1,
+  CoolFixWhyChooseUs1,
+  CoolFixHighlights1,
+  CoolFixHowWeWork1,
+  CoolFixCTA1,
+  CoolFixTestimonial1,
+  CoolFixGallery1,
+  CoolFixGalleryPage1,
+  CoolFixContactPage1,
+  CoolFixBookService1,
+  CoolFixGetQuote1,
+  CoolFixFooter1,
 };
 
 export function resolveSectionComponent(

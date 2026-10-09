@@ -134,6 +134,8 @@ const SECTION_ORDER = [
   "InvestmentOpportunities",
   "CountriesServe",
   ...PAGE_SECTIONS,
+  "CTA",
+  "Highlights",
   "Footer",
 ];
 
@@ -1112,11 +1114,32 @@ const TemplatesPage = () => {
       if (source.Header) next.Header = source.Header;
       next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
       next[pageBodyType] = pageBodyKey;
+      if (pageBodyKey === "CoolFixServicePage1") {
+        next.CTA = source.CTA || "CoolFixCTA1";
+        next.Highlights = source.Highlights || "CoolFixHighlights1";
+      }
+      if (pageBodyKey === "CoolFixGalleryPage1") {
+        next.CTA = source.CTA || "CoolFixCTA1";
+      }
       if (source.Footer) next.Footer = source.Footer;
       return next;
     }
-    const order =
-      Array.isArray(homeSectionOrder) && homeSectionOrder.length
+    const coolFixHome = String(source.Header || "").startsWith("CoolFix");
+    const order = coolFixHome
+      ? [
+          "Topbar",
+          "Header",
+          "Banner",
+          "HowWeWork",
+          "About",
+          "Service",
+          "Stats",
+          "Testimonial",
+          "CTA",
+          "Highlights",
+          "Footer",
+        ]
+      : Array.isArray(homeSectionOrder) && homeSectionOrder.length
         ? homeSectionOrder
         : HOME_SECTIONS;
     for (const section of order) {
