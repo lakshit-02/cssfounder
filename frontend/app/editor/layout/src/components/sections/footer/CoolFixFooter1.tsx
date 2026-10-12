@@ -4,6 +4,8 @@
 import React from "react";
 import Image from "next/image";
 import type { SectionProps } from "../../../types/section";
+import { useOptionalPreview } from "../../context/PreviewContext";
+import { filterMenuByHiddenPageLinks } from "../../../lib/navVisibility";
 function SocialSvg({ name }: { name: string }) {
   if (name === "facebook") return <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" /></svg>;
   if (name === "instagram") return <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2z" /></svg>;
@@ -19,13 +21,17 @@ function ContactIcon({ name }: { name: string }) {
 }
 
 function FooterSection({ data }: { data?: any }) {
+  const preview = useOptionalPreview();
   const raw = data ?? {};
   const f = {
     logo: raw?.logo ?? {},
     description: raw?.description ?? "",
     socials: Array.isArray(raw?.socials) ? raw.socials : [],
     titles: raw?.titles ?? {},
-    quickLinks: Array.isArray(raw?.quickLinks) ? raw.quickLinks : [],
+    quickLinks: filterMenuByHiddenPageLinks(
+      Array.isArray(raw?.quickLinks) ? raw.quickLinks : [],
+      preview?.pageLinks,
+    ),
     services: Array.isArray(raw?.services) ? raw.services : [],
     contacts: Array.isArray(raw?.contacts) ? raw.contacts : [],
     copyright: raw?.copyright ?? "",

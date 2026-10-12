@@ -2044,7 +2044,10 @@ export const resolveTemplateSectionVariant = (
   ) {
     return expected;
   }
-  if (isDedicatedThemeVariant(expected)) return expected;
+  if (isDedicatedThemeVariant(expected)) {
+    if (!current || isDedicatedThemeVariant(current)) return expected;
+    return current;
+  }
   return current;
 };
 

@@ -807,12 +807,14 @@ const isServicesPageLink = (link: {
   return (
     slug === "services" ||
     slug === "service" ||
+    slug === "our-services" ||
     href === "#page-service" ||
     href === "#page-services" ||
     href === "#service" ||
     href === "#services" ||
     (link.label || "").trim().toLowerCase() === "service" ||
-    (link.label || "").trim().toLowerCase() === "services"
+    (link.label || "").trim().toLowerCase() === "services" ||
+    (link.label || "").trim().toLowerCase() === "our services"
   );
 };
 
@@ -9903,6 +9905,53 @@ function EditorPage({
     const timeout = window.setTimeout(() => setDraftReady(true), 400);
     return () => window.clearTimeout(timeout);
   }, [pageLinks, sections, templateId, category, isRedesignOpen, redesignPageType]);
+
+  useEffect(() => {
+    const template = getBuilderTemplate(templateId, category);
+    if (template?.sectionVariants?.Header !== "CoolFixHeader1") return;
+
+    setPageLinks((current) => {
+      let changed = false;
+      const next = current.map((link) => {
+        if (
+          (isBlogIndexPageLink(link) || isTeamPageLink(link)) &&
+          link.hidden !== true
+        ) {
+          changed = true;
+          return { ...link, hidden: true };
+        }
+        return link;
+      });
+      return changed ? next : current;
+    });
+
+    setSections((current) => {
+      let changed = false;
+      const next = current.map((section) => {
+        if (section.type !== "Header" || !section.data) return section;
+        let sectionChanged = false;
+        const nextData = Object.fromEntries(
+          Object.entries(section.data).map(([variant, variantData]) => {
+            if (!variantData || typeof variantData !== "object") {
+              return [variant, variantData];
+            }
+            const data = variantData as SectionData;
+            if (!Array.isArray(data.menu)) return [variant, variantData];
+            const menu = (data.menu as EditorPageLink[]).filter(
+              (link) => !isBlogIndexPageLink(link) && !isTeamPageLink(link),
+            );
+            if (menu.length === data.menu.length) return [variant, variantData];
+            sectionChanged = true;
+            return [variant, { ...data, menu }];
+          }),
+        ) as SectionItem["data"];
+        if (!sectionChanged) return section;
+        changed = true;
+        return { ...section, data: nextData };
+      });
+      return changed ? next : current;
+    });
+  }, [templateId, category, pageLinks, sections, setPageLinks, setSections]);
 
   useEffect(() => {
     const nextPageLinks = normalizeEditorPageLinks(

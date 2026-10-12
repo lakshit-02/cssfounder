@@ -835,7 +835,7 @@ const sidebarItemsBySection: Record<string, string[]> = {
 };
 
 const componentContentFieldsByVariant: Record<string, string[]> = {
-  "Breadcrumb-1": ["pretitle", "homeLabel", "title"],
+  "Breadcrumb-1": ["pretitle", "homeLabel", "title", "backgroundImage"],
   "Breadcrumb-2": ["homeLabel", "title", "desc", "breadcrumbBackgroundColor", "breadcrumbTextColor"],
   "Breadcrumb-3": ["pretitle", "homeLabel", "title", "desc", "backgroundImage", "backgroundImageTitle"],
   "Breadcrumb-4": ["homeLabel", "title", "desc", "breadcrumbBackgroundColor", "breadcrumbTextColor"],
@@ -4206,11 +4206,21 @@ export default function EditSectionModal({
       ) {
         breadcrumbEntries.push(["desc2", ""]);
       }
+      if (
+        activeVariant === "Breadcrumb-1" &&
+        !breadcrumbEntries.some(([field]) => field === "backgroundImage")
+      ) {
+        breadcrumbEntries.push([
+          "backgroundImage",
+          "/services/images/page-header-bg.jpg",
+        ]);
+      }
       return sortObjectEntriesByPreferredOrder(breadcrumbEntries, [
         "pretitle",
         "title",
         "desc",
         "desc2",
+        "backgroundImage",
       ]);
     }
     if (activeSectionType === "Stats") {
@@ -4808,7 +4818,23 @@ export default function EditSectionModal({
     ? databaseLayoutOptions
     : fallbackLayoutOptions;
   const activeLayoutId = currentSection?.variant;
-  const layoutOptions: LayoutOption[] = [...unorderedLayoutOptions].sort(
+  const originLayoutId = Object.keys(currentSection?.data || {}).find(
+    (key) =>
+      key.startsWith("CoolFix") &&
+      key.toLowerCase().includes(activeSectionType.toLowerCase()),
+  );
+  const layoutOptionsWithOrigin: LayoutOption[] =
+    originLayoutId &&
+    !unorderedLayoutOptions.some((layout) => layout.id === originLayoutId)
+      ? [
+          {
+            id: originLayoutId,
+            name: "Original",
+          },
+          ...unorderedLayoutOptions,
+        ]
+      : unorderedLayoutOptions;
+  const layoutOptions: LayoutOption[] = [...layoutOptionsWithOrigin].sort(
     (left, right) => {
       if (left.id === activeLayoutId) return -1;
       if (right.id === activeLayoutId) return 1;
@@ -5597,9 +5623,13 @@ export default function EditSectionModal({
   };
 
   const selectSectionVariant = (variant: string) => {
+    const isThemeSkin =
+      /^(CoolFix|Pet|Plumbing)/.test(variant) &&
+      variant.toLowerCase().includes(activeSectionType.toLowerCase());
     const isAllowedVariant =
       variant.startsWith(`${activeSectionType}-`) ||
-      (isPageSection && variant.startsWith(`${activeSectionType}Page-`));
+      (isPageSection && variant.startsWith(`${activeSectionType}Page-`)) ||
+      isThemeSkin;
 
     if (!isAllowedVariant) return;
 

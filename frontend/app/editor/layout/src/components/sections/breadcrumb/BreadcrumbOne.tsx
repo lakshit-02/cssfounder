@@ -6,9 +6,22 @@ export default function BreadcrumbOne({ data = {} }: SectionProps) {
   const homeLabel = String(data.homeLabel || "Home");
   const parentLabel = String(data.parentLabel || "").trim();
   const pretitle = String(data.pretitle || "");
+  const backgroundImage = String(data.backgroundImage || "").trim();
 
   return (
-    <section className="cf-page-crumb border-b border-slate-200 bg-slate-50">
+    <section
+      className="cf-page-crumb border-b border-slate-200 bg-slate-50"
+      style={
+        backgroundImage
+          ? {
+              backgroundImage: `url("${backgroundImage}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : undefined
+      }
+    >
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-5 py-8 md:px-8">
         {pretitle ? (
           <p

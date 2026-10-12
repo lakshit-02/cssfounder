@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from "react";
 import type { SectionProps } from "../../../types/section";
 import { useOptionalPreview } from "../../context/PreviewContext";
+import { filterMenuByHiddenPageLinks } from "../../../lib/navVisibility";
 /* ─── Icons ──────────────────────────────────────── */
 const PhoneIcon = () => (
   <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -108,11 +109,26 @@ function resolveHeader(data: any) {
       : COOLFIX_LOGO;
   const logoAlt: string = typeof logo === "string" ? "CoolFix" : logo.alt ?? "CoolFix";
   const contacts = Array.isArray(data?.contacts) ? data.contacts : [];
-  const menu = (Array.isArray(data?.menu) ? data.menu : []).map((item: any) => {
+  const menu = (Array.isArray(data?.menu) ? data.menu : []).flatMap((item: any) => {
     const link = withCoolFixHref(item);
-    if (!link || typeof link !== "object") return link;
+    if (!link || typeof link !== "object") return [];
+    const label = String(link.label || "").trim().toLowerCase();
+    const href = String(link.href || "").trim().toLowerCase();
+    if (label === "service" || label === "services") return [];
+    if (
+      label === "blog" ||
+      label === "blogs" ||
+      label === "team" ||
+      label === "teams" ||
+      href === "#page-blog" ||
+      href === "#page-blogs" ||
+      href === "#page-team" ||
+      href === "#page-teams"
+    ) {
+      return [];
+    }
     const { children: _children, ...rest } = link;
-    return rest;
+    return [rest];
   });
   const cta = data?.cta ? withCoolFixHref(data.cta) : {};
   return { logoSrc, logoAlt, contacts, menu, cta };
@@ -120,8 +136,9 @@ function resolveHeader(data: any) {
 
 /* ─── Component ─────────────────────────────────── */
 function CoolFixHeaderSection({ data }: { data?: any }) {
-  const { logoSrc, logoAlt, contacts, menu, cta } = resolveHeader(data);
+  const { logoSrc, logoAlt, contacts, menu: sourceMenu, cta } = resolveHeader(data);
   const preview = useOptionalPreview();
+  const menu = filterMenuByHiddenPageLinks(sourceMenu, preview?.pageLinks);
   const currentPage = String(preview?.currentPage || "Home").trim().toLowerCase();
   const [menuOpen, setMenuOpen]         = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
