@@ -38,6 +38,17 @@ const SERVICE_ICON_PATHS: Record<string, string[]> = {
   ],
 };
 
+function openCoolFixServiceDetail(href?: string) {
+  const slug = String(href || "").split("/").filter(Boolean).pop() || "";
+  if (!slug || slug === "service-detail") return;
+  try {
+    sessionStorage.setItem("coolfix-service-slug", slug);
+  } catch {
+    /* ignore */
+  }
+  window.dispatchEvent(new CustomEvent("coolfix-service-slug", { detail: { slug } }));
+}
+
 function ServiceIcon({ name }: { name?: string }) {
   const paths = SERVICE_ICON_PATHS[name || ""] || SERVICE_ICON_PATHS.technician;
   return (
@@ -56,7 +67,17 @@ function ServicePageSection({ data }: { data?: any }) {
     heading:       raw?.heading       ?? {},
     description:   raw?.description   ?? "",
     readMoreLabel: raw?.readMoreLabel ?? "",
-    list:          Array.isArray(raw?.list) ? raw.list : [],
+    list:          Array.isArray(raw?.productItems) && raw.productItems.length
+      ? raw.productItems.map((item: any, index: number) => ({
+          id: item?.id ?? index + 1,
+          title: item?.title ?? "",
+          image: item?.image ?? "",
+          icon: item?.icon || "technician",
+          href: item?.slug
+            ? `/service-details/${item.slug}`
+            : item?.href || "#",
+        }))
+      : Array.isArray(raw?.list) ? raw.list : [],
   };
 
   return (
@@ -79,7 +100,12 @@ function ServicePageSection({ data }: { data?: any }) {
           {/* Services Grid */}
           <div className="grid grid-cols-4 gap-6">
             {s.list.map((svc: any, i: number) => (
-              <a key={svc.id ?? i} href={svc.href ?? "#"} className="group/item flex h-auto flex-col">
+              <a
+                key={svc.id ?? i}
+                href="#page-service-detail"
+                onClick={() => openCoolFixServiceDetail(svc.href)}
+                className="group/item flex h-auto flex-col"
+              >
                 <article className="relative flex flex-1 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
                   <div className="relative aspect-[4/3] overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -10,7 +10,12 @@ function GallerySection({ data }: { data?: any }) {
     badge:         raw?.badge         ?? "",
     heading:       raw?.heading       ?? {},
     description:   raw?.description   ?? "",
-    photos:        Array.isArray(raw?.photos) ? raw.photos : [],
+    photos:        Array.isArray(raw?.galleryItems) && raw.galleryItems.length
+      ? raw.galleryItems
+          .filter((item: { active?: boolean }) => item?.active !== false)
+          .map((item: { image?: string }) => item?.image)
+          .filter(Boolean)
+      : Array.isArray(raw?.photos) ? raw.photos : [],
     initialCount:  raw?.initialCount  ?? 9,
     loadMoreCount: raw?.loadMoreCount ?? 3,
     loadMoreBtn:   raw?.loadMoreBtn   ?? "",

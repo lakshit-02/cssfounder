@@ -814,6 +814,13 @@ const sidebarItemsBySection: Record<string, string[]> = {
   ContactPage: ["ContactPage Content", "ContactPage Layout"],
   Stats: ["Stats Content", "Stats Layout"],
   CTA: ["CTA Content", "CTA Layout"],
+  Highlights: ["Highlights Content"],
+  GetQuote: ["GetQuote Content"],
+  BookService: ["BookService Content"],
+  AboutPage: ["AboutPage Content"],
+  ServicePage: ["ServicePage Content"],
+  ServiceDetailPage: ["ServiceDetailPage Content"],
+  GalleryPage: ["GalleryPage Content"],
   Gallery: ["Gallery Content", "Gallery Layout"],
   CountriesServe: ["Countries Content", "Countries Layout"],
   Contact: ["Contact Content", "Contact Layout"],
@@ -2317,6 +2324,29 @@ type GenericFieldEditorProps = {
   contentVariant?: string;
 };
 
+const COOLFIX_CONTENT_FIELDS: Record<string, string[]> = {
+  CoolFixTopbar1: ["tagline", "highlights", "socials"],
+  CoolFixHeader1: ["logo", "contacts", "menu", "cta"],
+  CoolFixBanner1: ["slides"],
+  CoolFixAbout1: ["badge", "heading", "description", "stats", "goal", "cta", "image", "videoUrl"],
+  CoolFixAboutPage1: ["banner", "about", "stats", "whyChooseUs", "steps"],
+  CoolFixService1: ["badge", "heading", "description", "readMoreLabel", "list"],
+  CoolFixServicePage1: ["badge", "heading", "description", "readMoreLabel", "list"],
+  CoolFixServiceDetailPage1: ["banner", "sidebar", "items"],
+  CoolFixHowWeWork1: ["badge", "heading", "list"],
+  CoolFixHighlights1: ["badge", "heading", "description", "list"],
+  CoolFixStats1: ["list"],
+  CoolFixCTA1: ["badge", "heading", "description", "image", "primaryBtn", "secondaryBtn"],
+  CoolFixWhyChooseUs1: ["badge", "heading", "list", "image"],
+  CoolFixTestimonial1: ["badge", "heading", "image", "videoUrl", "source", "list"],
+  CoolFixGallery1: ["badge", "heading", "description", "photos", "loadMoreBtn"],
+  CoolFixGalleryPage1: ["badge", "heading", "description", "photos", "loadMoreBtn"],
+  CoolFixGetQuote1: ["badge", "heading", "description", "featuresTop", "image", "helpBadge", "featuresBottom", "form"],
+  CoolFixContactPage1: ["badge", "heading", "description", "info", "image", "form", "map"],
+  CoolFixBookService1: ["badge", "heading", "description", "featuresLeft", "image", "helpBadge", "featuresBottom", "form"],
+  CoolFixFooter1: ["logo", "description", "titles", "quickLinks", "services", "contacts", "socials", "copyright"],
+};
+
 const userManageableCollectionFields = new Set([
   "productItems",
   "serviceSlides",
@@ -2380,6 +2410,7 @@ const GenericArrayFieldEditor = ({
   const canManageItems =
     path.length === 1 &&
     (userManageableCollectionFields.has(fieldName) ||
+      contentVariant?.startsWith("CoolFix") ||
       (fieldName === "items" &&
         (sectionType === "FeaturedDev" ||
           sectionType === "InvestmentOpportunities"))) &&
@@ -2636,6 +2667,27 @@ const GenericFieldEditor = ({
   }
 
   if (typeof value === "object" && value !== null) {
+    const imageRecord = value as Record<string, unknown>;
+    const imageSrc = imageRecord.src;
+    if (
+      typeof imageSrc === "string" &&
+      /^(image|photo|background|bg|avatar|logo)$/i.test(fieldName)
+    ) {
+      return (
+        <GenericFieldEditor
+          fieldName={fieldName}
+          value={imageSrc}
+          path={[...path, "src"]}
+          sectionType={sectionType}
+          contentVariant={contentVariant}
+          onChange={onChange}
+          onMediaChange={onMediaChange}
+          onImagePickerRequest={onImagePickerRequest}
+          onOpenHrefPicker={onOpenHrefPicker}
+          availablePageNames={availablePageNames}
+        />
+      );
+    }
     return (
       <div className="space-y-3.5">
         {fieldName.startsWith("Item ") && (
@@ -3062,6 +3114,12 @@ const GenericFieldEditor = ({
             }
           }
 
+          if (contentVariant?.startsWith("CoolFix")) {
+            entries = entries.filter(
+              ([key]) => !/^(id|width|height|color|slug)$/i.test(key),
+            );
+          }
+
           return entries.map(([childName, childValue]) => (
             <GenericFieldEditor
               key={childName}
@@ -3090,6 +3148,14 @@ const GenericFieldEditor = ({
       ? getMediaKindFromKey(fieldName) ||
       (fieldName.toLowerCase() === "logo" &&
         /^(https?:|data:|\/)/.test(value)
+        ? "image"
+        : null) ||
+      (contentVariant?.startsWith("CoolFix") &&
+      (fieldName === "avatar" ||
+        fieldName === "backgroundImage" ||
+        path[0] === "photos" ||
+        ((fieldName === "main" || fieldName === "secondary") &&
+          path.includes("image")))
         ? "image"
         : null)
       : null;
@@ -3684,7 +3750,9 @@ export default function EditSectionModal({
   );
   const activeSectionKey = currentSection?.id ?? currentSection?.type ?? sectionId;
   const isPageSection = Boolean(currentSection?.page);
-  const activeVariant = currentSection?.data?.[currentSection.variant]
+  const activeVariant = currentSection?.variant?.startsWith("CoolFix")
+    ? currentSection.variant
+    : currentSection?.data?.[currentSection.variant]
     ? currentSection.variant
     : currentSection?.variant?.startsWith(`${activeSectionType}-`)
       ? currentSection.variant
@@ -3694,14 +3762,17 @@ export default function EditSectionModal({
     Object.values(currentSection?.data ?? {})[0];
   const visibleSidebarItems =
     sidebarItemsBySection[activeSectionType] ??
-    (activeVariant.startsWith("Plumbing") || activeVariant.startsWith("Pet")
+    (activeVariant.startsWith("Plumbing") ||
+    activeVariant.startsWith("Pet") ||
+    activeVariant.startsWith("CoolFix")
       ? [`${activeSectionType} Content`]
       : []);
 
   useEffect(() => {
     if (
       !activeVariant.startsWith("Plumbing") &&
-      !activeVariant.startsWith("Pet")
+      !activeVariant.startsWith("Pet") &&
+      !activeVariant.startsWith("CoolFix")
     ) {
       return;
     }
@@ -3912,6 +3983,16 @@ export default function EditSectionModal({
       ...(petEditorSlice(activeVariant) ?? {}),
       ...savedWithoutBanner,
     };
+    if (activeVariant.startsWith("CoolFix")) {
+      const order =
+        COOLFIX_CONTENT_FIELDS[activeVariant] ||
+        COOLFIX_CONTENT_FIELDS[activeVariant.replace(/Page1$/, "1")];
+      if (order) {
+        return order
+          .filter((field) => field in source)
+          .map((field) => [field, source[field]] as [string, unknown]);
+      }
+    }
     const entries = Object.entries(source).filter(([field]) => {
       if (/^id$/i.test(field)) return false;
       if (
@@ -5307,9 +5388,20 @@ export default function EditSectionModal({
     const [field] = path;
     if (typeof field !== "string") return;
 
-    const items = activeGenericData?.[field as keyof SectionData];
+    const storedItems = activeGenericData?.[field as keyof SectionData];
+    const mergedItems = activeVariant.startsWith("CoolFix")
+      ? withCoolFixContent(
+          activeVariant,
+          (activeGenericData ?? {}) as Record<string, unknown>,
+        )?.[field]
+      : undefined;
+    const items = Array.isArray(storedItems)
+      ? storedItems
+      : Array.isArray(mergedItems)
+        ? mergedItems
+        : undefined;
     if (!Array.isArray(items)) return;
-    if (field === "features" && items.length >= 4) return;
+    if (field === "features" && !activeVariant.startsWith("CoolFix") && items.length >= 4) return;
     if (field === "whyChooseUsItems" && items.length >= 4) return;
     if (field === "steps" && items.length >= 4) return;
     if (field === "awardItems" && activeSectionType === "Awards" && items.length >= 5) return;
@@ -5317,7 +5409,14 @@ export default function EditSectionModal({
     if (field === "impactStats" && items.length >= 4) return;
     if (field === "benefits" && items.length >= 4) return;
     if (field === "formFields" && items.length >= MAX_FORM_FIELDS) return;
-    if (field === "items" && activeSectionType !== "FeaturedDev" && activeSectionType !== "InvestmentOpportunities") return;
+    if (
+      field === "items" &&
+      activeSectionType !== "FeaturedDev" &&
+      activeSectionType !== "InvestmentOpportunities" &&
+      !activeVariant.startsWith("CoolFix")
+    ) {
+      return;
+    }
 
     const newItems: Record<string, unknown> = {
       productItems: {
@@ -5455,7 +5554,11 @@ export default function EditSectionModal({
             placeholder: "Enter value",
           },
     };
-    const newItem = newItems[field];
+    const newItem =
+      newItems[field] ??
+      (activeVariant.startsWith("CoolFix")
+        ? structuredClone(items[items.length - 1] ?? {})
+        : undefined);
 
     if (!newItem) return;
     updateGenericField(path, [...items, newItem]);
@@ -5468,7 +5571,18 @@ export default function EditSectionModal({
     const [field] = path;
     if (typeof field !== "string") return;
 
-    const items = activeGenericData?.[field as keyof SectionData];
+    const storedItems = activeGenericData?.[field as keyof SectionData];
+    const mergedItems = activeVariant.startsWith("CoolFix")
+      ? withCoolFixContent(
+          activeVariant,
+          (activeGenericData ?? {}) as Record<string, unknown>,
+        )?.[field]
+      : undefined;
+    const items = Array.isArray(storedItems)
+      ? storedItems
+      : Array.isArray(mergedItems)
+        ? mergedItems
+        : undefined;
     if (!Array.isArray(items)) return;
 
     updateGenericField(

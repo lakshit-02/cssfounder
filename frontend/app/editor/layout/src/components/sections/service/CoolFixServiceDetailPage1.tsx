@@ -21,7 +21,26 @@ function ServiceDetailPageSection({ data }: { data?: any }) {
   const raw = (data ?? {}) as any;
   const sidebar = raw?.sidebar ?? { assistance: {} };
   const items   = Array.isArray(raw?.items) ? raw.items : [];
-  const [currentSlug, setCurrentSlug] = useState(items[0]?.slug ?? "");
+  const [currentSlug, setCurrentSlug] = useState(() => {
+    if (typeof window === "undefined") return items[0]?.slug ?? "";
+    try {
+      const saved = sessionStorage.getItem("coolfix-service-slug") || "";
+      if (items.some((item: { slug?: string }) => item.slug === saved)) return saved;
+    } catch {
+      /* ignore */
+    }
+    return items[0]?.slug ?? "";
+  });
+  React.useEffect(() => {
+    const onPick = (event: Event) => {
+      const slug = (event as CustomEvent<{ slug?: string }>).detail?.slug || "";
+      if (items.some((item: { slug?: string }) => item.slug === slug)) {
+        setCurrentSlug(slug);
+      }
+    };
+    window.addEventListener("coolfix-service-slug", onPick);
+    return () => window.removeEventListener("coolfix-service-slug", onPick);
+  }, [items]);
   const current = items.find((item: any) => item.slug === currentSlug) ?? items[0];
   if (!current) return null;
   const { hero, sections } = current;

@@ -2621,6 +2621,40 @@ const ensureDedicatedThemePageBodies = (
       "Highlights",
       "Footer",
     ];
+    for (const type of homeOrder) {
+      const variant = template.sectionVariants[type];
+      if (!variant) continue;
+      const onHome = next.some((section) => {
+        const slug = normalizePageSlug(section.page || "");
+        if (slug && slug !== "home") return false;
+        return section.type === type || section.variant === variant;
+      });
+      if (onHome) continue;
+      if (type === "HowWeWork") {
+        const misplaced = next.find(
+          (section) => section.type === type || section.variant === variant,
+        );
+        if (misplaced) {
+          next = next.map((section) =>
+            section === misplaced ? { ...section, page: undefined } : section,
+          );
+          changed = true;
+          continue;
+        }
+      }
+      const usedIds = new Set(next.map((section) => section.id));
+      const id = usedIds.has(type) ? `${type}-home` : type;
+      next = [
+        ...next,
+        {
+          id,
+          type,
+          variant,
+          data: { [variant]: {} as SectionData },
+        },
+      ];
+      changed = true;
+    }
     const rank = new Map(homeOrder.map((type, index) => [type, index]));
     const pages = next.filter((section) => section.page);
     const home = next.filter((section) => !section.page);
@@ -3025,6 +3059,48 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
           typeof item.seoKeywords === "string" ? item.seoKeywords : "",
       }))
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  if (
+    Array.isArray(data.list) &&
+    data.list.some(
+      (item) =>
+        item &&
+        typeof item === "object" &&
+        typeof (item as { title?: unknown }).title === "string" &&
+        typeof (item as { image?: unknown }).image === "string",
+    )
+  ) {
+    return data.list
+      .map((item, index) => {
+        if (!item || typeof item !== "object") return null;
+        const record = item as Record<string, unknown>;
+        const title = typeof record.title === "string" ? record.title : "";
+        if (!title) return null;
+        const href = typeof record.href === "string" ? record.href : "";
+        const slugFromHref =
+          href.split("/").filter(Boolean).pop() || "";
+        return {
+          id:
+            (typeof record.id === "string" && record.id) ||
+            (typeof record.id === "number" ? String(record.id) : "") ||
+            `service-${index + 1}`,
+          title,
+          category: "Service",
+          desc: typeof record.description === "string" ? record.description : "",
+          content: "",
+          image: typeof record.image === "string" ? record.image : "/bg1.jpg",
+          alt: title,
+          slug: slugFromHref || createPageSlug(title) || `service-${index + 1}`,
+          order: index + 1,
+          active: record.active !== false,
+          layout: "",
+          seoTitle: "",
+          seoDescription: "",
+          seoKeywords: "",
+        };
+      })
+      .filter((item): item is ServiceItem => item !== null);
   }
 
   if (Array.isArray(data.services) && data.services.length > 0) {
@@ -4426,6 +4502,22 @@ const readGalleryItemsFromData = (data: SectionData): GalleryItem[] => {
         active: item.active !== false,
       }))
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  if (
+    Array.isArray(data.photos) &&
+    data.photos.every((photo) => typeof photo === "string")
+  ) {
+    return data.photos.map((image, index) => ({
+      id: `photo-${index + 1}`,
+      title: `Photo ${index + 1}`,
+      category: "Gallery",
+      desc: "",
+      image,
+      alt: `Photo ${index + 1}`,
+      order: index + 1,
+      active: true,
+    }));
   }
 
   return [];
@@ -8488,10 +8580,16 @@ function EditorPage({
     const emitServiceState = (items: SectionItem[]) => {
       const section = findServiceSection(items);
       if (!section) return;
-      const data =
+      const stored =
         (section.data[section.variant] as SectionData | undefined) ??
         (section.data["ServicePage-1"] as SectionData | undefined) ??
         ({} as SectionData);
+      const data = String(section.variant || "").startsWith("CoolFix")
+        ? ((withCoolFixContent(
+            section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
+        : stored;
       const state = buildServicePageState(data);
       const homeServices = readHomePetServices(items);
       const services =
@@ -9224,10 +9322,16 @@ function EditorPage({
     const emitGalleryState = (items: SectionItem[]) => {
       const section = findGallerySection(items);
       if (!section) return;
-      const data =
+      const stored =
         (section.data[section.variant] as SectionData | undefined) ??
         (section.data["GalleryPage-1"] as SectionData | undefined) ??
         ({} as SectionData);
+      const data = String(section.variant || "").startsWith("CoolFix")
+        ? ((withCoolFixContent(
+            section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
+        : stored;
       window.dispatchEvent(
         new CustomEvent("ai-builder-gallery-page-state", {
           detail: {
@@ -9289,11 +9393,13 @@ function EditorPage({
           }
 
           const currentVariant = section.variant || "GalleryPage-1";
-          const nextVariant = currentVariant.startsWith("Pet")
-            ? currentVariant
-            : detail.layout && /^GalleryPage-[1-5]$/.test(detail.layout)
-              ? detail.layout
-              : currentVariant;
+          const nextVariant =
+            currentVariant.startsWith("Pet") ||
+            currentVariant.startsWith("CoolFix")
+              ? currentVariant
+              : detail.layout && /^GalleryPage-[1-5]$/.test(detail.layout)
+                ? detail.layout
+                : currentVariant;
           const currentData =
             (section.data[nextVariant] as SectionData | undefined) ??
             (section.data[currentVariant] as SectionData | undefined) ??
@@ -17625,6 +17731,29 @@ function EditorPage({
                         section.variant === "PetBlogPage1"
                       ? "Blogs"
                       : resolveManagerForSection(section);
+              const coolFixPageSlug = normalizePageSlug(section.page || "");
+              const coolFixServicePage =
+                String(section.variant || "").startsWith("CoolFix") &&
+                (section.variant === "CoolFixServicePage1" ||
+                  section.type === "ServicePage" ||
+                  (section.type === "Service" &&
+                    ["service", "services"].includes(coolFixPageSlug)));
+              const coolFixGalleryPage =
+                String(section.variant || "").startsWith("CoolFix") &&
+                (section.variant === "CoolFixGalleryPage1" ||
+                  section.type === "GalleryPage" ||
+                  (section.type === "Gallery" && coolFixPageSlug === "gallery"));
+              if (
+                String(section.variant || "").startsWith("CoolFix") &&
+                !coolFixServicePage &&
+                !coolFixGalleryPage
+              ) {
+                prepareEditorSurfaceForReplace();
+                bumpSectionRenderEpoch(sectionId);
+                setEditingSectionInitialTab(undefined);
+                setEditingSection(sectionId);
+                return;
+              }
               if (manager) {
                 window.dispatchEvent(
                   new CustomEvent("ai-builder-open-manager", {

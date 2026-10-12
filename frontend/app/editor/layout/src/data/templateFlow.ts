@@ -278,6 +278,24 @@ const mergeCoolFixContent = (
       );
       continue;
     }
+    if (Array.isArray(value) && Array.isArray(current)) {
+      out[key] = value.map((item, index) => {
+        if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+        const storedItem = item as Record<string, unknown>;
+        const matched = current.find(
+          (entry) =>
+            entry &&
+            typeof entry === "object" &&
+            !Array.isArray(entry) &&
+            storedItem.id != null &&
+            (entry as Record<string, unknown>).id === storedItem.id,
+        ) as Record<string, unknown> | undefined;
+        const baseItem = (matched ?? current[index]) as Record<string, unknown> | undefined;
+        if (!baseItem || typeof baseItem !== "object" || Array.isArray(baseItem)) return item;
+        return mergeCoolFixContent(baseItem, storedItem);
+      });
+      continue;
+    }
     out[key] = value;
   }
   return out;

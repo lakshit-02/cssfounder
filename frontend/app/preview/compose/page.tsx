@@ -651,6 +651,25 @@ function ComposeInner() {
         scrollComposeToTop();
         return;
       }
+      const serviceDetailMatch = path.match(/^\/service-details\/([^/]+)\/?$/i);
+      if (serviceDetailMatch?.[1]) {
+        event.preventDefault();
+        event.stopPropagation();
+        const slug = decodeURIComponent(serviceDetailMatch[1]);
+        try {
+          sessionStorage.setItem("coolfix-service-slug", slug);
+        } catch {
+          /* ignore */
+        }
+        window.dispatchEvent(new CustomEvent("coolfix-service-slug", { detail: { slug } }));
+        const detailPage =
+          sitePages.find((page) => page.id === "service-detail")?.id ||
+          "service-detail";
+        setPreviewDetail(null);
+        if (detailPage !== activePageId) setActivePageId(detailPage);
+        scrollComposeToTop();
+        return;
+      }
       const projectMatch = path.match(/^\/projects\/([^/]+)\/?$/i);
       if (projectMatch?.[1]) {
         event.preventDefault();

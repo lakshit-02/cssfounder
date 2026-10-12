@@ -77,7 +77,17 @@ function ServiceSection({ data }: { data?: any }) {
                 return (
                   <a
                     key={svc.id}
-                    href={svc.href}
+                    href="#page-service-detail"
+                    onClick={() => {
+                      const slug = String(svc.href || "").split("/").filter(Boolean).pop() || "";
+                      if (!slug) return;
+                      try {
+                        sessionStorage.setItem("coolfix-service-slug", slug);
+                      } catch {
+                        /* ignore */
+                      }
+                      window.dispatchEvent(new CustomEvent("coolfix-service-slug", { detail: { slug } }));
+                    }}
                     className="group/item relative flex min-w-0 flex-col py-4"
                   >
                     <article className="flex flex-1 flex-col overflow-hidden rounded-xl bg-white shadow-[0_8px_30px_rgba(11,28,61,0.08)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(11,28,61,0.14)]">
