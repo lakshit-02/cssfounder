@@ -264,6 +264,7 @@ function SidebarContent({
   const [showSupportChat, setShowSupportChat] = useState(false);
   const [showBlogModal, setShowBlogModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
+  const [serviceCardOnly, setServiceCardOnly] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
@@ -819,7 +820,11 @@ function SidebarContent({
   useEffect(() => {
     const onOpenManager = (event: Event) => {
       const detail = (
-        event as CustomEvent<{ manager?: string; preservePage?: boolean }>
+        event as CustomEvent<{
+          manager?: string;
+          preservePage?: boolean;
+          cardOnly?: boolean;
+        }>
       ).detail;
       const manager = detail?.manager;
       if (!manager || typeof manager !== "string") return;
@@ -838,6 +843,7 @@ function SidebarContent({
         return;
       }
       if (manager === "Services") {
+        setServiceCardOnly(Boolean(detail?.cardOnly));
         setShowServiceModal(true);
         return;
       }
@@ -928,6 +934,7 @@ function SidebarContent({
 
     if (label === "Services") {
       onNavigate?.();
+      setServiceCardOnly(false);
       setShowServiceModal(true);
       return;
     }
@@ -1729,7 +1736,11 @@ function SidebarContent({
         <ServiceManager
           siteId={searchParams.get("siteId") || "draft"}
           preserveNavigation={managerPreserveNavigation}
-          onClose={() => closeManagerModal(setShowServiceModal)}
+          cardOnly={serviceCardOnly}
+          onClose={() => {
+            setServiceCardOnly(false);
+            closeManagerModal(setShowServiceModal);
+          }}
         />
       )}
 

@@ -288,19 +288,10 @@ function StepsSection({ d }: { d: any }) {
 ──────────────────────────────────────────────── */
 export default function CoolFixAboutPage1({ data }: SectionProps) {
   const raw = (data ?? {}) as any;
-  const banner = raw.banner ?? {};
+  const about = raw.about ?? raw;
   return (
     <div className="bg-white">
-
-      <AboutSection d={raw.about ?? { heading: {}, stats: [], image: {} }} />
-
-      <StatsSection d={raw.stats ?? { list: [] }} />
-
-      {/* Why Choose Us */}
-      <WhyChooseUsSection d={raw.whyChooseUs ?? { heading: {}, list: [] }} />
-
-      <StepsSection d={raw.steps ?? { heading: {}, list: [] }} />
-
+      <AboutSection d={about ?? { heading: {}, stats: [], image: {} }} />
     </div>
   );
 }

@@ -2329,7 +2329,7 @@ const COOLFIX_CONTENT_FIELDS: Record<string, string[]> = {
   CoolFixHeader1: ["logo", "contacts", "menu", "cta"],
   CoolFixBanner1: ["slides"],
   CoolFixAbout1: ["badge", "heading", "description", "stats", "goal", "cta", "image", "videoUrl"],
-  CoolFixAboutPage1: ["banner", "about", "stats", "whyChooseUs", "steps"],
+  CoolFixAboutPage1: ["about"],
   CoolFixService1: ["badge", "heading", "description", "readMoreLabel", "list"],
   CoolFixServicePage1: ["badge", "heading", "description", "readMoreLabel", "list"],
   CoolFixServiceDetailPage1: ["banner", "sidebar", "items"],

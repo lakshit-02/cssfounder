@@ -2374,12 +2374,53 @@ const ensureMissingAboutPageCompanions = (
     if (aboutVariant.startsWith("CoolFix")) {
       const stripped = next.filter((section) => {
         if (normalizePageSlug(section.page || "") !== slug) return true;
-        return section.type !== "Stats" && section.type !== "CTA";
+        return section.type !== "CTA";
       });
       if (stripped.length !== next.length) {
         next = stripped;
         changed = true;
       }
+      const pack =
+        (withCoolFixContent(
+          "CoolFixAboutPage1",
+          (body.data?.[body.variant] ?? {}) as Record<string, unknown>,
+        ) ?? {}) as Record<string, unknown>;
+      const companions: Array<{ type: string; variant: string; content: unknown }> = [
+        { type: "Stats", variant: "CoolFixStats1", content: pack.stats },
+        { type: "WhyChooseUs", variant: "CoolFixWhyChooseUs1", content: pack.whyChooseUs },
+        { type: "HowWeWork", variant: "CoolFixHowWeWork1", content: pack.steps },
+      ];
+      const missing = companions.filter(
+        (item) =>
+          !stripped.some(
+            (section) =>
+              section.type === item.type &&
+              normalizePageSlug(section.page || "") === slug,
+          ),
+      );
+      if (!missing.length) {
+        next = stripped;
+        return;
+      }
+      const aboutIndex = stripped.findIndex((section) => section === body || section.id === body.id);
+      const insertAt = aboutIndex === -1 ? stripped.length : aboutIndex + 1;
+      next = [
+        ...stripped.slice(0, insertAt),
+        ...missing.map((item) => ({
+          id: `${item.type}-${pageDefinition.id}`,
+          page: pageDefinition.id,
+          type: item.type,
+          variant: item.variant,
+          data: {
+            [item.variant]:
+              item.content && typeof item.content === "object"
+                ? item.content
+                : {},
+          },
+        })),
+        ...stripped.slice(insertAt),
+      ];
+      changed = true;
       return;
     }
     if (
@@ -10741,6 +10782,25 @@ function EditorPage({
         if ((section.id ?? section.type) !== sectionId) return section;
 
         const mergedData = { ...section.data, ...newData };
+        if (section.type === "Breadcrumb") {
+          const activeRecord = mergedData[section.variant] as
+            | Record<string, unknown>
+            | undefined;
+          const chosenImage =
+            activeRecord && typeof activeRecord.backgroundImage === "string"
+              ? activeRecord.backgroundImage.trim()
+              : "";
+          if (chosenImage) {
+            for (const variantKey of Object.keys(mergedData)) {
+              const record = mergedData[variantKey];
+              if (!record || typeof record !== "object") continue;
+              mergedData[variantKey] = {
+                ...(record as Record<string, unknown>),
+                backgroundImage: chosenImage,
+              } as SectionData;
+            }
+          }
+        }
         if (section.type === "CustomSection") {
           for (const [variantKey, variantValue] of Object.entries(mergedData)) {
             if (!variantValue || typeof variantValue !== "object") continue;
@@ -17537,11 +17597,10 @@ function EditorPage({
       style={
         {
           ...templateVariables,
-          fontFamily: coolFixTheme
-            ? '"Geist", Arial, Helvetica, sans-serif'
-            : templateVariables["--font-body"] ||
-              templateVariables.fontFamily ||
-              undefined,
+          fontFamily:
+            templateVariables["--font-body"] ||
+            templateVariables.fontFamily ||
+            undefined,
         } as React.CSSProperties
       }
     >
@@ -17552,9 +17611,9 @@ function EditorPage({
         />
       )}
       <style dangerouslySetInnerHTML={{ __html: SITE_THEME_GLOBAL_CSS + (coolFixTheme ? `
-        .coolfix-theme, .coolfix-theme * { font-family: "Geist", Arial, Helvetica, sans-serif !important; }
-        .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3 { font-weight: 800; letter-spacing: -0.02em; }
-        .coolfix-theme button, .coolfix-theme a { font-weight: 600; }
+        .coolfix-theme { font-family: var(--font-body, "Geist", Arial, Helvetica, sans-serif); }
+        .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3, .coolfix-theme h4 { font-family: var(--font-heading, "Geist", Arial, Helvetica, sans-serif); font-weight: 800; letter-spacing: -0.02em; }
+        .coolfix-theme button, .coolfix-theme a { font-family: var(--font-button, var(--font-body, "Geist", Arial, Helvetica, sans-serif)); font-weight: 600; }
         .coolfix-theme .cf-page-crumb {
           position: relative;
           isolation: isolate;
@@ -17563,7 +17622,11 @@ function EditorPage({
           align-items: center;
           min-height: 200px;
           border: 0;
-          background: #10284d url("/services/images/page-header-bg.jpg") center / cover no-repeat;
+          background-color: #10284d;
+          background-image: var(--cf-crumb-image, url("/services/images/page-header-bg.jpg"));
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
           color: #fff;
         }
         .coolfix-theme .cf-page-crumb::before {

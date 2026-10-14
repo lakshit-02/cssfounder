@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { SectionProps } from "../../../types/section";
 import InlineRichText from "../../builder/InlineRichText";
 
@@ -13,12 +14,13 @@ export default function BreadcrumbOne({ data = {} }: SectionProps) {
       className="cf-page-crumb border-b border-slate-200 bg-slate-50"
       style={
         backgroundImage
-          ? {
+          ? ({
+              ["--cf-crumb-image" as string]: `url("${backgroundImage}")`,
               backgroundImage: `url("${backgroundImage}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-            }
+            } as CSSProperties)
           : undefined
       }
     >

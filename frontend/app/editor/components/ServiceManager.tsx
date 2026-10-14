@@ -114,6 +114,7 @@ type ServiceManagerProps = {
   onClose: () => void;
   siteId?: string;
   preserveNavigation?: boolean;
+  cardOnly?: boolean;
 };
 
 const SERVICE_PAGE_SEO_KEY = "Services";
@@ -292,6 +293,7 @@ export default function ServiceManager({
   onClose,
   siteId = "draft",
   preserveNavigation = false,
+  cardOnly = false,
 }: ServiceManagerProps) {
   const { siteSeoConfig, setSiteSeoConfig, pageLinks, setPageLinks } =
     usePreview();
@@ -728,6 +730,7 @@ export default function ServiceManager({
     setEditingId(null);
     setShowContentEditor(false);
     setDraft(emptyService());
+    if (cardOnly) onClose();
   };
 
   const addCategory = () => {
@@ -860,7 +863,7 @@ export default function ServiceManager({
 
   const content = (
     <div
-      className="fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800"
+      className={`fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800 ${cardOnly ? "hidden" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="service-manager-title"

@@ -909,9 +909,7 @@ function ComposeInner() {
     <main
       className={`min-h-dvh bg-white${coolFixTheme ? " coolfix-theme" : ""}`}
       style={
-        coolFixTheme
-          ? { ...cssVars, fontFamily: '"Geist", Arial, Helvetica, sans-serif' }
-          : cssVars
+        cssVars
       }
       data-template-scroll
     >
@@ -924,9 +922,9 @@ function ComposeInner() {
           <style
             dangerouslySetInnerHTML={{
               __html: `
-                .coolfix-theme, .coolfix-theme * { font-family: "Geist", Arial, Helvetica, sans-serif !important; }
-                .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3 { font-weight: 800; letter-spacing: -0.02em; }
-                .coolfix-theme button, .coolfix-theme a { font-weight: 600; }
+                .coolfix-theme { font-family: var(--font-body, "Geist", Arial, Helvetica, sans-serif); }
+                .coolfix-theme h1, .coolfix-theme h2, .coolfix-theme h3, .coolfix-theme h4 { font-family: var(--font-heading, "Geist", Arial, Helvetica, sans-serif); font-weight: 800; letter-spacing: -0.02em; }
+                .coolfix-theme button, .coolfix-theme a { font-family: var(--font-button, var(--font-body, "Geist", Arial, Helvetica, sans-serif)); font-weight: 600; }
                 .coolfix-theme .cf-page-crumb {
                   position: relative;
                   isolation: isolate;
@@ -935,7 +933,11 @@ function ComposeInner() {
                   align-items: center;
                   min-height: 200px;
                   border: 0;
-                  background: #10284d url("/services/images/page-header-bg.jpg") center / cover no-repeat;
+                  background-color: #10284d;
+                  background-image: var(--cf-crumb-image, url("/services/images/page-header-bg.jpg"));
+                  background-position: center;
+                  background-size: cover;
+                  background-repeat: no-repeat;
                   color: #fff;
                 }
                 .coolfix-theme .cf-page-crumb::before {

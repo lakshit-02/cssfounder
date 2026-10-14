@@ -2,6 +2,7 @@
 "use client";
 import React from "react";
 import type { SectionProps } from "../../../types/section";
+import { useOptionalPreview } from "../../context/PreviewContext";
 
 function ArrowRightIcon() {
   return <svg className="h-3 w-3 text-[#ff6b00] transition group-hover/item:translate-x-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>;
@@ -49,6 +50,27 @@ function openCoolFixServiceDetail(href?: string) {
   window.dispatchEvent(new CustomEvent("coolfix-service-slug", { detail: { slug } }));
 }
 
+function openCoolFixServiceCardEditor(svc: { id?: string | number; title?: string; href?: string }) {
+  const slug = String(svc.href || "").split("/").filter(Boolean).pop() || "";
+  try {
+    sessionStorage.setItem(
+      "ai-builder-open-manager-item:Services",
+      JSON.stringify({
+        id: svc.id != null ? String(svc.id) : undefined,
+        slug: slug && slug !== "service-detail" ? slug : undefined,
+        title: svc.title || "",
+      }),
+    );
+  } catch {
+    /* ignore */
+  }
+  window.dispatchEvent(
+    new CustomEvent("ai-builder-open-manager", {
+      detail: { manager: "Services", cardOnly: true, preservePage: true },
+    }),
+  );
+}
+
 function ServiceIcon({ name }: { name?: string }) {
   const paths = SERVICE_ICON_PATHS[name || ""] || SERVICE_ICON_PATHS.technician;
   return (
@@ -61,6 +83,7 @@ function ServiceIcon({ name }: { name?: string }) {
 }
 
 function ServicePageSection({ data }: { data?: any }) {
+  const preview = useOptionalPreview();
   const raw = (data ?? {}) as any;
   const s = {
     badge:         raw?.badge         ?? "",
@@ -100,10 +123,8 @@ function ServicePageSection({ data }: { data?: any }) {
           {/* Services Grid */}
           <div className="grid grid-cols-4 gap-6">
             {s.list.map((svc: any, i: number) => (
-              <a
+              <div
                 key={svc.id ?? i}
-                href="#page-service-detail"
-                onClick={() => openCoolFixServiceDetail(svc.href)}
                 className="group/item flex h-auto flex-col"
               >
                 <article className="relative flex flex-1 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
@@ -131,15 +152,36 @@ function ServicePageSection({ data }: { data?: any }) {
                       </div>
                       <h3 className="mb-2 text-[17px] font-bold leading-snug text-[#0b1c3d]">{svc.title}</h3>
                       <div className="mt-auto pt-2">
-                        <span className="inline-flex items-center gap-2 text-[13px] font-bold text-gray-500 underline underline-offset-4 transition group-hover/item:text-[#ff6b00]">
+                        <button
+                          type="button"
+                          data-editor-no-inline="true"
+                          onPointerDown={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                          }}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            const inEditor = Boolean(
+                              document.querySelector("[data-editor-live-surface]"),
+                            );
+                            if (inEditor) {
+                              openCoolFixServiceCardEditor(svc);
+                              return;
+                            }
+                            openCoolFixServiceDetail(svc.href);
+                            preview?.setCurrentPage("Service Detail");
+                          }}
+                          className="inline-flex items-center gap-2 text-[13px] font-bold text-gray-500 underline underline-offset-4 transition group-hover/item:text-[#ff6b00]"
+                        >
                           {s.readMoreLabel}
                           <ArrowRightIcon />
-                        </span>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </article>
-              </a>
+              </div>
             ))}
           </div>
         </div>

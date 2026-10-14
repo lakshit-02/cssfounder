@@ -4956,7 +4956,7 @@ function PublishedSiteContent({
 
   return (
     <main
-      className="min-h-screen w-full overflow-x-clip [overflow-wrap:anywhere]"
+      className={`min-h-screen w-full overflow-x-clip [overflow-wrap:anywhere]${publishedTemplate?.sectionVariants?.Header === "CoolFixHeader1" ? " coolfix-theme" : ""}`}
       data-site-theme-root
       style={payload.templateVariables as React.CSSProperties}
     >

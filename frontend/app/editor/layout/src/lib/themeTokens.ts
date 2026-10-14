@@ -197,6 +197,42 @@ export const SITE_THEME_GLOBAL_CSS = `
   background-color: var(--primary-bg);
   color: var(--primary-text);
 }
+/* CoolFix: orange accent follows Theme Color primary, navy follows header */
+.coolfix-theme [class~="text-[#ff6b00]"],
+.coolfix-theme [class*="text-[#ff6b00]/"] {
+  color: var(--primary-bg, #ff6b00) !important;
+}
+.coolfix-theme [class~="bg-[#ff6b00]"],
+.coolfix-theme [class*="bg-[#ff6b00]/"] {
+  background-color: var(--primary-bg, #ff6b00) !important;
+}
+.coolfix-theme [class~="border-[#ff6b00]"],
+.coolfix-theme [class*="border-[#ff6b00]/"],
+.coolfix-theme [class~="focus:border-[#ff6b00]"]:focus {
+  border-color: var(--primary-bg, #ff6b00) !important;
+}
+.coolfix-theme [class~="hover:bg-[#e55f00]"]:hover,
+.coolfix-theme [class~="hover:bg-[#ff6b00]"]:hover {
+  background-color: color-mix(in srgb, var(--primary-bg, #ff6b00) 82%, black) !important;
+}
+.coolfix-theme [class~="hover:text-[#ff6b00]"]:hover,
+.coolfix-theme [class*="group"]:hover [class*="group-hover:text-[#ff6b00]"] {
+  color: var(--primary-bg, #ff6b00) !important;
+}
+.coolfix-theme [class~="text-[#0b2a5b]"],
+.coolfix-theme [class~="text-[#0b1c3d]"] {
+  color: var(--header-bg, #0b2a5b) !important;
+}
+.coolfix-theme [class~="bg-[#0b2a5b]"],
+.coolfix-theme [class~="bg-[#041a33]"],
+.coolfix-theme [class~="bg-[#10284d]"] {
+  background-color: var(--header-bg, #0b2a5b) !important;
+  color: var(--header-text, #ffffff);
+}
+.coolfix-theme svg [stroke="#ff6b00"] { stroke: var(--primary-bg, #ff6b00); }
+.coolfix-theme svg [fill="#ff6b00"] { fill: var(--primary-bg, #ff6b00); }
+.coolfix-theme svg [stroke="#0b2a5b"] { stroke: var(--header-bg, #0b2a5b); }
+.coolfix-theme svg [fill="#0b2a5b"] { fill: var(--header-bg, #0b2a5b); }
 /* Manager detail bodies (blog/service/event/…): restore heading hierarchy */
 [data-site-theme-root] .manager-detail-prose h1 {
   font-family: var(--font-heading);
