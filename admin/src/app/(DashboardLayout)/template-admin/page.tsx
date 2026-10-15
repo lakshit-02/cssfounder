@@ -144,6 +144,7 @@ type TemplatePage = {
   label: string;
   sectionType: string;
   submenu?: boolean;
+  sectionOrder?: string[];
 };
 
 const DESKTOP_PREVIEW_WIDTH = 1280;
@@ -232,26 +233,120 @@ function snapshotBuilder(data: {
 
 const LOCKED_HOME_SECTIONS = new Set(["Topbar", "Header", "Footer"]);
 
-function mergeHomeSectionOrder(order?: string[] | null) {
+const COOLFIX_HOME_ORDER = [
+  "Topbar",
+  "Header",
+  "Banner",
+  "HowWeWork",
+  "About",
+  "Service",
+  "Stats",
+  "Testimonial",
+  "CTA",
+  "Highlights",
+  "Footer",
+];
+
+function isInnerOnlySection(type: string) {
+  return type === "Breadcrumb" || type.endsWith("Page") || PAGE_SECTIONS.includes(type);
+}
+
+function insertByPreferredOrder(list: string[], type: string, preferred: string[]) {
+  if (!type || list.includes(type)) return;
+  let insertAt = list.indexOf("Footer");
+  if (insertAt < 0) insertAt = list.length;
+  const pref = preferred.indexOf(type);
+  if (pref >= 0) {
+    for (let i = pref - 1; i >= 0; i -= 1) {
+      const prev = list.indexOf(preferred[i]);
+      if (prev >= 0) {
+        insertAt = prev + 1;
+        break;
+      }
+    }
+  }
+  list.splice(insertAt, 0, type);
+}
+
+function mergeHomeSectionOrder(
+  order?: string[] | null,
+  variants?: Record<string, string> | null,
+) {
   const seen = new Set<string>();
   const middle: string[] = [];
-  const source =
-    Array.isArray(order) && order.length ? order : HOME_SECTIONS;
-  for (const type of source) {
-    if (!HOME_SECTIONS.includes(type) || seen.has(type)) continue;
+  const hasExplicit = Array.isArray(order) && order.length > 0;
+  const source = hasExplicit ? order : HOME_SECTIONS;
+  const take = (type: string, keepInner: boolean) => {
+    if (!type || seen.has(type) || LOCKED_HOME_SECTIONS.has(type)) return;
+    if (!keepInner && isInnerOnlySection(type)) return;
     seen.add(type);
-    if (LOCKED_HOME_SECTIONS.has(type)) continue;
+    middle.push(type);
+  };
+  for (const type of source) take(type, hasExplicit);
+  if (!hasExplicit) {
+    for (const type of HOME_SECTIONS) take(type, false);
+  }
+
+  const next = ["Topbar", "Header", ...middle, "Footer"];
+  if (variants && String(variants.Header || "").startsWith("CoolFix")) {
+    for (const type of COOLFIX_HOME_ORDER) {
+      if (!variants[type] || LOCKED_HOME_SECTIONS.has(type)) continue;
+      insertByPreferredOrder(next, type, COOLFIX_HOME_ORDER);
+    }
+  }
+  return next;
+}
+
+function defaultInnerSectionOrder(
+  sectionType: string,
+  layoutKey: string,
+  keepThemeSections = false,
+) {
+  const order = ["Topbar", "Header", "Breadcrumb", sectionType];
+  const coolFixAbout =
+    keepThemeSections || layoutKey === "CoolFixAboutPage1";
+  const coolFixService =
+    keepThemeSections || layoutKey === "CoolFixServicePage1";
+  const coolFixGallery =
+    keepThemeSections || layoutKey === "CoolFixGalleryPage1";
+  if (sectionType === "AboutPage" && coolFixAbout) {
+    order.push("Stats", "WhyChooseUs", "HowWeWork");
+  } else if (sectionType === "ServicePage" && coolFixService) {
+    order.push("CTA", "Highlights");
+  } else if (sectionType === "GalleryPage" && coolFixGallery) {
+    order.push("CTA");
+  }
+  order.push("Footer");
+  return order;
+}
+
+function mergeInnerSectionOrder(
+  order: string[] | null | undefined,
+  defaults: string[],
+) {
+  const allowed = new Set(defaults);
+  const middle: string[] = [];
+  const seen = new Set<string>();
+  const explicit = Array.isArray(order) && order.length > 0;
+  const source = explicit ? order : defaults;
+  for (const type of source) {
+    if (!type || seen.has(type) || LOCKED_HOME_SECTIONS.has(type)) continue;
+    if (!explicit && !allowed.has(type)) continue;
+    seen.add(type);
     middle.push(type);
   }
-  for (const type of HOME_SECTIONS) {
-    if (seen.has(type) || LOCKED_HOME_SECTIONS.has(type)) continue;
-    middle.push(type);
+  if (!explicit) {
+    for (const type of defaults) {
+      if (seen.has(type) || LOCKED_HOME_SECTIONS.has(type)) continue;
+      seen.add(type);
+      middle.push(type);
+    }
   }
   const next: string[] = [];
-  if (HOME_SECTIONS.includes("Topbar")) next.push("Topbar");
-  if (HOME_SECTIONS.includes("Header")) next.push("Header");
+  if (defaults.includes("Topbar")) next.push("Topbar");
+  if (defaults.includes("Header")) next.push("Header");
   next.push(...middle);
-  if (HOME_SECTIONS.includes("Footer")) next.push("Footer");
+  if (defaults.includes("Footer")) next.push("Footer");
   return next;
 }
 
@@ -264,11 +359,15 @@ function normalizePages(raw: unknown): TemplatePage[] {
       const label = String(row.label || "").trim();
       const id = String(row.id || slugifyPageId(label) || "").trim();
       const sectionType = String(row.sectionType || "CustomPage").trim();
+      const sectionOrder = Array.isArray(row.sectionOrder)
+        ? row.sectionOrder.map((item) => String(item || "").trim()).filter(Boolean)
+        : undefined;
       return {
         id,
         label,
         sectionType,
         submenu: row.submenu === true,
+        ...(sectionOrder?.length ? { sectionOrder } : {}),
       };
     })
     .filter((p) => p.id && p.label);
@@ -285,6 +384,10 @@ const SECTION_TYPE_LABELS: Record<string, string> = {
   Breadcrumb: "Breadcrumb",
   WhyChooseUs: "Why Choose Us",
   FormDetail: "Form Detail",
+  HowWeWork: "How We Work",
+  Highlights: "Highlights",
+  Service: "Services",
+  CTA: "CTA",
 };
 
 function sectionTypeLabel(type: string) {
@@ -355,7 +458,14 @@ function uniqueSectionLayouts(
   return list.sort((a, b) => a.key.localeCompare(b.key));
 }
 
-function preferredLayoutKey(sectionType: string, options: LayoutRow[]) {
+function preferredLayoutKey(
+  sectionType: string,
+  options: LayoutRow[],
+  coolFix = false,
+) {
+  if (coolFix && sectionType === "Breadcrumb") {
+    return options.find((row) => row.key === "Breadcrumb-1")?.key || "Breadcrumb-1";
+  }
   if (sectionType === "CustomPage") {
     return (
       options.find((row) => row.key === "CustomPage-1")?.key ||
@@ -370,6 +480,27 @@ function preferredLayoutKey(sectionType: string, options: LayoutRow[]) {
   );
 }
 
+function isCoolFixBuilder(data: {
+  key?: string;
+  sectionVariants?: Record<string, string>;
+}) {
+  return (
+    data.key === "template-coolfix-1" ||
+    String(data.sectionVariants?.Header || "").startsWith("CoolFix")
+  );
+}
+
+function withCoolFixBreadcrumbChoice(sectionType: string, rows: LayoutRow[], coolFix: boolean) {
+  if (!coolFix || sectionType !== "Breadcrumb") return rows;
+  const coolFixCrumb: LayoutRow = {
+    _id: "Breadcrumb-1",
+    key: "Breadcrumb-1",
+    name: "CoolFix Breadcrumb",
+    sectionType: "Breadcrumb",
+  };
+  return [coolFixCrumb, ...rows.filter((row) => row.key !== "Breadcrumb-1")];
+}
+
 const TEMPLATE_TYPES = [
   "Single Page Website",
   "Multiple Pages Website",
@@ -381,6 +512,7 @@ type LayoutRow = {
   name: string;
   sectionType: string;
   scope?: string;
+  categorySlug?: string | null;
 };
 
 type TemplateRow = {
@@ -436,7 +568,7 @@ const TemplatesPage = () => {
     CategoryContentRow[]
   >([]);
   const [adminCategories, setAdminCategories] = useState<
-    { name?: string }[]
+    { name?: string; slug?: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -462,6 +594,11 @@ const TemplatesPage = () => {
   /** "home" | page.id — which page is being configured */
   const [activeBuilderPageId, setActiveBuilderPageId] = useState("home");
   const [pinnedSectionTypes, setPinnedSectionTypes] = useState<string[]>([]);
+  const [openAddFor, setOpenAddFor] = useState<string | null>(null);
+  const [addMenuPos, setAddMenuPos] = useState<{ top: number; left: number } | null>(
+    null,
+  );
+  const addMenuRef = useRef<HTMLDivElement | null>(null);
   const [builderDirty, setBuilderDirty] = useState(false);
   const builderSnapshotRef = useRef("");
 
@@ -538,15 +675,38 @@ const TemplatesPage = () => {
     return groups;
   }, [layouts]);
 
+  const sectionLayoutOptions = (sectionType: string) => {
+    const base = uniqueSectionLayouts(sectionType, [
+      ...(layoutsBySection[sectionType] || []),
+      ...fallbackPageLayouts(sectionType),
+    ]);
+    return withCoolFixBreadcrumbChoice(
+      sectionType,
+      base,
+      isCoolFixBuilder(builderData),
+    );
+  };
+
   const sectionTypesOrdered = useMemo(() => {
     const isMulti = builderData.type === "Multiple Pages Website";
     if (!isMulti || activeBuilderPageId === "home") {
-      return mergeHomeSectionOrder(builderData.homeSectionOrder);
+      return mergeHomeSectionOrder(
+        builderData.homeSectionOrder,
+        builderData.sectionVariants,
+      );
     }
     const page = (builderData.pages || []).find(
       (p) => p.id === activeBuilderPageId,
     );
-    return page?.sectionType ? [...INNER_PAGE_CHROME, page.sectionType] : [];
+    if (!page?.sectionType) return [];
+    return mergeInnerSectionOrder(
+      page.sectionOrder,
+      defaultInnerSectionOrder(
+        page.sectionType,
+        builderData.sectionVariants[page.sectionType] || "",
+        isCoolFixBuilder(builderData),
+      ),
+    );
   }, [
     builderData.type,
     builderData.pages,
@@ -562,11 +722,78 @@ const TemplatesPage = () => {
     return page?.label || "Page";
   }, [activeBuilderPageId, builderData.pages]);
 
+  const categoryAddChoices = useMemo(() => {
+    const categoryName = (builderData.categories[0] || "").trim().toLowerCase();
+    const contentRow = categoryContents.find(
+      (row) => row.categoryName.trim().toLowerCase() === categoryName,
+    );
+    const adminRow = adminCategories.find(
+      (row) => String(row.name || "").trim().toLowerCase() === categoryName,
+    );
+    const categorySlug = (
+      contentRow?.categorySlug ||
+      adminRow?.slug ||
+      categoryName.replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+    )
+      .trim()
+      .toLowerCase();
+    if (!categorySlug) return [];
+
+    const byKey = new Map<
+      string,
+      { sectionType: string; layoutKey: string; name: string }
+    >();
+    for (const layout of layouts) {
+      const layoutSlug = (layout.categorySlug || "").trim().toLowerCase();
+      if (layoutSlug !== categorySlug) continue;
+      const sectionType = layout.sectionType.trim();
+      const layoutKey = layout.key.trim();
+      if (!sectionType || !layoutKey || LOCKED_HOME_SECTIONS.has(sectionType)) continue;
+      if (byKey.has(layoutKey)) continue;
+      byKey.set(layoutKey, {
+        sectionType,
+        layoutKey,
+        name: layout.name || sectionTypeLabel(sectionType),
+      });
+    }
+
+    return Array.from(byKey.values()).sort((left, right) =>
+      left.name.localeCompare(right.name),
+    );
+  }, [
+    adminCategories,
+    builderData.categories,
+    categoryContents,
+    layouts,
+  ]);
+
   const selectBuilderPage = (pageId: string) => {
     setActiveBuilderPageId(pageId);
     setBuilderFocusKey(null);
+    setOpenAddFor(null);
     setBuilderPreviewTick((t) => t + 1);
   };
+
+  useEffect(() => {
+    if (!openAddFor) return;
+    const close = () => setOpenAddFor(null);
+    const closeOnScroll = (event: Event) => {
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        addMenuRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpenAddFor(null);
+    };
+    window.addEventListener("mousedown", close);
+    window.addEventListener("scroll", closeOnScroll, true);
+    return () => {
+      window.removeEventListener("mousedown", close);
+      window.removeEventListener("scroll", closeOnScroll, true);
+    };
+  }, [openAddFor]);
 
   /** Drop page-only variants when switching to Single Page */
   const setBuilderType = (type: string) => {
@@ -781,8 +1008,25 @@ const TemplatesPage = () => {
       previewImage: template.previewImage || "",
       previewDescription: template.previewDescription || "",
       prebuiltPages: template.prebuiltPages ?? 0,
-      sectionVariants: { ...(template.sectionVariants || {}) },
-      homeSectionOrder: mergeHomeSectionOrder(template.homeSectionOrder),
+      sectionVariants: (() => {
+        const variants = { ...(template.sectionVariants || {}) };
+        const coolFix =
+          template.key === "template-coolfix-1" ||
+          String(variants.Header || "").startsWith("CoolFix");
+        if (
+          coolFix &&
+          (!variants.Breadcrumb ||
+            variants.Breadcrumb === "Breadcrumb-5" ||
+            variants.Breadcrumb === "Breadcrumb-6")
+        ) {
+          variants.Breadcrumb = "Breadcrumb-1";
+        }
+        return variants;
+      })(),
+      homeSectionOrder: mergeHomeSectionOrder(
+        template.homeSectionOrder,
+        template.sectionVariants,
+      ),
       pages: isMulti
         ? pages.length
           ? pages
@@ -859,7 +1103,10 @@ const TemplatesPage = () => {
             ? latest.pages || []
             : null,
         sectionVariants: latest.sectionVariants,
-        homeSectionOrder: mergeHomeSectionOrder(latest.homeSectionOrder),
+        homeSectionOrder: mergeHomeSectionOrder(
+          latest.homeSectionOrder,
+          latest.sectionVariants,
+        ),
         status: latest.status,
       };
 
@@ -978,13 +1225,14 @@ const TemplatesPage = () => {
     const patch: Record<string, string> = {};
     for (const sectionType of needed) {
       if (pinnedSectionTypes.includes(sectionType)) continue;
-      const options = uniqueSectionLayouts(sectionType, [
-        ...(layoutsBySection[sectionType] || []),
-        ...fallbackPageLayouts(sectionType),
-      ]);
+      const options = sectionLayoutOptions(sectionType);
       const current = builderData.sectionVariants[sectionType];
       if (current && options.some((row) => row.key === current)) continue;
-      const next = preferredLayoutKey(sectionType, options);
+      const next = preferredLayoutKey(
+        sectionType,
+        options,
+        isCoolFixBuilder(builderData),
+      );
       if (next) patch[sectionType] = next;
     }
     if (!Object.keys(patch).length) return;
@@ -1019,17 +1267,54 @@ const TemplatesPage = () => {
 
   const moveHomeSection = (sectionType: string, direction: -1 | 1) => {
     if (LOCKED_HOME_SECTIONS.has(sectionType)) return;
-    const visible = sectionTypesOrdered.filter(
-      (type) =>
-        !LOCKED_HOME_SECTIONS.has(type) &&
-        (Boolean(builderData.sectionVariants[type]) ||
-          pinnedSectionTypes.includes(type)),
-    );
+    const isHome =
+      builderData.type !== "Multiple Pages Website" ||
+      activeBuilderPageId === "home";
+    const visible = sectionTypesOrdered.filter((type) => {
+      if (LOCKED_HOME_SECTIONS.has(type)) return false;
+      if (!isHome) return true;
+      return (
+        Boolean(builderData.sectionVariants[type]) ||
+        pinnedSectionTypes.includes(type)
+      );
+    });
     const from = visible.indexOf(sectionType);
     const swapWith = visible[from + direction];
     if (from < 0 || !swapWith) return;
 
-    const order = mergeHomeSectionOrder(builderData.homeSectionOrder);
+    if (!isHome) {
+      const page = (builderData.pages || []).find(
+        (item) => item.id === activeBuilderPageId,
+      );
+      if (!page) return;
+      const order = mergeInnerSectionOrder(
+        page.sectionOrder,
+        defaultInnerSectionOrder(
+          page.sectionType,
+          builderData.sectionVariants[page.sectionType] || "",
+          isCoolFixBuilder(builderData),
+        ),
+      );
+      const a = order.indexOf(sectionType);
+      const b = order.indexOf(swapWith);
+      if (a < 0 || b < 0) return;
+      const next = [...order];
+      next[a] = order[b];
+      next[b] = order[a];
+      setBuilderData((prev) => ({
+        ...prev,
+        pages: (prev.pages || []).map((item) =>
+          item.id === page.id ? { ...item, sectionOrder: next } : item,
+        ),
+      }));
+      setBuilderPreviewTick((t) => t + 1);
+      return;
+    }
+
+    const order = mergeHomeSectionOrder(
+      builderData.homeSectionOrder,
+      builderData.sectionVariants,
+    );
     const a = order.indexOf(sectionType);
     const b = order.indexOf(swapWith);
     if (a < 0 || b < 0) return;
@@ -1040,31 +1325,111 @@ const TemplatesPage = () => {
     setBuilderPreviewTick((t) => t + 1);
   };
 
-  const addHomeSectionAfter = (afterType: string, newType: string) => {
-    if (!newType) return;
-    setPinnedSectionTypes((prev) =>
-      prev.includes(newType) ? prev : [...prev, newType],
-    );
-    const order = mergeHomeSectionOrder(builderData.homeSectionOrder).filter(
-      (type) => type !== newType,
-    );
-    let afterIndex = order.indexOf(afterType === "Topbar" ? "Header" : afterType);
-    if (afterIndex < 0) afterIndex = order.indexOf("Header");
+  const insertSectionAfter = (
+    order: string[],
+    afterType: string,
+    sectionType: string,
+  ) => {
+    const next = order.filter((type) => type !== sectionType);
+    let afterIndex = next.indexOf(afterType);
+    if (afterIndex < 0) afterIndex = next.indexOf("Header");
     let insertAt = afterIndex + 1;
-    const footerAt = order.indexOf("Footer");
-    if (afterType === "Footer" || (footerAt >= 0 && insertAt > footerAt)) {
-      insertAt = footerAt >= 0 ? footerAt : order.length;
+    const footerAt = next.indexOf("Footer");
+    if (footerAt >= 0 && insertAt > footerAt) insertAt = footerAt;
+    next.splice(Math.max(insertAt, 0), 0, sectionType);
+    return next;
+  };
+
+  const addLayoutSection = (
+    afterType: string,
+    sectionType: string,
+    layoutKey: string,
+  ) => {
+    if (!sectionType || !layoutKey || LOCKED_HOME_SECTIONS.has(sectionType)) return;
+    const isHome =
+      builderData.type !== "Multiple Pages Website" ||
+      activeBuilderPageId === "home";
+    if (!isHome) {
+      const page = (builderData.pages || []).find(
+        (item) => item.id === activeBuilderPageId,
+      );
+      if (!page) return;
+      const order = insertSectionAfter(
+        mergeInnerSectionOrder(
+          page.sectionOrder,
+          defaultInnerSectionOrder(
+            page.sectionType,
+            builderData.sectionVariants[page.sectionType] || "",
+            isCoolFixBuilder(builderData),
+          ),
+        ),
+        afterType,
+        sectionType,
+      );
+      setBuilderData((prev) => ({
+        ...prev,
+        sectionVariants: {
+          ...prev.sectionVariants,
+          [sectionType]: layoutKey,
+        },
+        pages: (prev.pages || []).map((item) =>
+          item.id === page.id ? { ...item, sectionOrder: order } : item,
+        ),
+      }));
+    } else {
+      const order = insertSectionAfter(
+        mergeHomeSectionOrder(
+          builderData.homeSectionOrder,
+          builderData.sectionVariants,
+        ),
+        afterType,
+        sectionType,
+      );
+      setPinnedSectionTypes((prev) =>
+        prev.includes(sectionType) ? prev : [...prev, sectionType],
+      );
+      setBuilderData((prev) => ({
+        ...prev,
+        sectionVariants: {
+          ...prev.sectionVariants,
+          [sectionType]: layoutKey,
+        },
+        homeSectionOrder: order,
+      }));
     }
-    order.splice(Math.max(insertAt, 0), 0, newType);
-    setBuilderData((prev) => ({
-      ...prev,
-      homeSectionOrder: mergeHomeSectionOrder(order),
-    }));
+    setOpenAddFor(null);
+    setBuilderFocusKey(null);
     setBuilderPreviewTick((t) => t + 1);
   };
 
   const removeHomeSection = (sectionType: string) => {
     if (LOCKED_HOME_SECTIONS.has(sectionType)) return;
+    const isHome =
+      builderData.type !== "Multiple Pages Website" ||
+      activeBuilderPageId === "home";
+    if (!isHome) {
+      const page = (builderData.pages || []).find(
+        (item) => item.id === activeBuilderPageId,
+      );
+      if (!page) return;
+      const order = mergeInnerSectionOrder(
+        page.sectionOrder,
+        defaultInnerSectionOrder(
+          page.sectionType,
+          builderData.sectionVariants[page.sectionType] || "",
+          isCoolFixBuilder(builderData),
+        ),
+      ).filter((type) => type !== sectionType);
+      setBuilderData((prev) => ({
+        ...prev,
+        pages: (prev.pages || []).map((item) =>
+          item.id === page.id ? { ...item, sectionOrder: order } : item,
+        ),
+      }));
+      setBuilderFocusKey(null);
+      setBuilderPreviewTick((t) => t + 1);
+      return;
+    }
     setBuilderData((prev) => {
       const next = { ...prev.sectionVariants };
       delete next[sectionType];
@@ -1107,41 +1472,68 @@ const TemplatesPage = () => {
     pageBodyType?: string,
     pageBodyKey?: string,
     homeSectionOrder?: string[] | null,
+    innerSectionOrder?: string[] | null,
   ): Record<string, string> => {
     const next: Record<string, string> = {};
     if (pageBodyType && pageBodyKey) {
-      if (source.Topbar) next.Topbar = source.Topbar;
-      if (source.Header) next.Header = source.Header;
-      next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
-      next[pageBodyType] = pageBodyKey;
-      if (pageBodyKey === "CoolFixServicePage1") {
-        next.CTA = source.CTA || "CoolFixCTA1";
-        next.Highlights = source.Highlights || "CoolFixHighlights1";
+      const coolFixPage = Object.values(source).some((key) =>
+        String(key || "").startsWith("CoolFix"),
+      );
+      const order = mergeInnerSectionOrder(
+        innerSectionOrder,
+        defaultInnerSectionOrder(pageBodyType, pageBodyKey, coolFixPage),
+      );
+      for (const section of order) {
+        if (section === pageBodyType) {
+          next[section] = pageBodyKey;
+          continue;
+        }
+        if (section === "Breadcrumb") {
+          next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
+          continue;
+        }
+        if (
+          section === "CTA" &&
+          (coolFixPage ||
+            pageBodyKey === "CoolFixServicePage1" ||
+            pageBodyKey === "CoolFixGalleryPage1")
+        ) {
+          next.CTA = source.CTA || "CoolFixCTA1";
+          continue;
+        }
+        if (
+          section === "Highlights" &&
+          (coolFixPage || pageBodyKey === "CoolFixServicePage1")
+        ) {
+          next.Highlights = source.Highlights || "CoolFixHighlights1";
+          continue;
+        }
+        if (
+          section === "Stats" &&
+          (coolFixPage || pageBodyKey === "CoolFixAboutPage1")
+        ) {
+          next.Stats = source.Stats || "CoolFixStats1";
+          continue;
+        }
+        if (
+          section === "WhyChooseUs" &&
+          (coolFixPage || pageBodyKey === "CoolFixAboutPage1")
+        ) {
+          next.WhyChooseUs = source.WhyChooseUs || "CoolFixWhyChooseUs1";
+          continue;
+        }
+        if (
+          section === "HowWeWork" &&
+          (coolFixPage || pageBodyKey === "CoolFixAboutPage1")
+        ) {
+          next.HowWeWork = source.HowWeWork || "CoolFixHowWeWork1";
+          continue;
+        }
+        if (source[section]) next[section] = source[section];
       }
-      if (pageBodyKey === "CoolFixGalleryPage1") {
-        next.CTA = source.CTA || "CoolFixCTA1";
-      }
-      if (source.Footer) next.Footer = source.Footer;
       return next;
     }
-    const coolFixHome = String(source.Header || "").startsWith("CoolFix");
-    const order = coolFixHome
-      ? [
-          "Topbar",
-          "Header",
-          "Banner",
-          "HowWeWork",
-          "About",
-          "Service",
-          "Stats",
-          "Testimonial",
-          "CTA",
-          "Highlights",
-          "Footer",
-        ]
-      : Array.isArray(homeSectionOrder) && homeSectionOrder.length
-        ? homeSectionOrder
-        : HOME_SECTIONS;
+    const order = mergeHomeSectionOrder(homeSectionOrder, source);
     for (const section of order) {
       if (source[section]) next[section] = source[section];
     }
@@ -1191,7 +1583,13 @@ const TemplatesPage = () => {
       const layoutKey = variants[page.sectionType];
       if (!layoutKey) return;
       const csv = variantsCsv(
-        pageVariantsFor(variants, page.sectionType, layoutKey),
+        pageVariantsFor(
+          variants,
+          page.sectionType,
+          layoutKey,
+          undefined,
+          page.sectionOrder,
+        ),
       );
       if (!csv) return;
       qs.append(
@@ -1253,10 +1651,7 @@ const TemplatesPage = () => {
       (p) => p.id === activeBuilderPageId,
     );
     if (!page) return null;
-    const pageOptions = uniqueSectionLayouts(page.sectionType, [
-      ...(layoutsBySection[page.sectionType] || []),
-      ...fallbackPageLayouts(page.sectionType),
-    ]);
+    const pageOptions = sectionLayoutOptions(page.sectionType);
     const savedLayout = source[page.sectionType];
     const validSaved = pageOptions.some((row) => row.key === savedLayout)
       ? savedLayout
@@ -1265,7 +1660,11 @@ const TemplatesPage = () => {
       validSaved ||
       (pinnedSectionTypes.includes(page.sectionType)
         ? ""
-        : preferredLayoutKey(page.sectionType, pageOptions));
+        : preferredLayoutKey(
+            page.sectionType,
+            pageOptions,
+            isCoolFixBuilder(builderData),
+          ));
     if (!pageLayout) return null;
 
     const url = buildComposeUrl(
@@ -1273,6 +1672,8 @@ const TemplatesPage = () => {
         { ...source, [page.sectionType]: pageLayout },
         page.sectionType,
         pageLayout,
+        undefined,
+        page.sectionOrder,
       ),
       builderCategoryName,
     );
@@ -1653,17 +2054,16 @@ const TemplatesPage = () => {
                       const isHomeList =
                         !builderData.type.startsWith("Multiple") ||
                         activeBuilderPageId === "home";
-                      if (!isHomeList) return true;
+                      if (!isHomeList) {
+                        return !LOCKED_HOME_SECTIONS.has(sectionType);
+                      }
                       return (
                         Boolean(builderData.sectionVariants[sectionType]) ||
                         pinnedSectionTypes.includes(sectionType)
                       );
                     })
                     .map((sectionType, sectionIndex, visibleTypes) => {
-                    const options = uniqueSectionLayouts(sectionType, [
-                      ...(layoutsBySection[sectionType] || []),
-                      ...fallbackPageLayouts(sectionType),
-                    ]);
+                    const options = sectionLayoutOptions(sectionType);
                     const selectedKey =
                       options.some(
                         (row) =>
@@ -1675,19 +2075,12 @@ const TemplatesPage = () => {
                     const isHomeLayouts =
                       !builderData.type.startsWith("Multiple") ||
                       activeBuilderPageId === "home";
-                    const canReorderHome =
-                      isHomeLayouts && !LOCKED_HOME_SECTIONS.has(sectionType);
-                    const availableToAdd = sectionTypesOrdered.filter(
-                      (type) =>
-                        !builderData.sectionVariants[type] &&
-                        !pinnedSectionTypes.includes(type),
+                    const canReorder =
+                      !LOCKED_HOME_SECTIONS.has(sectionType);
+                    const canRemove = !LOCKED_HOME_SECTIONS.has(sectionType);
+                    const addChoices = categoryAddChoices.filter(
+                      (choice) => !visibleTypes.includes(choice.sectionType),
                     );
-                    const canAddAfter =
-                      isHomeLayouts &&
-                      !LOCKED_HOME_SECTIONS.has(sectionType) &&
-                      availableToAdd.length > 0;
-                    const canRemoveHome =
-                      isHomeLayouts && !LOCKED_HOME_SECTIONS.has(sectionType);
                     const movableTypes = visibleTypes.filter(
                       (type) => !LOCKED_HOME_SECTIONS.has(type),
                     );
@@ -1698,7 +2091,9 @@ const TemplatesPage = () => {
                       ? "page body"
                       : isInnerChrome
                         ? "inner"
-                        : "home";
+                        : isHomeLayouts
+                          ? "home"
+                          : "page";
 
                     return (
                       <div
@@ -1712,9 +2107,9 @@ const TemplatesPage = () => {
                               {scopeLabel}
                             </span>
                           </label>
-                          {(canReorderHome || canAddAfter || canRemoveHome) && (
+                          {(canReorder || canRemove) && (
                             <div className="flex items-center gap-1">
-                              {canReorderHome ? (
+                              {canReorder ? (
                                 <>
                                   <button
                                     type="button"
@@ -1739,26 +2134,73 @@ const TemplatesPage = () => {
                                   </button>
                                 </>
                               ) : null}
-                              {canAddAfter ? (
-                                <select
-                                  value=""
-                                  aria-label={`Add section after ${sectionTypeLabel(sectionType)}`}
-                                  onChange={(e) => {
-                                    const next = e.target.value;
-                                    if (!next) return;
-                                    addHomeSectionAfter(sectionType, next);
-                                  }}
-                                  className="max-w-[140px] rounded-lg border border-dashed border-gray-300 bg-gray-50 px-2 py-1 text-[11px] font-semibold text-gray-600 dark:border-white/20 dark:bg-[#171717] dark:text-gray-300"
+                              {canRemove ? (
+                                <div
+                                  className="relative"
+                                  onMouseDown={(event) => event.stopPropagation()}
                                 >
-                                  <option value="">+ Add</option>
-                                  {availableToAdd.map((type) => (
-                                    <option key={type} value={type}>
-                                      {sectionTypeLabel(type)}
-                                    </option>
-                                  ))}
-                                </select>
+                                  <button
+                                    type="button"
+                                    aria-label={`Add component after ${sectionTypeLabel(sectionType)}`}
+                                    aria-expanded={openAddFor === sectionType}
+                                    onClick={(event) => {
+                                      if (openAddFor === sectionType) {
+                                        setOpenAddFor(null);
+                                        return;
+                                      }
+                                      const rect = event.currentTarget.getBoundingClientRect();
+                                      const menuHeight = 288;
+                                      const menuWidth = 256;
+                                      const top =
+                                        rect.bottom + 6 + menuHeight > window.innerHeight
+                                          ? Math.max(8, rect.top - 6 - menuHeight)
+                                          : rect.bottom + 6;
+                                      setAddMenuPos({
+                                        top,
+                                        left: Math.max(8, rect.right - menuWidth),
+                                      });
+                                      setOpenAddFor(sectionType);
+                                    }}
+                                    className="rounded-lg border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-600 hover:border-[#e53935]/50 hover:text-[#e53935] dark:border-white/10 dark:text-gray-300"
+                                  >
+                                    Add
+                                  </button>
+                                  {openAddFor === sectionType && addMenuPos ? (
+                                    <div
+                                      ref={addMenuRef}
+                                      className="fixed z-50 w-64 max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-white/10 dark:bg-[#171717]"
+                                      style={{ top: addMenuPos.top, left: addMenuPos.left }}
+                                    >
+                                      <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                                        {builderData.categories[0] || "Category"} components
+                                      </p>
+                                      {addChoices.length === 0 ? (
+                                        <p className="px-3 py-2 text-[12px] text-gray-500">
+                                          No more components in this category.
+                                        </p>
+                                      ) : (
+                                        addChoices.map((choice) => (
+                                          <button
+                                            key={choice.layoutKey}
+                                            type="button"
+                                            onClick={() =>
+                                              addLayoutSection(
+                                                sectionType,
+                                                choice.sectionType,
+                                                choice.layoutKey,
+                                              )
+                                            }
+                                            className="block w-full px-3 py-2 text-left text-[12px] font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#e53935] dark:text-gray-200 dark:hover:bg-white/5"
+                                          >
+                                            {choice.name}
+                                          </button>
+                                        ))
+                                      )}
+                                    </div>
+                                  ) : null}
+                                </div>
                               ) : null}
-                              {canRemoveHome ? (
+                              {canRemove ? (
                                 <button
                                   type="button"
                                   aria-label={`Remove ${sectionTypeLabel(sectionType)}`}
