@@ -7,6 +7,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const KEY = 'template-coolfix-1';
+const CATEGORY_SLUG = 'professional-services';
 
 const template = {
   key: KEY,
@@ -30,13 +31,13 @@ const template = {
     'Topbar',
     'Header',
     'Banner',
-    'Stats',
+    'HowWeWork',
     'About',
     'Service',
-    'Highlights',
-    'HowWeWork',
-    'CTA',
+    'Stats',
     'Testimonial',
+    'CTA',
+    'Highlights',
     'Footer',
   ],
   sectionVariants: {
@@ -60,11 +61,21 @@ const template = {
     GetQuotePage: 'CoolFixGetQuote1',
     BookServicePage: 'CoolFixBookService1',
     Footer: 'CoolFixFooter1',
+    Breadcrumb: 'Breadcrumb-1',
   },
   variables: {
     '--font-body': '"Geist", Arial, Helvetica, sans-serif',
     '--font-heading': '"Geist", Arial, Helvetica, sans-serif',
     fontFamily: '"Geist", Arial, Helvetica, sans-serif',
+    '--primary-bg': '#ff6b00',
+    '--primary-text': '#ffffff',
+    '--header-bg': '#0b2a5b',
+    '--header-text': '#ffffff',
+    '--secondary-bg': '#ffffff',
+    '--secondary-text': '#0b2a5b',
+    '--hero-bg': '#0b2a5b',
+    '--hero-title': '#ffffff',
+    '--blue-bg': '#ff6b00',
   },
   order: 9201,
   status: 'Active',
@@ -88,28 +99,45 @@ async function main() {
   });
   console.log(`✓ Template ${row.key} — ${row.title}`);
 
-  const categories = await prisma.categoryContent.findMany();
-  const target = categories.find((category) => {
-    const slug = String(category.categorySlug || '').toLowerCase();
-    const name = String(category.categoryName || '').toLowerCase();
-    return slug === 'services' || name === 'services' || name.includes('professional');
+  const category = await prisma.category.findUnique({
+    where: { slug: CATEGORY_SLUG },
   });
-
-  if (!target) {
-    console.log('No Services category row. Template is still listed under All.');
-    return;
+  if (!category) {
+    throw new Error(`Category not found: ${CATEGORY_SLUG}`);
   }
 
-  const keys = Array.isArray(target.templateKeys) ? target.templateKeys : [];
-  if (!keys.includes(KEY)) {
+  const contents = await prisma.categoryContent.findMany();
+  for (const content of contents) {
+    const keys = Array.isArray(content.templateKeys) ? content.templateKeys : [];
+    if (content.categorySlug === CATEGORY_SLUG || !keys.includes(KEY)) continue;
     await prisma.categoryContent.update({
-      where: { id: target.id },
-      data: { templateKeys: [...keys, KEY] },
+      where: { id: content.id },
+      data: { templateKeys: keys.filter((key) => key !== KEY) },
     });
-    console.log(`✓ Linked to category ${target.categoryName}`);
-  } else {
-    console.log(`✓ Already linked to ${target.categoryName}`);
+    console.log(`✓ Removed from ${content.categoryName}`);
   }
+
+  const existing = contents.find((content) => content.categorySlug === CATEGORY_SLUG);
+  const keys = Array.isArray(existing?.templateKeys)
+    ? existing.templateKeys.filter((key) => key !== KEY)
+    : [];
+
+  await prisma.categoryContent.upsert({
+    where: { categorySlug: CATEGORY_SLUG },
+    create: {
+      categorySlug: CATEGORY_SLUG,
+      categoryName: category.name,
+      templateKeys: [KEY],
+      sections: {},
+      status: 'Active',
+    },
+    update: {
+      categoryName: category.name,
+      templateKeys: [...keys, KEY],
+      status: 'Active',
+    },
+  });
+  console.log(`✓ Linked to ${category.name}`);
 }
 
 main()

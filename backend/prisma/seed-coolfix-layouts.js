@@ -7,6 +7,8 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+const CATEGORY_SLUG = 'professional-services';
+
 const layouts = [
   ['CoolFixTopbar1', 'CoolFix Topbar', 'Topbar', 'home'],
   ['CoolFixHeader1', 'CoolFix Header', 'Header', 'home'],
@@ -31,10 +33,12 @@ const layouts = [
 ];
 
 async function main() {
-  const footer = await prisma.layout.findUnique({
-    where: { key: 'CoolFixFooter1' },
+  const category = await prisma.category.findUnique({
+    where: { slug: CATEGORY_SLUG },
   });
-  const categorySlug = footer?.categorySlug ?? null;
+  if (!category) {
+    throw new Error(`Category not found: ${CATEGORY_SLUG}`);
+  }
 
   let created = 0;
   let updated = 0;
@@ -48,7 +52,7 @@ async function main() {
         name,
         sectionType,
         sectionNumber: 1,
-        categorySlug,
+        categorySlug: CATEGORY_SLUG,
         scope,
         order: index + 1,
         status: 'Active',
@@ -58,13 +62,14 @@ async function main() {
         name,
         sectionType,
         scope,
+        categorySlug: CATEGORY_SLUG,
         status: 'Active',
         description: 'CoolFix AC Repair & Services',
       },
     });
     if (existing) updated += 1;
     else created += 1;
-    console.log(`✓ ${key} (${sectionType} / ${scope})`);
+    console.log(`✓ ${key} (${sectionType} / ${scope} / ${CATEGORY_SLUG})`);
   }
   console.log(
     `\nDone: ${layouts.length} CoolFix layouts (created ${created}, updated ${updated})`,
