@@ -16,6 +16,7 @@ import {
   getTemplateVariables,
   refreshCategoryContentFromApi,
   resolveLayoutPreview,
+  withCoolFixBreadcrumbBackground,
 } from "@/app/editor/layout/src/data/templateFlow";
 import {
   PreviewProvider,
@@ -326,7 +327,8 @@ const COOLFIX_HOME_KEYS = [
 function coolFixHomeKeys(pageId: string, keys: string[]) {
   if (pageId && pageId !== "home") return keys;
   if (!keys.some((key) => key.startsWith("CoolFix"))) return keys;
-  return COOLFIX_HOME_KEYS;
+  // Caller order is the layout order (admin up/down, saved homeSectionOrder).
+  return keys.length ? keys : COOLFIX_HOME_KEYS;
 }
 
 function withCoolFixPageCompanions(keys: string[]) {
@@ -357,6 +359,13 @@ function sitePagesToMenu(pages: SitePage[]): PageLink[] {
   }));
 }
 
+function canonicalPageSlug(value: string) {
+  const slug = value.trim().toLowerCase().replace(/\s+/g, "-");
+  if (slug === "about-us" || slug === "aboutus") return "about";
+  if (slug === "contact-us" || slug === "contactus") return "contact";
+  return slug;
+}
+
 function matchPageId(pages: SitePage[], currentPage: string): string | null {
   const raw = currentPage.trim().toLowerCase();
   if (!raw) return null;
@@ -382,7 +391,13 @@ function matchPageId(pages: SitePage[], currentPage: string): string | null {
   );
   if (byStrippedSlug) return byStrippedSlug.id;
 
-  return null;
+  const target = canonicalPageSlug(strippedSlug || slug);
+  const byCanonical = pages.find(
+    (page) =>
+      canonicalPageSlug(page.id) === target ||
+      canonicalPageSlug(page.label) === target,
+  );
+  return byCanonical?.id || null;
 }
 
 const PAGE_PATH_ALIASES: Record<string, string> = {
@@ -774,6 +789,13 @@ function ComposeInner() {
         data = { ...data, title: pageTitle };
       }
 
+      if (
+        sectionType === "Breadcrumb" &&
+        variantKeys.some((variantKey) => variantKey.startsWith("CoolFix"))
+      ) {
+        data = withCoolFixBreadcrumbBackground(data);
+      }
+
       if (sectionType === "CustomPage" && pageTitle) {
         data = {
           ...data,
@@ -945,7 +967,8 @@ function ComposeInner() {
                   position: absolute;
                   inset: 0;
                   background: rgba(28, 28, 28, 0.75);
-                  z-index: 0;
+                  z-index: 1;
+                  pointer-events: none;
                 }
                 .coolfix-theme .cf-page-crumb::after {
                   content: "";
@@ -958,6 +981,7 @@ function ComposeInner() {
                   opacity: 0.6;
                   transform: rotate(34deg);
                   z-index: 1;
+                  pointer-events: none;
                 }
                 .coolfix-theme .cf-page-crumb > div { position: relative; z-index: 2; }
                 .coolfix-theme .cf-page-crumb nav,

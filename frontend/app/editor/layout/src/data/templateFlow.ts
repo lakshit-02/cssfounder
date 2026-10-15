@@ -13,7 +13,12 @@ export type BuilderTemplate = {
   previewimage?: string | null;
   preview_description?: string | null;
   prebuilt_pages: number;
-  pages?: Array<{ id: string; label: string; sectionType: string }> | null;
+  pages?: Array<{
+    id: string;
+    label: string;
+    sectionType: string;
+    sectionOrder?: string[];
+  }> | null;
   /** When set, home canvas order follows this list (template-1 style). */
   homeSectionOrder?: string[] | null;
   sectionVariants: Record<string, string>;
@@ -86,15 +91,25 @@ const mergeRemoteTemplates = (remote: BuilderTemplate[]) => {
   const merged = remote.map((item) => {
     const local = jsonById.get(item.id);
     if (!local) return item;
+    const remoteOrder = Array.isArray(item.homeSectionOrder)
+      ? item.homeSectionOrder.filter((type) => typeof type === "string" && type.trim())
+      : [];
+    const remotePages = Array.isArray(item.pages) ? item.pages : [];
     return {
       ...item,
-      title: local.title,
-      type: local.type,
-      pages: local.pages || item.pages,
-      homeSectionOrder: local.homeSectionOrder || item.homeSectionOrder,
-      sectionVariants: local.sectionVariants,
-      variables: local.variables || item.variables,
-      preview_description: local.preview_description || item.preview_description,
+      title: item.title || local.title,
+      type: item.type || local.type,
+      pages: remotePages.length ? remotePages : local.pages,
+      homeSectionOrder: remoteOrder.length ? remoteOrder : local.homeSectionOrder,
+      sectionVariants: {
+        ...local.sectionVariants,
+        ...(item.sectionVariants || {}),
+      },
+      variables: {
+        ...(local.variables || {}),
+        ...(item.variables || {}),
+      },
+      preview_description: item.preview_description || local.preview_description,
     };
   });
   return [
@@ -319,6 +334,36 @@ export const withCoolFixContent = (
 };
 
 export const COOLFIX_TEMPLATE_ID = "template-coolfix-1";
+export const COOLFIX_BREADCRUMB_IMAGE = "/services/images/page-header-bg.jpg";
+
+/** Shared breadcrumb content ships /bg1.jpg and /bg2.jpg. CoolFix uses its own header photo. */
+export function isStockBreadcrumbImage(value: unknown) {
+  const file = String(value || "")
+    .trim()
+    .split("?")[0]
+    .split("#")[0]
+    .replace(/\\/g, "/")
+    .split("/")
+    .pop()
+    ?.toLowerCase();
+  return !file || file === "bg1.jpg" || file === "bg2.jpg";
+}
+
+export function withCoolFixBreadcrumbBackground<T extends Record<string, unknown>>(
+  data: T,
+): T {
+  if (!isStockBreadcrumbImage(data.backgroundImage)) return data;
+  return { ...data, backgroundImage: COOLFIX_BREADCRUMB_IMAGE };
+}
+
+export function isCoolFixTemplate(
+  template?: { id?: string; sectionVariants?: Record<string, string> } | null,
+) {
+  return (
+    template?.id === COOLFIX_TEMPLATE_ID ||
+    template?.sectionVariants?.Header === "CoolFixHeader1"
+  );
+}
 
 const coolFixTemplate: BuilderTemplate = {
   id: COOLFIX_TEMPLATE_ID,
@@ -508,7 +553,14 @@ export const getTemplatesForCategory = (
   websiteRelated?: string | null,
 ) => {
   if (isServiceProviderProfessionalCategory(category, websiteRelated)) {
-    return [plumbingTemplate, coolFixTemplate];
+    const merged = getBuilderTemplates();
+    const plumbing =
+      merged.find((template) => template.id === plumbingTemplate.id) ??
+      plumbingTemplate;
+    const coolFix =
+      merged.find((template) => template.id === coolFixTemplate.id) ??
+      coolFixTemplate;
+    return [plumbing, coolFix];
   }
   const templateIds = [...getTemplateIdsForCategory(category)];
   if (category.trim().toLowerCase() === "pet services") {
@@ -1747,19 +1799,22 @@ export const createCustomPageBreadcrumb = (
     ...resolveVariantContent(commonBreadcrumb, breadcrumbVariant),
     ...resolveVariantContent(categoryBreadcrumb, breadcrumbVariant),
   };
+  const crumbData = {
+    ...previewData,
+    title: trimmedLabel,
+    homeLabel:
+      (typeof previewData.homeLabel === "string" && previewData.homeLabel) ||
+      "Home",
+  };
   return {
     id: `Breadcrumb-${pageSlug}`,
     page: pageSlug,
     type: "Breadcrumb",
     variant: breadcrumbVariant,
     data: {
-      [breadcrumbVariant]: {
-        ...previewData,
-        title: trimmedLabel,
-        homeLabel:
-          (typeof previewData.homeLabel === "string" && previewData.homeLabel) ||
-          "Home",
-      } as SectionData,
+      [breadcrumbVariant]: (isCoolFixTemplate(template)
+        ? withCoolFixBreadcrumbBackground(crumbData)
+        : crumbData) as SectionData,
     },
   };
 };
@@ -2616,6 +2671,11 @@ function pageVariantsFor(
       next.Stats = source.Stats || "Stats-5";
       next.CTA = source.CTA || "CTA-5";
     }
+    if (pageBodyKey === "CoolFixAboutPage1") {
+      next.Stats = source.Stats || "CoolFixStats1";
+      next.WhyChooseUs = source.WhyChooseUs || "CoolFixWhyChooseUs1";
+      next.HowWeWork = source.HowWeWork || "CoolFixHowWeWork1";
+    }
     if (pageBodyKey === "CoolFixServicePage1") {
       next.CTA = source.CTA || "CoolFixCTA1";
       next.Highlights = source.Highlights || "CoolFixHighlights1";
@@ -2627,23 +2687,24 @@ function pageVariantsFor(
     return next;
   }
   const coolFixHome = String(source.Header || "").startsWith("CoolFix");
-  const order = coolFixHome
-    ? [
-        "Topbar",
-        "Header",
-        "Banner",
-        "HowWeWork",
-        "About",
-        "Service",
-        "Stats",
-        "Testimonial",
-        "CTA",
-        "Highlights",
-        "Footer",
-      ]
-    : Array.isArray(homeSectionOrder) && homeSectionOrder.length
+  const order =
+    Array.isArray(homeSectionOrder) && homeSectionOrder.length
       ? homeSectionOrder
-      : [...HOME_SECTIONS_PREVIEW];
+      : coolFixHome
+        ? [
+            "Topbar",
+            "Header",
+            "Banner",
+            "HowWeWork",
+            "About",
+            "Service",
+            "Stats",
+            "Testimonial",
+            "CTA",
+            "Highlights",
+            "Footer",
+          ]
+        : [...HOME_SECTIONS_PREVIEW];
   for (const section of order) {
     if (source[section]) next[section] = source[section];
   }
@@ -3110,7 +3171,58 @@ export const buildSelectedConfig = (
           page: page.id,
         });
       }
-      return [pageBody, ...companions];
+      const savedOrder = page.sectionOrder;
+      if (Array.isArray(savedOrder)) {
+        const present = new Set<string>([
+          pageBody.type,
+          ...companions.map((section) => section.type),
+        ]);
+        const sameBody = (left: string, right: string) =>
+          left === right ||
+          (left === "AboutPage" && right === "About") ||
+          (left === "About" && right === "AboutPage") ||
+          (left === "ServicePage" && right === "Service") ||
+          (left === "Service" && right === "ServicePage") ||
+          (left === "GalleryPage" && right === "Gallery") ||
+          (left === "Gallery" && right === "GalleryPage") ||
+          (left === "ContactPage" && right === "Contact") ||
+          (left === "Contact" && right === "ContactPage");
+        for (const type of savedOrder) {
+          if (["Topbar", "Header", "Footer", "Breadcrumb"].includes(type)) continue;
+          if ([...present].some((item) => sameBody(item, type))) continue;
+          const extraVariant = builderTemplate.sectionVariants[type];
+          if (!extraVariant) continue;
+          companions.push({
+            ...makeSection(type, extraVariant),
+            id: `${type}-${page.id}`,
+            page: page.id,
+          });
+          present.add(type);
+        }
+      }
+      const listed = (type: string) => {
+        if (!Array.isArray(savedOrder) || savedOrder.length < 2) return true;
+        if (savedOrder.includes(type)) return true;
+        if (type === "About" && savedOrder.includes("AboutPage")) return true;
+        if (type === "Service" && savedOrder.includes("ServicePage")) return true;
+        if (type === "Gallery" && savedOrder.includes("GalleryPage")) return true;
+        if (type === "Contact" && savedOrder.includes("ContactPage")) return true;
+        return false;
+      };
+      const block = [pageBody, ...companions].filter((section) =>
+        listed(section.type),
+      );
+      if (!Array.isArray(savedOrder) || savedOrder.length < 2) return block;
+      const rank = new Map(savedOrder.map((type, index) => [type, index]));
+      const sectionRank = (type: string) => {
+        if (rank.has(type)) return rank.get(type) ?? 100;
+        if (type === "About" && rank.has("AboutPage")) return rank.get("AboutPage") ?? 100;
+        if (type === "Service" && rank.has("ServicePage")) return rank.get("ServicePage") ?? 100;
+        if (type === "Gallery" && rank.has("GalleryPage")) return rank.get("GalleryPage") ?? 100;
+        if (type === "Contact" && rank.has("ContactPage")) return rank.get("ContactPage") ?? 100;
+        return 100;
+      };
+      return [...block].sort((left, right) => sectionRank(left.type) - sectionRank(right.type));
     });
 
     const footerIndex = homeSections.findIndex(

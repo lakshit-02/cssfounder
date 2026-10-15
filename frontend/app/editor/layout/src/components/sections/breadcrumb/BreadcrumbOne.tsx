@@ -2,29 +2,37 @@ import type { CSSProperties } from "react";
 import { SectionProps } from "../../../types/section";
 import InlineRichText from "../../builder/InlineRichText";
 
+const COOLFIX_CRUMB_IMAGE = "/services/images/page-header-bg.jpg";
+
 export default function BreadcrumbOne({ data = {} }: SectionProps) {
   const title = String(data.title || "Page");
   const homeLabel = String(data.homeLabel || "Home");
   const parentLabel = String(data.parentLabel || "").trim();
   const pretitle = String(data.pretitle || "");
-  const backgroundImage = String(data.backgroundImage || "").trim();
+  const storedImage = String(data.backgroundImage || "").trim();
+  const backgroundImage = storedImage || COOLFIX_CRUMB_IMAGE;
+  const cssUrl = backgroundImage.replace(/"/g, "%22");
 
   return (
     <section
-      className="cf-page-crumb border-b border-slate-200 bg-slate-50"
+      className="cf-page-crumb relative border-b border-slate-200 bg-slate-50"
       style={
-        backgroundImage
-          ? ({
-              ["--cf-crumb-image" as string]: `url("${backgroundImage}")`,
-              backgroundImage: `url("${backgroundImage}")`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            } as CSSProperties)
-          : undefined
+        {
+          ["--cf-crumb-image" as string]: `url("${cssUrl}")`,
+        } as CSSProperties
       }
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-5 py-8 md:px-8">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={backgroundImage}
+        alt=""
+        data-editor-media
+        data-editor-media-type="image"
+        data-editor-media-role="background"
+        data-editor-media-src={backgroundImage}
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+      />
+      <div className="relative z-[2] mx-auto flex w-full max-w-7xl flex-col gap-2 px-5 py-8 md:px-8">
         {pretitle ? (
           <p
             className="text-xs font-bold uppercase tracking-[0.2em] theme-accent"

@@ -44,6 +44,10 @@ import {
   withTopbarLayoutSkin,
   applyTopbarLayoutSkins,
   withCoolFixContent,
+  withCoolFixBreadcrumbBackground,
+  isCoolFixTemplate,
+  isStockBreadcrumbImage,
+  COOLFIX_BREADCRUMB_IMAGE,
 } from "./src/data/templateFlow";
 import { sectionRegistry } from "./src/lib/sectionRegistry";
 import { site as petDefaultSite } from "./src/components/sections/data/pet/petDefaults";
@@ -1916,6 +1920,33 @@ const alignTemplatePageSections = (
       resolveLayoutPreview(activeBreadcrumbVariant, category)?.data || {};
     const savedBreadcrumbData =
       savedBreadcrumb?.data?.[savedBreadcrumbVariant] || {};
+    const mergedCrumb = {
+      ...mergeSectionContent(
+        breadcrumbData as Record<string, unknown>,
+        savedBreadcrumbData as Record<string, unknown>,
+      ),
+      pretitle:
+        (savedBreadcrumbData.pretitle as string | undefined) ||
+        (typeof pageBodyData.pretitle === "string"
+          ? pageBodyData.pretitle
+          : undefined),
+      title:
+        (savedBreadcrumbData.title as string | undefined) ||
+        pageDefinition.label ||
+        (typeof pageBodyData.title === "string"
+          ? pageBodyData.title
+          : undefined),
+      desc:
+        (savedBreadcrumbData.desc as string | undefined) ||
+        (typeof pageBodyData.desc === "string"
+          ? pageBodyData.desc
+          : undefined),
+      desc2:
+        (savedBreadcrumbData.desc2 as string | undefined) ||
+        (typeof pageBodyData.desc2 === "string"
+          ? pageBodyData.desc2
+          : undefined),
+    };
     const breadcrumb: SectionItem = {
       id: savedBreadcrumb?.id || `Breadcrumb-${pageDefinition.id}`,
       page: pageDefinition.id,
@@ -1923,33 +1954,9 @@ const alignTemplatePageSections = (
       variant: activeBreadcrumbVariant,
       data: {
         ...(savedBreadcrumb?.data || {}),
-        [activeBreadcrumbVariant]: {
-          ...mergeSectionContent(
-            breadcrumbData as Record<string, unknown>,
-            savedBreadcrumbData as Record<string, unknown>,
-          ),
-          pretitle:
-            (savedBreadcrumbData.pretitle as string | undefined) ||
-            (typeof pageBodyData.pretitle === "string"
-              ? pageBodyData.pretitle
-              : undefined),
-          title:
-            (savedBreadcrumbData.title as string | undefined) ||
-            pageDefinition.label ||
-            (typeof pageBodyData.title === "string"
-              ? pageBodyData.title
-              : undefined),
-          desc:
-            (savedBreadcrumbData.desc as string | undefined) ||
-            (typeof pageBodyData.desc === "string"
-              ? pageBodyData.desc
-              : undefined),
-          desc2:
-            (savedBreadcrumbData.desc2 as string | undefined) ||
-            (typeof pageBodyData.desc2 === "string"
-              ? pageBodyData.desc2
-              : undefined),
-        },
+        [activeBreadcrumbVariant]: (isCoolFixTemplate(template)
+          ? withCoolFixBreadcrumbBackground(mergedCrumb)
+          : mergedCrumb) as SectionData,
       },
     };
     const attached: SectionItem[] = [breadcrumb, section];
@@ -2376,10 +2383,6 @@ const ensureMissingAboutPageCompanions = (
         if (normalizePageSlug(section.page || "") !== slug) return true;
         return section.type !== "CTA";
       });
-      if (stripped.length !== next.length) {
-        next = stripped;
-        changed = true;
-      }
       const pack =
         (withCoolFixContent(
           "CoolFixAboutPage1",
@@ -2390,23 +2393,21 @@ const ensureMissingAboutPageCompanions = (
         { type: "WhyChooseUs", variant: "CoolFixWhyChooseUs1", content: pack.whyChooseUs },
         { type: "HowWeWork", variant: "CoolFixHowWeWork1", content: pack.steps },
       ];
-      const missing = companions.filter(
-        (item) =>
-          !stripped.some(
+      const onThisPage = (section: SectionItem) =>
+        normalizePageSlug(section.page || "") === slug;
+      const existing = new Map(
+        stripped
+          .filter(
             (section) =>
-              section.type === item.type &&
-              normalizePageSlug(section.page || "") === slug,
-          ),
+              onThisPage(section) &&
+              companions.some((item) => item.type === section.type),
+          )
+          .map((section) => [section.type, section]),
       );
-      if (!missing.length) {
-        next = stripped;
-        return;
-      }
-      const aboutIndex = stripped.findIndex((section) => section === body || section.id === body.id);
-      const insertAt = aboutIndex === -1 ? stripped.length : aboutIndex + 1;
-      next = [
-        ...stripped.slice(0, insertAt),
-        ...missing.map((item) => ({
+      const orderedCompanions = companions.map((item) => {
+        const saved = existing.get(item.type);
+        if (saved) return saved;
+        return {
           id: `${item.type}-${pageDefinition.id}`,
           page: pageDefinition.id,
           type: item.type,
@@ -2414,13 +2415,32 @@ const ensureMissingAboutPageCompanions = (
           data: {
             [item.variant]:
               item.content && typeof item.content === "object"
-                ? item.content
-                : {},
+                ? (item.content as SectionData)
+                : ({} as SectionData),
           },
-        })),
-        ...stripped.slice(insertAt),
+        };
+      });
+      const withoutCompanions = stripped.filter(
+        (section) =>
+          !onThisPage(section) ||
+          !companions.some((item) => item.type === section.type),
+      );
+      const aboutIndex = withoutCompanions.findIndex(
+        (section) => section === body || section.id === body.id,
+      );
+      const insertAt = aboutIndex === -1 ? withoutCompanions.length : aboutIndex + 1;
+      const arranged = [
+        ...withoutCompanions.slice(0, insertAt),
+        ...orderedCompanions,
+        ...withoutCompanions.slice(insertAt),
       ];
-      changed = true;
+      const same =
+        arranged.length === next.length &&
+        arranged.every((section, index) => section === next[index]);
+      if (!same) {
+        next = arranged;
+        changed = true;
+      }
       return;
     }
     if (
@@ -2512,6 +2532,29 @@ const ensureMissingAboutPageCompanions = (
   return changed ? next : sections;
 };
 
+/** Explicit admin page order keeps a section. Missing order keeps the theme default. */
+const pageSectionOrderLists = (
+  page: { sectionOrder?: string[] } | undefined,
+  type: string,
+) => {
+  const order = page?.sectionOrder;
+  if (!Array.isArray(order) || order.length < 2) return true;
+  if (order.includes(type)) return true;
+  if (
+    (type === "About" && order.includes("AboutPage")) ||
+    (type === "AboutPage" && order.includes("About")) ||
+    (type === "Service" && order.includes("ServicePage")) ||
+    (type === "ServicePage" && order.includes("Service")) ||
+    (type === "Gallery" && order.includes("GalleryPage")) ||
+    (type === "GalleryPage" && order.includes("Gallery")) ||
+    (type === "Contact" && order.includes("ContactPage")) ||
+    (type === "ContactPage" && order.includes("Contact"))
+  ) {
+    return true;
+  }
+  return false;
+};
+
 const DEDICATED_PAGE_SHELL_TYPES = new Set([
   "Topbar",
   "Header",
@@ -2547,6 +2590,13 @@ const ensureDedicatedThemePageBodies = (
   getTemplatePages(template).forEach((pageDefinition) => {
     const variant = template.sectionVariants[pageDefinition.sectionType];
     if (!variant || !variant.startsWith("CoolFix")) return;
+    const bodyType = typeAlias[pageDefinition.sectionType] || pageDefinition.sectionType;
+    if (
+      !pageSectionOrderLists(pageDefinition, pageDefinition.sectionType) &&
+      !pageSectionOrderLists(pageDefinition, bodyType)
+    ) {
+      return;
+    }
     const slug = normalizePageSlug(pageDefinition.id);
     const bodyIndex = next.findIndex((section) => {
       if (DEDICATED_PAGE_SHELL_TYPES.has(section.type)) return false;
@@ -2651,19 +2701,26 @@ const ensureDedicatedThemePageBodies = (
   }
 
   if (template.sectionVariants.Header === "CoolFixHeader1") {
-    const homeOrder = [
-      "Topbar",
-      "Header",
-      "Banner",
-      "HowWeWork",
-      "About",
-      "Service",
-      "Stats",
-      "Testimonial",
-      "CTA",
-      "Highlights",
-      "Footer",
-    ];
+    const savedHomeOrder = Array.isArray(template.homeSectionOrder)
+      ? template.homeSectionOrder.filter(
+          (type) => typeof type === "string" && type.trim(),
+        )
+      : [];
+    const homeOrder = savedHomeOrder.length
+      ? savedHomeOrder
+      : [
+          "Topbar",
+          "Header",
+          "Banner",
+          "HowWeWork",
+          "About",
+          "Service",
+          "Stats",
+          "Testimonial",
+          "CTA",
+          "Highlights",
+          "Footer",
+        ];
     for (const type of homeOrder) {
       const variant = template.sectionVariants[type];
       if (!variant) continue;
@@ -2716,6 +2773,110 @@ const ensureDedicatedThemePageBodies = (
       changed = true;
     }
   }
+
+  const sectionRank = (type: string, rank: Map<string, number>) => {
+    if (rank.has(type)) return rank.get(type) ?? 100;
+    if (type === "About" && rank.has("AboutPage")) return rank.get("AboutPage") ?? 100;
+    if (type === "Service" && rank.has("ServicePage")) return rank.get("ServicePage") ?? 100;
+    if (type === "Gallery" && rank.has("GalleryPage")) return rank.get("GalleryPage") ?? 100;
+    if (type === "Contact" && rank.has("ContactPage")) return rank.get("ContactPage") ?? 100;
+    return 100;
+  };
+  getTemplatePages(template).forEach((page) => {
+    const savedOrder = page.sectionOrder;
+    if (!Array.isArray(savedOrder) || savedOrder.length < 2) return;
+    const slug = normalizePageSlug(page.id);
+    const skip = new Set(["Topbar", "Header", "Footer"]);
+    for (const type of savedOrder) {
+      if (skip.has(type)) continue;
+      const variant = template.sectionVariants[type];
+      if (!variant) continue;
+      const exists = next.some((section) => {
+        if (normalizePageSlug(section.page || "") !== slug) return false;
+        if (section.type === type || section.variant === variant) return true;
+        if (type === "AboutPage" && section.type === "About") return true;
+        if (type === "About" && section.type === "AboutPage") return true;
+        if (type === "ServicePage" && section.type === "Service") return true;
+        if (type === "Service" && section.type === "ServicePage") return true;
+        if (type === "GalleryPage" && section.type === "Gallery") return true;
+        if (type === "Gallery" && section.type === "GalleryPage") return true;
+        if (type === "ContactPage" && section.type === "Contact") return true;
+        if (type === "Contact" && section.type === "ContactPage") return true;
+        return false;
+      });
+      if (exists) continue;
+      const created: SectionItem = {
+        id: `${type}-${page.id}`,
+        page: page.id,
+        type,
+        variant,
+        data: { [variant]: {} as SectionData },
+      };
+      const footerIndex = next.findIndex(
+        (section) => section.type === "Footer" && !section.page,
+      );
+      next =
+        footerIndex === -1
+          ? [...next, created]
+          : [
+              ...next.slice(0, footerIndex),
+              created,
+              ...next.slice(footerIndex),
+            ];
+      changed = true;
+    }
+  });
+  getTemplatePages(template).forEach((page) => {
+    const savedOrder = page.sectionOrder;
+    if (!Array.isArray(savedOrder) || savedOrder.length < 2) return;
+    const slug = normalizePageSlug(page.id);
+    const rank = new Map(savedOrder.map((type, index) => [type, index]));
+    const pageSections = next.filter(
+      (section) => normalizePageSlug(section.page || "") === slug,
+    );
+    if (pageSections.length < 2) return;
+    const sorted = [...pageSections].sort(
+      (left, right) => sectionRank(left.type, rank) - sectionRank(right.type, rank),
+    );
+    const already =
+      pageSections.length === sorted.length &&
+      pageSections.every((section, index) => section === sorted[index]);
+    if (already) return;
+    let cursor = 0;
+    next = next.map((section) => {
+      if (normalizePageSlug(section.page || "") !== slug) return section;
+      const replacement = sorted[cursor];
+      cursor += 1;
+      return replacement || section;
+    });
+    changed = true;
+  });
+
+  getTemplatePages(template).forEach((page) => {
+    const savedOrder = page.sectionOrder;
+    if (!Array.isArray(savedOrder) || savedOrder.length < 2) return;
+    const slug = normalizePageSlug(page.id);
+    const bodyType = typeAlias[page.sectionType] || page.sectionType;
+    const controlled = new Set([
+      "Stats",
+      "WhyChooseUs",
+      "HowWeWork",
+      "CTA",
+      "Highlights",
+      "Breadcrumb",
+      page.sectionType,
+      bodyType,
+    ]);
+    const filtered = next.filter((section) => {
+      if (normalizePageSlug(section.page || "") !== slug) return true;
+      if (!controlled.has(section.type)) return true;
+      return pageSectionOrderLists(page, section.type);
+    });
+    if (filtered.length !== next.length) {
+      next = filtered;
+      changed = true;
+    }
+  });
 
   return changed ? next : sections;
 };
@@ -2783,41 +2944,44 @@ const syncPageBreadcrumbsToTemplate = (
       ({} as SectionData);
 
     changed = true;
+    const mergedCrumb = {
+      ...mergeSectionContent(
+        previewData as Record<string, unknown>,
+        savedData as Record<string, unknown>,
+      ),
+      pretitle:
+        (savedData.pretitle as string | undefined) ||
+        (typeof pageBodyData.pretitle === "string"
+          ? pageBodyData.pretitle
+          : undefined) ||
+        (previewData.pretitle as string | undefined),
+      title:
+        (savedData.title as string | undefined) ||
+        pageDefinition?.label ||
+        (typeof pageBodyData.title === "string"
+          ? pageBodyData.title
+          : undefined) ||
+        (previewData.title as string | undefined),
+      desc:
+        (savedData.desc as string | undefined) ||
+        (typeof pageBodyData.desc === "string"
+          ? pageBodyData.desc
+          : undefined) ||
+        (previewData.desc as string | undefined),
+      desc2:
+        (savedData.desc2 as string | undefined) ||
+        (typeof pageBodyData.desc2 === "string"
+          ? pageBodyData.desc2
+          : undefined) ||
+        (previewData.desc2 as string | undefined),
+    };
     return {
       ...section,
       variant: targetVariant,
       data: {
-        [targetVariant]: {
-          ...mergeSectionContent(
-            previewData as Record<string, unknown>,
-            savedData as Record<string, unknown>,
-          ),
-          pretitle:
-            (savedData.pretitle as string | undefined) ||
-            (typeof pageBodyData.pretitle === "string"
-              ? pageBodyData.pretitle
-              : undefined) ||
-            (previewData.pretitle as string | undefined),
-          title:
-            (savedData.title as string | undefined) ||
-            pageDefinition?.label ||
-            (typeof pageBodyData.title === "string"
-              ? pageBodyData.title
-              : undefined) ||
-            (previewData.title as string | undefined),
-          desc:
-            (savedData.desc as string | undefined) ||
-            (typeof pageBodyData.desc === "string"
-              ? pageBodyData.desc
-              : undefined) ||
-            (previewData.desc as string | undefined),
-          desc2:
-            (savedData.desc2 as string | undefined) ||
-            (typeof pageBodyData.desc2 === "string"
-              ? pageBodyData.desc2
-              : undefined) ||
-            (previewData.desc2 as string | undefined),
-        },
+        [targetVariant]: (isCoolFixTemplate(template)
+          ? withCoolFixBreadcrumbBackground(mergedCrumb)
+          : mergedCrumb) as SectionData,
       },
     };
   });
@@ -2884,36 +3048,41 @@ const ensureMissingPageBreadcrumbs = (
       string,
       unknown
     >;
+    const mergedCrumb = {
+      ...previewData,
+      ...donorData,
+      pretitle:
+        (typeof pageBodyData.pretitle === "string"
+          ? pageBodyData.pretitle
+          : undefined) ||
+        (typeof donorData.pretitle === "string"
+          ? donorData.pretitle
+          : undefined) ||
+        (typeof previewData.pretitle === "string"
+          ? previewData.pretitle
+          : undefined),
+      title:
+        pageDefinition.label ||
+        (typeof pageBodyData.title === "string" && pageBodyData.title) ||
+        (typeof donorData.title === "string" ? donorData.title : undefined),
+      desc:
+        (typeof pageBodyData.desc === "string" && pageBodyData.desc) ||
+        (typeof donorData.desc === "string" ? donorData.desc : undefined),
+      desc2:
+        (typeof pageBodyData.desc2 === "string" && pageBodyData.desc2) ||
+        (typeof donorData.desc2 === "string" ? donorData.desc2 : undefined),
+    };
     const breadcrumb: SectionItem = {
       id: `Breadcrumb-${pageDefinition.id}`,
       page: pageDefinition.id,
       type: "Breadcrumb",
       variant: breadcrumbVariant,
       data: {
-        [breadcrumbVariant]: {
-          ...previewData,
-          ...donorData,
-          pretitle:
-            (typeof pageBodyData.pretitle === "string"
-              ? pageBodyData.pretitle
-              : undefined) ||
-            (typeof donorData.pretitle === "string"
-              ? donorData.pretitle
-              : undefined) ||
-            (typeof previewData.pretitle === "string"
-              ? previewData.pretitle
-              : undefined),
-          title:
-            pageDefinition.label ||
-            (typeof pageBodyData.title === "string" && pageBodyData.title) ||
-            (typeof donorData.title === "string" ? donorData.title : undefined),
-          desc:
-            (typeof pageBodyData.desc === "string" && pageBodyData.desc) ||
-            (typeof donorData.desc === "string" ? donorData.desc : undefined),
-          desc2:
-            (typeof pageBodyData.desc2 === "string" && pageBodyData.desc2) ||
-            (typeof donorData.desc2 === "string" ? donorData.desc2 : undefined),
-        },
+        [breadcrumbVariant]: (isCoolFixTemplate(template)
+          ? withCoolFixBreadcrumbBackground(
+              mergedCrumb as Record<string, unknown>,
+            )
+          : mergedCrumb) as SectionData,
       },
     };
     next = [
@@ -7106,7 +7275,11 @@ const replaceHintedMediaValue = (
     logo: "logoImage",
   };
   const field = fieldHint ? fieldByRole[fieldHint] : undefined;
-  if (!field || typeof data[field] !== "string") {
+  if (!field) return { value: data, replaced: false };
+  const current = data[field];
+  // Missing backgroundImage is how CoolFix crumbs start (CSS default only).
+  // Treat that as replaceable so the first picked image is actually stored.
+  if (current != null && typeof current !== "string") {
     return { value: data, replaced: false };
   }
 
@@ -9969,6 +10142,25 @@ function EditorPage({
     setSections((current) => {
       let changed = false;
       const next = current.map((section) => {
+        if (section.type === "Breadcrumb" && section.data) {
+          let crumbChanged = false;
+          const nextData = Object.fromEntries(
+            Object.entries(section.data).map(([variant, variantData]) => {
+              if (!variantData || typeof variantData !== "object") {
+                return [variant, variantData];
+              }
+              const patched = withCoolFixBreadcrumbBackground(
+                variantData as Record<string, unknown>,
+              );
+              if (patched !== variantData) crumbChanged = true;
+              return [variant, patched];
+            }),
+          ) as SectionItem["data"];
+          if (crumbChanged) {
+            changed = true;
+            return { ...section, data: nextData };
+          }
+        }
         if (section.type !== "Header" || !section.data) return section;
         let sectionChanged = false;
         const nextData = Object.fromEntries(
@@ -17052,40 +17244,7 @@ function EditorPage({
   );
   const visibleSections = (() => {
     if (coolFixTheme && (!currentPageSlug || currentPageSlug === "home")) {
-      const homeTypes = [
-        "Topbar",
-        "Header",
-        "Banner",
-        "HowWeWork",
-        "About",
-        "Service",
-        "Stats",
-        "Testimonial",
-        "CTA",
-        "Highlights",
-        "Footer",
-      ];
-      return homeTypes.flatMap((type) => {
-        const variant = editorTemplate?.sectionVariants?.[type];
-        const match = syncedSections.find((section) => {
-          const slug = normalizePageSlug(section.page || "");
-          if (slug && slug !== "home") return false;
-          return (
-            section.type === type ||
-            (Boolean(variant) && section.variant === variant)
-          );
-        });
-        if (match) return [match];
-        if (!variant) return [];
-        return [
-          {
-            id: type,
-            type,
-            variant,
-            data: { [variant]: {} as SectionData },
-          },
-        ];
-      });
+      return orderedSections;
     }
     if (!petTheme || !currentPageSlug || currentPageSlug === "home") {
       return orderedSections;
@@ -17634,7 +17793,8 @@ function EditorPage({
           position: absolute;
           inset: 0;
           background: rgba(28, 28, 28, 0.75);
-          z-index: 0;
+          z-index: 1;
+          pointer-events: none;
         }
         .coolfix-theme .cf-page-crumb::after {
           content: "";
@@ -17647,6 +17807,7 @@ function EditorPage({
           opacity: 0.6;
           transform: rotate(34deg);
           z-index: 1;
+          pointer-events: none;
         }
         .coolfix-theme .cf-page-crumb > div { position: relative; z-index: 2; }
         .coolfix-theme .cf-page-crumb nav,
@@ -17715,6 +17876,13 @@ function EditorPage({
             : section.variant;
         const sectionData = {
           ...rawVariantData,
+          ...(coolFixTheme &&
+          section.type === "Breadcrumb" &&
+          isStockBreadcrumbImage(
+            (rawVariantData as { backgroundImage?: unknown }).backgroundImage,
+          )
+            ? { backgroundImage: COOLFIX_BREADCRUMB_IMAGE }
+            : {}),
           ...overlayManagerHomeFeed(
             { ...section, variant: renderVariant },
             sections.map((item) => ({
