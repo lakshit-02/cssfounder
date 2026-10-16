@@ -22,6 +22,8 @@
     "db:seed:coolfix-template": "node prisma/seed-coolfix-template.js",
     "db:seed:realestate-layouts": "node prisma/seed-realestate-layouts.js",
     "db:seed:industry-layouts": "node prisma/seed-industry-layouts.js",
+    "db:seed:beauty-layouts": "node prisma/seed-beauty-layouts.js",
+    "db:seed:beauty-template": "node prisma/seed-beauty-template.js",
     "db:seed:templates": "node prisma/seed-templates.js",
     "db:seed:home-templates": "node prisma/seed-home-templates-for-categories.js"
   },

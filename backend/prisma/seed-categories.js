@@ -39,6 +39,14 @@ const categories = [
     description: 'Plumbing and industry service sites',
     status: 'Active',
   },
+  {
+    order: 5,
+    name: 'Beauty & Personal Care',
+    slug: 'beauty-personal-care',
+    icon: 'lucide-sparkles',
+    description: 'Salon and beauty websites',
+    status: 'Active',
+  },
 ];
 
 async function main() {
