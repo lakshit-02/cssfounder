@@ -40,7 +40,12 @@ import {
 } from "@/lib/publishedSeo";
 import type { PublishedSitePayload } from "@/lib/publishedSeo";
 import { recoverBlogPageLinksFromSections } from "@/lib/recoverBlogPageLinks";
-import { filterMenuByHiddenPageLinks } from "../../editor/layout/src/lib/navVisibility";
+import {
+  filterMenuByHiddenPageLinks,
+  isBlogOwnedSection,
+  isGalleryOwnedSection,
+  isServiceOwnedSection,
+} from "../../editor/layout/src/lib/navVisibility";
 import {
   getBuilderTemplates,
   getBuilderTemplate,
@@ -4175,6 +4180,24 @@ function PublishedSiteContent({
           section.type !== "LatestProject" &&
           section.type !== "PortfolioPage" &&
           section.type !== "Portfolio",
+      );
+    }
+
+    if (!hasPublishedServicesPage(payload)) {
+      pageSections = pageSections.filter(
+        (section) => !isServiceOwnedSection(section),
+      );
+    }
+
+    if (!hasPublishedBlogIndexPage(payload)) {
+      pageSections = pageSections.filter(
+        (section) => !isBlogOwnedSection(section),
+      );
+    }
+
+    if (!hasPublishedGalleryPage(payload)) {
+      pageSections = pageSections.filter(
+        (section) => !isGalleryOwnedSection(section),
       );
     }
 

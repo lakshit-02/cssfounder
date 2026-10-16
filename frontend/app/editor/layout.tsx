@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { Check, Loader2, X } from "lucide-react";
+import { UserAuthProvider } from "@/components/auth/UserAuthContext";
 import { PreviewProvider } from "./layout/src/components/context/PreviewContext";
 import { generalSansMedium } from "@/app/fonts";
 import EditorLoadingScreen from "./components/EditorLoadingScreen";
@@ -67,12 +68,14 @@ export default function EditorLayout({
 }) {
   return (
     <Suspense fallback={<EditorLoadingScreen message="Loading editor…" />}>
-      <PreviewProvider>
-        <div className={generalSansMedium.className}>
-          {children}
-          <EditorCloudSaveToast />
-        </div>
-      </PreviewProvider>
+      <UserAuthProvider>
+        <PreviewProvider>
+          <div className={generalSansMedium.className}>
+            {children}
+            <EditorCloudSaveToast />
+          </div>
+        </PreviewProvider>
+      </UserAuthProvider>
     </Suspense>
   );
 }

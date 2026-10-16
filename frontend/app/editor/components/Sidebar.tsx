@@ -50,6 +50,11 @@ import GalleryManager from "./GalleryManager";
 import CountriesServeManager from "./CountriesServeManager";
 import PropertyManager from "./PropertyManager";
 import { getBuilderTemplate } from "../layout/src/data/templateFlow";
+import {
+  isHiddenBlogsPage,
+  isHiddenGalleryPage,
+  isHiddenServicesPage,
+} from "../layout/src/lib/navVisibility";
 import { isRedesignEditorSearchParams } from "@/lib/is-redesign-editor";
 import { readRedesignEditorPack } from "@/lib/redesign-editor-session";
 
@@ -265,6 +270,7 @@ function SidebarContent({
   const [showBlogModal, setShowBlogModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [serviceCardOnly, setServiceCardOnly] = useState(false);
+  const [blogCardOnly, setBlogCardOnly] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
@@ -593,7 +599,43 @@ function SidebarContent({
     }
   }, [authLoading, setEditorPanel, user]);
 
-  const multiPageList = pageLinks.filter((page) => page.kind !== "blog");
+  const servicesWebsiteOff = isHiddenServicesPage(pageLinks);
+  const blogsWebsiteOff = isHiddenBlogsPage(pageLinks);
+  const galleryWebsiteOff = isHiddenGalleryPage(pageLinks);
+  const multiPageList = pageLinks.filter((page) => {
+    if (page.kind === "blog") return false;
+    const href = (page.href || "").trim().toLowerCase();
+    const slug = page.label.trim().toLowerCase().replace(/\s+/g, "-");
+    if (
+      servicesWebsiteOff &&
+      (href === "#page-service" ||
+        href === "#page-services" ||
+        href === "#page-service-detail" ||
+        slug === "services" ||
+        slug === "service" ||
+        slug === "our-services" ||
+        slug === "service-detail" ||
+        slug === "service-details")
+    ) {
+      return false;
+    }
+    if (
+      blogsWebsiteOff &&
+      (isBlogIndexPageLink(page) ||
+        slug === "blog-detail" ||
+        slug === "blog-details" ||
+        href === "#page-blog-detail")
+    ) {
+      return false;
+    }
+    if (
+      galleryWebsiteOff &&
+      (slug === "gallery" || href === "#page-gallery" || href === "#gallery")
+    ) {
+      return false;
+    }
+    return true;
+  });
   const pageItems = multiPageList.map((page) => ({
     label: page.label,
     icon: FileText,
@@ -836,6 +878,7 @@ function SidebarContent({
         setManagerPreserveNavigation(false);
       }
       if (manager === "Blogs") {
+        setBlogCardOnly(Boolean(detail?.cardOnly));
         if (!detail?.preservePage) {
           navigateToBlogsEditorPage();
         }
@@ -1125,23 +1168,51 @@ function SidebarContent({
   };
 
   const updateBlog = (href: string, patch: Partial<PageLink>) => {
-    setPageLinks(
-      pageLinks.map((page) => {
-        if (page.href !== href) return page;
+    setPageLinks((current) => {
+      const slugHint = href.replace(/^#page-blog-/i, "").trim();
+      const target = current.find(
+        (page) =>
+          page.kind === "blog" &&
+          (page.href === href ||
+            (slugHint &&
+              (page.slug === slugHint || page.href === `#page-blog-${slugHint}`)) ||
+            (patch.slug && page.slug === patch.slug)),
+      );
+      if (!target) return current;
 
-        const next = { ...page, ...patch };
-        if (typeof patch.slug === "string" && patch.slug.trim()) {
-          const slug = uniqueBlogSlug(
-            pageLinks,
-            toBlogSlugFromInput(patch.slug) || "post",
-            href,
-          );
-          next.slug = slug;
-          next.href = `#page-blog-${slug}`;
-        }
-        return next;
-      }),
-    );
+      const updated = { ...target, ...patch };
+      if (typeof patch.slug === "string" && patch.slug.trim()) {
+        const slug = uniqueBlogSlug(
+          current,
+          toBlogSlugFromInput(patch.slug) || "post",
+          target.href,
+        );
+        updated.slug = slug;
+        updated.href = `#page-blog-${slug}`;
+      }
+
+      const others = current
+        .filter((page) => page.kind === "blog" && page.href !== target.href)
+        .sort(
+          (left, right) =>
+            (Number(left.order) || Number.MAX_SAFE_INTEGER) -
+            (Number(right.order) || Number.MAX_SAFE_INTEGER),
+        );
+      const desired = Math.max(1, Number(patch.order) || Number(updated.order) || 1);
+      others.splice(Math.min(others.length, desired - 1), 0, updated);
+      const orderedBlogs = others.map((blog, index) => ({
+        ...blog,
+        order: index + 1,
+      }));
+      const firstBlogAt = current.findIndex((page) => page.kind === "blog");
+      const before = current
+        .slice(0, Math.max(firstBlogAt, 0))
+        .filter((page) => page.kind !== "blog");
+      const after = current
+        .slice(Math.max(firstBlogAt, 0))
+        .filter((page) => page.kind !== "blog");
+      return [...before, ...orderedBlogs, ...after];
+    });
     window.dispatchEvent(
       new CustomEvent("ai-builder-blog-updated", { detail: { href, ...patch } }),
     );
@@ -1728,7 +1799,11 @@ function SidebarContent({
           onUpdateBlog={updateBlog}
           onDeleteBlog={deleteBlog}
           onDeleteBlogs={deleteBlogs}
-          onClose={() => closeManagerModal(setShowBlogModal)}
+          cardOnly={blogCardOnly}
+          onClose={() => {
+            setBlogCardOnly(false);
+            closeManagerModal(setShowBlogModal);
+          }}
         />
       )}
 

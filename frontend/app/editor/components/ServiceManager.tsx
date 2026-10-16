@@ -825,11 +825,21 @@ export default function ServiceManager({
       seoKeywords: draft.seoKeywords?.trim() || "",
     };
 
-    const services = editingId
-      ? pageState.services.map((item) =>
-          item.id === editingId ? nextItem : item,
-        )
-      : [...pageState.services, nextItem];
+    const withoutEdited = pageState.services.filter(
+      (item) => item.id !== nextItem.id,
+    );
+    const ranked = [...withoutEdited].sort(
+      (left, right) => (left.order ?? 0) - (right.order ?? 0),
+    );
+    const insertAt = Math.min(
+      ranked.length,
+      Math.max(0, nextItem.order - 1),
+    );
+    ranked.splice(insertAt, 0, nextItem);
+    const services = ranked.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
 
     persist({ ...pageState, services });
     closeComposer();
@@ -931,11 +941,9 @@ export default function ServiceManager({
 
       {!servicesWebsiteEnabled ? (
         <div className="shrink-0 border-b border-amber-200 bg-amber-50 px-5 py-2.5 text-sm text-amber-900 sm:px-7">
-          Services are hidden on the live website. Items stay saved here —{" "}
-          <span className="font-semibold">/services</span> and detail links will
-          show 404 until you turn{" "}
-          <span className="font-semibold">Show on website</span> on, then
-          republish.
+          Services are hidden. The service page and any service section on
+          other pages, including Home, stay saved here and come back when you
+          turn <span className="font-semibold">Show on website</span> on.
         </div>
       ) : null}
 

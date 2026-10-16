@@ -216,6 +216,29 @@ import CoolFixBookService1 from "../components/sections/form/CoolFixBookService1
 import CoolFixGetQuote1 from "../components/sections/form/CoolFixGetQuote1";
 import CoolFixFooter1 from "../components/sections/footer/CoolFixFooter1";
 
+import HairAtelierHeader1 from "../components/sections/header/BeautyAndPersonalCareHeader1";
+import HairAtelierFooter1 from "../components/sections/footer/BeautyAndPersonalCareFooter1";
+import HairAtelierHeroBanner1 from "../components/sections/banner/BeautyAndPersonalCareHeroBanner1";
+import HairAtelierPageBanners1 from "../components/sections/breadcrumb/BeautyAndPersonalCarePageBanners1";
+import HairAtelierAboutUs1 from "../components/sections/about/BeautyAndPersonalCareAboutUs1";
+import HairAtelierAboutPage1 from "../components/sections/about/BeautyAndPersonalCareAboutPage1";
+import HairAtelierServices1 from "../components/sections/service/BeautyAndPersonalCareServices1";
+import HairAtelierServicePage1 from "../components/sections/service/BeautyAndPersonalCareServicePage1";
+import HairAtelierServiceDetailPage1 from "../components/sections/service/BeautyAndPersonalCareServiceDetailPage1";
+import HairAtelierWhyChooseUs1 from "../components/sections/whychooseus/BeautyAndPersonalCareWhyChooseUs1";
+import HairAtelierStats1 from "../components/sections/stats/BeautyAndPersonalCareStats1";
+import HairAtelierGallery1 from "../components/sections/gallery/BeautyAndPersonalCareGallery1";
+import HairAtelierGalleryPage1 from "../components/sections/gallery/BeautyAndPersonalCareGalleryPage1";
+import HairAtelierTestimonials1 from "../components/sections/testimonial/BeautyAndPersonalCareTestimonials1";
+import HairAtelierBlogNews1 from "../components/sections/blog/BeautyAndPersonalCareBlogNews1";
+import HairAtelierBlogPage1 from "../components/sections/blog/BeautyAndPersonalCareBlogPage1";
+import HairAtelierBlogDetailPage1 from "../components/sections/blog/BeautyAndPersonalCareBlogDetailPage1";
+import HairAtelierContactPage1 from "../components/sections/contact/BeautyAndPersonalCareContactPage1";
+import HairAtelierContactForm1 from "../components/sections/contact/BeautyAndPersonalCareContactForm1";
+import HairAtelierContactMap1 from "../components/sections/contact/BeautyAndPersonalCareContactMap1";
+import HairAtelierQuotePage1 from "../components/sections/quote/BeautyAndPersonalCareQuotePage1";
+import HairAtelierThankYouPage1 from "../components/sections/thank-you/BeautyAndPersonalCareThankYouPage1";
+
 import { SectionProps } from "../types/section";
 
 /**
@@ -604,6 +627,29 @@ export const sectionRegistry: Record<string, ComponentType<SectionProps>> = {
   CoolFixBookService1,
   CoolFixGetQuote1,
   CoolFixFooter1,
+
+  HairAtelierHeader1,
+  HairAtelierFooter1,
+  HairAtelierHeroBanner1,
+  HairAtelierPageBanners1,
+  HairAtelierAboutUs1,
+  HairAtelierAboutPage1,
+  HairAtelierServices1,
+  HairAtelierServicePage1,
+  HairAtelierServiceDetailPage1,
+  HairAtelierWhyChooseUs1,
+  HairAtelierStats1,
+  HairAtelierGallery1,
+  HairAtelierGalleryPage1,
+  HairAtelierTestimonials1,
+  HairAtelierBlogNews1,
+  HairAtelierBlogPage1,
+  HairAtelierBlogDetailPage1,
+  HairAtelierContactPage1,
+  HairAtelierContactForm1,
+  HairAtelierContactMap1,
+  HairAtelierQuotePage1,
+  HairAtelierThankYouPage1,
 };
 
 export function resolveSectionComponent(

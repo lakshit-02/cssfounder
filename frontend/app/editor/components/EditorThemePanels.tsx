@@ -15,9 +15,9 @@ import {
   type EditorPanel,
 } from "../layout/src/components/context/PreviewContext";
 import { getPublishedSiteUrl } from "@/lib/migrateGuestSite";
-import {
-  ensureThemeGoogleFontsLoaded,
-} from "../layout/src/lib/themeTokens";
+import { useSearchParams } from "next/navigation";
+import { getBuilderTemplate } from "../layout/src/data/templateFlow";
+import { ensureThemeGoogleFontsLoaded } from "../layout/src/lib/themeTokens";
 
 const COLOR_FIELDS: { key: string; label: string }[] = [
   { key: "--primary-bg", label: "Primary" },
@@ -508,10 +508,28 @@ export default function EditorThemePanels() {
     });
   };
 
+  const searchParams = useSearchParams();
+  const templateFontDefaults = useMemo(() => {
+    const templateId = searchParams.get("templateId");
+    if (!templateId) return null;
+    const template = getBuilderTemplate(templateId, searchParams.get("category"));
+    const vars = template.variables || {};
+    const heading = vars["--font-heading"];
+    const body = vars["--font-body"];
+    if (!heading && !body) return null;
+    const button = vars["--font-button"] || body || DEFAULT_THEME_FONTS["--font-button"];
+    return {
+      "--font-heading": heading || DEFAULT_THEME_FONTS["--font-heading"],
+      "--font-body": body || DEFAULT_THEME_FONTS["--font-body"],
+      "--font-button": button,
+      fontFamily: body || DEFAULT_THEME_FONTS.fontFamily,
+    };
+  }, [searchParams]);
+
   const resetThemeFonts = () => {
     setThemeVariables({
       ...themeVariables,
-      ...baselineFontsRef.current,
+      ...(templateFontDefaults || baselineFontsRef.current),
     });
   };
 

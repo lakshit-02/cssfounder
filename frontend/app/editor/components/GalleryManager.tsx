@@ -676,10 +676,9 @@ export default function GalleryManager({
 
       {!galleryWebsiteEnabled ? (
         <div className="shrink-0 border-b border-amber-200 bg-amber-50 px-5 py-2.5 text-sm text-amber-900 sm:px-7">
-          Gallery is hidden on the live website. Items stay saved here -{" "}
-          <span className="font-semibold">/gallery</span> will show 404 until you
-          turn <span className="font-semibold">Show on website</span> on, then
-          republish.
+          Gallery is hidden. The gallery page and any gallery section on other
+          pages, including Home, stay saved here and come back when you turn{" "}
+          <span className="font-semibold">Show on website</span> on.
         </div>
       ) : null}
 

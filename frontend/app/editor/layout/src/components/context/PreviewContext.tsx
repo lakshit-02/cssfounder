@@ -300,6 +300,12 @@ export function PreviewProvider({
   }, []);
 
   useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname.includes("/preview/compose")
+    ) {
+      return;
+    }
     mirrorActiveFlowCurrentPage(currentPage);
   }, [currentPage]);
 
@@ -320,6 +326,12 @@ export function PreviewProvider({
 
   // When URL switches redesign ↔ custom without remounting the provider, re-activate.
   useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname.includes("/preview/compose")
+    ) {
+      return;
+    }
     activateFlowPreviewStorage(flowKey);
     try {
       const raw = window.localStorage.getItem(pageLinksStorageKey);

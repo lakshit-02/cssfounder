@@ -1231,6 +1231,84 @@
           "sectionType": "LocationDetail"
         }
       ]
+    },
+    {
+      "id": "template-hairatelier-1",
+      "numericId": 16,
+      "title": "Hair Atelier",
+      "type": "Multiple Pages Website",
+      "image": "/beauty%20and%20personal%20care/images/hero-1.jpg",
+      "previewimage": "/beauty%20and%20personal%20care/images/hero-1.jpg",
+      "preview_description": "Beauty and personal care salon website.",
+      "prebuilt_pages": 9,
+      "sectionVariants": {
+        "Header": "HairAtelierHeader1",
+        "Footer": "HairAtelierFooter1",
+        "Banner": "HairAtelierHeroBanner1",
+        "About": "HairAtelierAboutUs1",
+        "Service": "HairAtelierServices1",
+        "WhyChooseUs": "HairAtelierWhyChooseUs1",
+        "Stats": "HairAtelierStats1",
+        "Gallery": "HairAtelierGallery1",
+        "Testimonial": "HairAtelierTestimonials1",
+        "Blog": "HairAtelierBlogNews1",
+        "AboutPage": "HairAtelierAboutPage1",
+        "ServicePage": "HairAtelierServicePage1",
+        "ServiceDetailPage": "HairAtelierServiceDetailPage1",
+        "GalleryPage": "HairAtelierGalleryPage1",
+        "BlogPage": "HairAtelierBlogPage1",
+        "BlogDetailPage": "HairAtelierBlogDetailPage1",
+        "ContactPage": "HairAtelierContactPage1",
+        "QuotePage": "HairAtelierQuotePage1",
+        "ThankYouPage": "HairAtelierThankYouPage1"
+      },
+      "variables": {
+        "--font-body": "\"Montserrat\", Arial, Helvetica, sans-serif",
+        "--font-heading": "\"Playfair Display\", Georgia, serif",
+        "--primary-bg": "#e0a458",
+        "--primary-text": "#000000",
+        "--secondary-bg": "#000000",
+        "--secondary-text": "#ffffff",
+        "--header-bg": "#000000",
+        "--header-text": "#ffffff",
+        "--hero-bg": "#000000",
+        "--hero-title": "#ffffff",
+        "--primary-pretitle-text": "#e0a458",
+        "--primary-title-text": "#ffffff",
+        "--primary-subtitle-text": "#ffffff",
+        "--secondary-pretitle-text": "#e0a458",
+        "--secondary-title-text": "#ffffff",
+        "--secondary-subtitle-text": "#ffffff",
+        "--primary-link-bg": "#e0a458",
+        "--primary-link-color": "#000000",
+        "--secondary-link-bg": "#111111",
+        "--secondary-link-color": "#ffffff",
+        "--text-white": "white",
+        "--blue-bg": "#e0a458",
+        "--lightcream-bg": "#1a1208"
+      },
+      "homeSectionOrder": [
+        "Header",
+        "Banner",
+        "About",
+        "Stats",
+        "Service",
+        "Gallery",
+        "Testimonial",
+        "Blog",
+        "Footer"
+      ],
+      "pages": [
+        { "id": "about", "label": "About Us", "sectionType": "AboutPage" },
+        { "id": "services", "label": "Services", "sectionType": "ServicePage" },
+        { "id": "service-detail", "label": "Service Detail", "sectionType": "ServiceDetailPage" },
+        { "id": "gallery", "label": "Gallery", "sectionType": "GalleryPage" },
+        { "id": "blogs", "label": "Blogs", "sectionType": "BlogPage" },
+        { "id": "blog-detail", "label": "Blog Detail", "sectionType": "BlogDetailPage" },
+        { "id": "contact", "label": "Contact Us", "sectionType": "ContactPage" },
+        { "id": "get-a-quote", "label": "Get a Quote", "sectionType": "QuotePage" },
+        { "id": "thank-you", "label": "Thank You", "sectionType": "ThankYouPage" }
+      ]
     }
   ],
   "common": {
@@ -23052,7 +23130,8 @@
               }
             }
           }
-        },
+        },
+
         "Banner": {
           "variants": {
             "CoolFixBanner1": {
@@ -23123,7 +23202,8 @@
               ]
             }
           }
-        },
+        },
+
         "About": {
           "variants": {
             "CoolFixAbout1": {
@@ -23279,7 +23359,8 @@
               }
             }
           }
-        },
+        },
+
         "Service": {
           "variants": {
             "CoolFixService1": {
@@ -23771,7 +23852,8 @@
               ]
             }
           }
-        },
+        },
+
         "Testimonial": {
           "variants": {
             "CoolFixTestimonial1": {
@@ -23853,7 +23935,8 @@
               ]
             }
           }
-        },
+        },
+
         "HowWeWork": {
           "variants": {
             "CoolFixHowWeWork1": {
@@ -23918,7 +24001,8 @@
               ]
             }
           }
-        },
+        },
+
         "CTA": {
           "variants": {
             "CoolFixCTA1": {
@@ -24234,7 +24318,8 @@
               }
             }
           }
-        },
+        },
+
         "BookService": {
           "variants": {
             "CoolFixBookService1": {
@@ -24478,6 +24563,2209 @@
           }
         }
       }
+    },
+    
+    "Beauty & Personal Care": {
+      "slug": "beauty-personal-care",
+      "description": "Hair salon and beauty website.",
+      "templates": [
+        "template-hairatelier-1"
+      ],
+    "HairAtelier": {
+      "templateComponents": {
+        "template-1": {
+          "shared": {
+            "Header": "HairAtelierHeader1",
+            "Footer": "HairAtelierFooter1"
+          },
+          "pages": {
+            "home": {
+              "components": [
+                {
+                  "key": "Hero",
+                  "component": "HairAtelierHeroBanner1"
+                },
+                {
+                  "key": "About",
+                  "component": "HairAtelierAboutUs1"
+                },
+                {
+                  "key": "Services",
+                  "component": "HairAtelierServices1"
+                },
+                {
+                  "key": "WhyChooseUs",
+                  "component": "HairAtelierWhyChooseUs1"
+                },
+                {
+                  "key": "Stats",
+                  "component": "HairAtelierStats1"
+                },
+                {
+                  "key": "Gallery",
+                  "component": "HairAtelierGallery1"
+                },
+                {
+                  "key": "Testimonials",
+                  "component": "HairAtelierTestimonials1"
+                },
+                {
+                  "key": "Blog",
+                  "component": "HairAtelierBlogNews1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "sections": {
+        "Global": {
+          "variants": {
+            "HairAtelierGlobal1": {
+              "companyName": "Hair Atelier",
+              "logo": {
+                "src": "/images/logo.png",
+                "alt": "Hair Atelier",
+                "width": 2172,
+                "height": 724,
+                "href": "/"
+              },
+              "contact": {
+                "address": "25 W 39th St, 4th Floor, New York, NY 10018",
+                "addressHref": "https://maps.google.com/?q=New+York, NY 10018",
+                "phone": "+1 00000 00000",
+                "phoneHref": "tel:+1 00000 00000",
+                "email": "info@xyz.com",
+                "emailHref": "mailto:info@xyz.com",
+                "hours": "Mon – Sun : 10:00 AM – 8:00 PM"
+              },
+              "socials": [
+                {
+                  "name": "Facebook",
+                  "url": "https://facebook.com",
+                  "icon": "facebook"
+                },
+                {
+                  "name": "Instagram",
+                  "url": "https://instagram.com",
+                  "icon": "instagram"
+                },
+                {
+                  "name": "YouTube",
+                  "url": "https://youtube.com",
+                  "icon": "youtube"
+                },
+                {
+                  "name": "Pinterest",
+                  "url": "https://pinterest.com",
+                  "icon": "pinterest"
+                }
+              ]
+            }
+          }
+        },
+        "Header": {
+          "variants": {
+            "HairAtelierHeader1": {
+              "logo": {
+                "src": "/images/logo.png",
+                "alt": "Hair Atelier",
+                "width": 2172,
+                "height": 724,
+                "href": "/"
+              },
+              "menu": [
+                {
+                  "label": "Home",
+                  "href": "/"
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about"
+                },
+                {
+                  "label": "Services",
+                  "href": "/services"
+                },
+                {
+                  "label": "Blogs",
+                  "href": "/blogs"
+                },
+                {
+                  "label": "Gallery",
+                  "href": "/gallery"
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact"
+                }
+              ],
+              "cta": {
+                "label": "Get a Quote",
+                "href": "/get-a-quote"
+              }
+            }
+          }
+        },
+        "PageBanners": {
+          "variants": {
+            "HairAtelierPageBanners1": {
+              "pages": {
+                "about": {
+                  "metaTitle": "About Us | Hair Atelier",
+                  "metaDescription": "Discover the story behind Hair Atelier — from one salon to a global style destination.",
+                  "banner": {
+                    "title": "About Us",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "About Us"
+                      }
+                    ]
+                  }
+                },
+                "gallery": {
+                  "metaTitle": "Gallery | Hair Atelier",
+                  "metaDescription": "Real moments, real transformations — explore the Hair Atelier gallery.",
+                  "banner": {
+                    "title": "Gallery",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "Gallery"
+                      }
+                    ]
+                  }
+                },
+                "services": {
+                  "metaTitle": "Services | Hair Atelier",
+                  "metaDescription": "Explore our signature services, crafted by expert stylists to bring out your natural beauty.",
+                  "banner": {
+                    "title": "Services",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "Services"
+                      }
+                    ]
+                  }
+                },
+                "quote": {
+                  "metaTitle": "Get a Quote | Hair Atelier",
+                  "metaDescription": "Request a personalized quote for haircuts, colouring, treatments and styling at Hair Atelier.",
+                  "banner": {
+                    "title": "Get a Quote",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "Get a Quote"
+                      }
+                    ]
+                  }
+                },
+                "contact": {
+                  "metaTitle": "Contact Us | Hair Atelier",
+                  "metaDescription": "Get in touch with Hair Atelier — visit our salon, call us or send a message.",
+                  "banner": {
+                    "title": "Contact Us",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "Contact Us"
+                      }
+                    ]
+                  }
+                },
+                "blogs": {
+                  "metaTitle": "Blogs | Hair Atelier",
+                  "metaDescription": "Expert tips, grooming trends and hair care guides from the Hair Atelier team.",
+                  "banner": {
+                    "title": "Blogs",
+                    "breadcrumbs": [
+                      {
+                        "label": "Home",
+                        "href": "/"
+                      },
+                      {
+                        "label": "Blogs"
+                      }
+                    ]
+                  }
+                },
+                "blogDetail": {
+                  "bannerTitle": "Blogs Detail"
+                },
+                "serviceDetails": {
+                  "bannerTitle": "Services Details"
+                },
+                "thankYou": {
+                  "metaTitle": "Thank You | Hair Atelier",
+                  "metaDescription": "Your message has been sent successfully. Our team will get back to you soon."
+                }
+              }
+            }
+          }
+        },
+        "HeroBanner": {
+          "variants": {
+            "HairAtelierHeroBanner1": {
+              "autoplayInterval": 6000,
+              "slides": [
+                {
+                  "id": 1,
+                  "image": {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Client enjoying a relaxing hair wash at Hair Atelier"
+                  },
+                  "badge": "Beauty Crafted With Care",
+                  "heading": {
+                    "main": "Clean, Cut",
+                    "highlight": "Confident"
+                  },
+                  "description": "Expert stylists, personalized care and premium services to bring out the best version of you.",
+                  "cta": {
+                    "label": "Contact Us",
+                    "href": "/contact"
+                  }
+                },
+                {
+                  "id": 2,
+                  "image": {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Client enjoying a relaxing hair wash at Hair Atelier"
+                  },
+                  "badge": "Beauty Crafted With Care",
+                  "heading": {
+                    "main": "Clean, Cut",
+                    "highlight": "Confident"
+                  },
+                  "description": "Expert stylists, personalized care and premium services to bring out the best version of you.",
+                  "cta": {
+                    "label": "Contact Us",
+                    "href": "/contact"
+                  }
+                },
+                {
+                  "id": 3,
+                  "image": {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Client enjoying a relaxing hair wash at Hair Atelier"
+                  },
+                  "badge": "Beauty Crafted With Care",
+                  "heading": {
+                    "main": "Clean, Cut",
+                    "highlight": "Confident"
+                  },
+                  "description": "Expert stylists, personalized care and premium services to bring out the best version of you.",
+                  "cta": {
+                    "label": "Contact Us",
+                    "href": "/contact"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "AboutUs": {
+          "variants": {
+            "HairAtelierAboutUs1": {
+              "badge": "About Us",
+              "heading": {
+                "main": "From One Salon to a",
+                "highlight": "Global Style Destination"
+              },
+              "paragraphs": [
+                "Hair Atelier began with a simple belief — great hair has the power to transform confidence, mood and life moments. What started as a single studio has grown into a trusted salon known for creativity, precision and personalized care.",
+                "Today, we blend timeless techniques with modern trends to deliver luxury salon experiences for every client, every time."
+              ],
+              "experience": {
+                "value": "12+",
+                "label": "Years of Excellence"
+              },
+              "images": {
+                "main": {
+                  "src": "/images/about-salon.jpg",
+                  "alt": "Hair Atelier luxury salon interior",
+                  "width": 864,
+                  "height": 1152
+                },
+                "secondary": {
+                  "src": "/images/about-styling.jpg",
+                  "alt": "Stylist preparing a precision haircut",
+                  "width": 864,
+                  "height": 1152
+                }
+              },
+              "features": [
+                {
+                  "icon": "users",
+                  "title": "Expert Stylists",
+                  "description": "Trained professionals with years of hands-on experience."
+                },
+                {
+                  "icon": "scissors",
+                  "title": "Trend-Driven Services",
+                  "description": "Modern techniques for contemporary looks."
+                },
+                {
+                  "icon": "diamond",
+                  "title": "Luxury Experience",
+                  "description": "A premium environment designed for your comfort."
+                }
+              ],
+              "cta": {
+                "label": "Explore Our Story",
+                "href": "/about"
+              }
+            }
+          }
+        },
+        "Services": {
+          "variants": {
+            "HairAtelierServices1": {
+              "badge": "Our Services",
+              "heading": {
+                "main": "Everything You Need to",
+                "highlight": "Look Your Best"
+              },
+              "description": "Six signature services, each crafted by expert stylists to bring out your natural beauty with precision and care.",
+              "priceUnit": "/ session",
+              "detailsLabel": "View Details",
+              "list": [
+                {
+                  "id": "01",
+                  "icon": "scissors",
+                  "title": "Signature Haircut",
+                  "description": "A bespoke cut tailored to your face shape, hair texture and personal style.",
+                  "price": "$45",
+                  "href": "/services/signature-haircut",
+                  "slug": "signature-haircut"
+                },
+                {
+                  "id": "02",
+                  "icon": "sparkles",
+                  "title": "Hair Styling",
+                  "description": "Professional styling for everyday elegance or special occasions.",
+                  "price": "$30",
+                  "href": "/services/hair-styling",
+                  "slug": "hair-styling"
+                },
+                {
+                  "id": "03",
+                  "icon": "drop",
+                  "title": "Hair Spa Therapy",
+                  "description": "Deep scalp treatment and nourishing therapy for stronger, healthier and shinier hair.",
+                  "price": "$55",
+                  "href": "/services/hair-spa-therapy",
+                  "slug": "hair-spa-therapy"
+                },
+                {
+                  "id": "04",
+                  "icon": "palette",
+                  "title": "Hair Coloring",
+                  "description": "Premium colour services designed to enhance your style with a natural, vibrant finish.",
+                  "price": "$70",
+                  "href": "/services/hair-coloring",
+                  "slug": "hair-coloring"
+                },
+                {
+                  "id": "05",
+                  "icon": "face",
+                  "title": "Skin Grooming",
+                  "description": "Facial cleansing, exfoliation and revitalising treatments for fresh, healthy and glowing skin.",
+                  "price": "$40",
+                  "href": "/services/skin-grooming",
+                  "slug": "skin-grooming"
+                },
+                {
+                  "id": "06",
+                  "icon": "user",
+                  "title": "Personal Consultation",
+                  "description": "One-on-one session to understand your hair goals and get a tailored grooming plan.",
+                  "price": "$25",
+                  "href": "/services/personal-consultation",
+                  "slug": "personal-consultation"
+                }
+              ],
+              "serviceDetails": {
+                "bannerTitle": "Services Details",
+                "overviewBadge": "Service Overview",
+                "processBadge": "Our Process",
+                "list": [
+                  {
+                    "slug": "signature-haircut",
+                    "title": "Signature Haircut",
+                    "metaDescription": "Bespoke haircuts tailored to your face shape, hair texture and lifestyle at Hair Atelier.",
+                    "overview": {
+                      "heading": {
+                        "main": "Tailored Haircuts",
+                        "middle": "for Your",
+                        "highlight": "Unique Style"
+                      },
+                      "description": "Our expert stylists create customized haircuts and styles that suit your face shape, hair texture and lifestyle. Whether you want a trendy look, a classic style or a complete transformation, we ensure you leave the salon feeling confident and refreshed.",
+                      "images": {
+                        "main": {
+                          "src": "/images/Hair_salon_09.jpg",
+                          "alt": "Client with freshly styled waves"
+                        },
+                        "secondary": {
+                          "src": "/images/Hair_salon_10.jpg",
+                          "alt": "Stylist cutting hair with precision"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "scissors",
+                          "title": "Personalized Consultation",
+                          "description": "Understand your style goals"
+                        },
+                        {
+                          "icon": "diamond",
+                          "title": "Expert Stylists",
+                          "description": "Skilled and trend-focused"
+                        },
+                        {
+                          "icon": "lotus",
+                          "title": "Modern Techniques",
+                          "description": "Latest cutting and styling methods"
+                        },
+                        {
+                          "icon": "clock",
+                          "title": "Long-Lasting Results",
+                          "description": "Look great, every day"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Haircut & Styling",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Consultation",
+                          "description": "We discuss your preferences and suggest the best style for you."
+                        },
+                        {
+                          "icon": "scissors",
+                          "title": "Expert Styling",
+                          "description": "Our stylists create a haircut and style tailored to your look."
+                        },
+                        {
+                          "icon": "dryer",
+                          "title": "Finishing Touch",
+                          "description": "We perfect the details for a flawless finish."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Feel Confident",
+                          "description": "Walk out with a fresh, stylish and confident look."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_11.jpg",
+                          "alt": "Soft layered waves"
+                        },
+                        {
+                          "src": "/images/Hair_salon_12.jpg",
+                          "alt": "Clean skin fade"
+                        },
+                        {
+                          "src": "/images/Hair_salon_13.jpg",
+                          "alt": "Elegant updo"
+                        },
+                        {
+                          "src": "/images/Hair_salon_14.jpg",
+                          "alt": "Glossy blowout"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "slug": "hair-styling",
+                    "title": "Hair Styling",
+                    "metaDescription": "Professional hair styling for everyday elegance or special occasions at Hair Atelier.",
+                    "overview": {
+                      "heading": {
+                        "main": "Effortless Styling",
+                        "middle": "for Every",
+                        "highlight": "Occasion"
+                      },
+                      "description": "From sleek blowouts to glamorous curls and elegant updos, our stylists craft looks that match your mood and moment. Perfect for everyday polish, parties, photoshoots or any special event where you want to shine.",
+                      "images": {
+                        "main": {
+                          "src": "/images/Hair_salon_15.jpg",
+                          "alt": "Glamorous curled hairstyle"
+                        },
+                        "secondary": {
+                          "src": "/images/Hair_salon_16.jpg",
+                          "alt": "Stylist curling hair"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "sparkles",
+                          "title": "Occasion Ready",
+                          "description": "Looks for every event"
+                        },
+                        {
+                          "icon": "diamond",
+                          "title": "Premium Products",
+                          "description": "Heat protection and hold"
+                        },
+                        {
+                          "icon": "lotus",
+                          "title": "Creative Stylists",
+                          "description": "Trend-led and timeless"
+                        },
+                        {
+                          "icon": "clock",
+                          "title": "All-Day Hold",
+                          "description": "Styles that stay put"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Hair Styling",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Style Discussion",
+                          "description": "We understand your event, outfit and the look you love."
+                        },
+                        {
+                          "icon": "drop",
+                          "title": "Prep & Protect",
+                          "description": "Hair is cleansed and prepped with heat-protection care."
+                        },
+                        {
+                          "icon": "dryer",
+                          "title": "Create the Look",
+                          "description": "Blowouts, curls or updos crafted with precision."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Set & Shine",
+                          "description": "Finished with shine and hold so you look amazing all day."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_17.jpg",
+                          "alt": "Bouncy blowout"
+                        },
+                        {
+                          "src": "/images/Hair_salon_18.jpg",
+                          "alt": "Hollywood waves"
+                        },
+                        {
+                          "src": "/images/Hair_salon_19.jpg",
+                          "alt": "Bridal updo"
+                        },
+                        {
+                          "src": "/images/Hair_salon_21.jpg",
+                          "alt": "Sleek straight finish"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "slug": "hair-spa-therapy",
+                    "title": "Hair Spa Therapy",
+                    "metaDescription": "Deep scalp treatment and nourishing hair spa therapy at Hair Atelier.",
+                    "overview": {
+                      "heading": {
+                        "main": "Deep Nourishment",
+                        "middle": "for",
+                        "highlight": "Healthier Hair"
+                      },
+                      "description": "Our hair spa therapy combines deep cleansing, nourishing masks and a relaxing scalp massage to restore moisture, strength and shine. Ideal for dry, frizzy or damaged hair that needs a revitalising boost.",
+                      "images": {
+                        "main": {
+                          "src": "/images/Hair_salon_22.jpg",
+                          "alt": "Client relaxing during hair spa"
+                        },
+                        "secondary": {
+                          "src": "/images/Hair_salon_23.jpg",
+                          "alt": "Nourishing hair mask application"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "drop",
+                          "title": "Deep Hydration",
+                          "description": "Restores moisture and softness"
+                        },
+                        {
+                          "icon": "lotus",
+                          "title": "Relaxing Massage",
+                          "description": "Stress-relieving scalp care"
+                        },
+                        {
+                          "icon": "shield",
+                          "title": "Damage Repair",
+                          "description": "Strengthens weak strands"
+                        },
+                        {
+                          "icon": "sparkles",
+                          "title": "Natural Shine",
+                          "description": "Silky, glossy finish"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Hair Spa",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Scalp Analysis",
+                          "description": "We assess your scalp and hair condition to choose the right treatment."
+                        },
+                        {
+                          "icon": "drop",
+                          "title": "Deep Cleanse",
+                          "description": "A gentle cleanse removes buildup and refreshes the scalp."
+                        },
+                        {
+                          "icon": "lotus",
+                          "title": "Mask & Massage",
+                          "description": "Nourishing mask paired with a relaxing scalp massage."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Glow & Relax",
+                          "description": "Leave with soft, healthy hair and a refreshed mind."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_24.jpg",
+                          "alt": "Relaxing hair wash"
+                        },
+                        {
+                          "src": "/images/Hair_salon_25.jpg",
+                          "alt": "Hair mask treatment"
+                        },
+                        {
+                          "src": "/images/Hair_salon_26.jpg",
+                          "alt": "Scalp massage"
+                        },
+                        {
+                          "src": "/images/Hair_salon_27.jpg",
+                          "alt": "Healthy shiny hair"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "slug": "hair-coloring",
+                    "title": "Hair Coloring",
+                    "metaDescription": "Premium hair colouring, balayage and highlights at Hair Atelier.",
+                    "overview": {
+                      "heading": {
+                        "main": "Vibrant Colour",
+                        "middle": "with a",
+                        "highlight": "Natural Finish"
+                      },
+                      "description": "From subtle highlights to bold balayage and full colour transformations, our colour experts use premium, hair-friendly products to create shades that complement your skin tone and personality.",
+                      "images": {
+                        "main": {
+                          "src": "/images/Hair_salon_28.jpg",
+                          "alt": "Rich balayage colour"
+                        },
+                        "secondary": {
+                          "src": "/images/Hair_salon_29.jpg",
+                          "alt": "Foil highlights application"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "palette",
+                          "title": "Custom Shades",
+                          "description": "Matched to your skin tone"
+                        },
+                        {
+                          "icon": "diamond",
+                          "title": "Premium Colour",
+                          "description": "Gentle, long-lasting formulas"
+                        },
+                        {
+                          "icon": "shield",
+                          "title": "Hair Protection",
+                          "description": "Bond-care with every service"
+                        },
+                        {
+                          "icon": "clock",
+                          "title": "Lasting Vibrancy",
+                          "description": "Colour that stays rich"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Hair Coloring",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Colour Consultation",
+                          "description": "We find the perfect shade for your skin tone and style."
+                        },
+                        {
+                          "icon": "palette",
+                          "title": "Custom Mixing",
+                          "description": "Colour is mixed precisely for your desired result."
+                        },
+                        {
+                          "icon": "sparkles",
+                          "title": "Expert Application",
+                          "description": "Balayage, highlights or global colour applied with care."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Gloss & Reveal",
+                          "description": "A finishing gloss for shine that turns heads."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_30.jpg",
+                          "alt": "Caramel balayage"
+                        },
+                        {
+                          "src": "/images/hero-1.jpg",
+                          "alt": "Copper highlights"
+                        },
+                        {
+                          "src": "/images/about-salon.jpg",
+                          "alt": "Ash blonde toning"
+                        },
+                        {
+                          "src": "/images/about-styling.jpg",
+                          "alt": "Chocolate brown colour"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "slug": "skin-grooming",
+                    "title": "Skin Grooming",
+                    "metaDescription": "Facial cleansing, exfoliation and revitalising skin treatments at Hair Atelier.",
+                    "overview": {
+                      "heading": {
+                        "main": "Fresh, Radiant",
+                        "middle": "and",
+                        "highlight": "Glowing Skin"
+                      },
+                      "description": "Our skin grooming treatments deeply cleanse, exfoliate and revitalise your skin. Using gentle, high-quality products, we help you achieve a healthy glow and a refreshed, confident look.",
+                      "images": {
+                        "main": {
+                          "src": "/images/man.jpg",
+                          "alt": "Client with glowing skin"
+                        },
+                        "secondary": {
+                          "src": "/images/stats-bg.jpg",
+                          "alt": "Facial mask application"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "face",
+                          "title": "Deep Cleansing",
+                          "description": "Removes dirt and impurities"
+                        },
+                        {
+                          "icon": "leaf",
+                          "title": "Gentle Products",
+                          "description": "Skin-friendly formulas"
+                        },
+                        {
+                          "icon": "sparkles",
+                          "title": "Instant Glow",
+                          "description": "Visible radiance"
+                        },
+                        {
+                          "icon": "heart",
+                          "title": "Relaxing Care",
+                          "description": "Calm, soothing experience"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Skin Grooming",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Skin Analysis",
+                          "description": "We assess your skin type and concerns."
+                        },
+                        {
+                          "icon": "drop",
+                          "title": "Cleanse & Exfoliate",
+                          "description": "Deep cleansing and gentle exfoliation for fresh skin."
+                        },
+                        {
+                          "icon": "face",
+                          "title": "Treat & Mask",
+                          "description": "Targeted masks and serums to revitalise your skin."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Glow Up",
+                          "description": "Leave with hydrated, glowing and healthy skin."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_01.jpg",
+                          "alt": "Facial treatment"
+                        },
+                        {
+                          "src": "/images/Hair_salon_02.jpg",
+                          "alt": "Cleansing routine"
+                        },
+                        {
+                          "src": "/images/Hair_salon_03.jpg",
+                          "alt": "Hydrating mask"
+                        },
+                        {
+                          "src": "/images/Hair_salon_04.jpg",
+                          "alt": "Glowing skin result"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "slug": "personal-consultation",
+                    "title": "Personal Consultation",
+                    "metaDescription": "One-on-one hair and grooming consultation with Hair Atelier experts.",
+                    "overview": {
+                      "heading": {
+                        "main": "Expert Advice",
+                        "middle": "for Your",
+                        "highlight": "Hair Goals"
+                      },
+                      "description": "Sit down one-on-one with our senior stylists to understand your hair type, lifestyle and goals. We create a tailored grooming plan covering cuts, colour, treatments and home care so you always look your best.",
+                      "images": {
+                        "main": {
+                          "src": "/images/Hair_salon_05.jpg",
+                          "alt": "Stylist consulting a client"
+                        },
+                        "secondary": {
+                          "src": "/images/Hair_salon_06.jpg",
+                          "alt": "Hair analysis close-up"
+                        }
+                      },
+                      "highlights": [
+                        {
+                          "icon": "user",
+                          "title": "One-on-One Session",
+                          "description": "Dedicated stylist time"
+                        },
+                        {
+                          "icon": "chat",
+                          "title": "Honest Advice",
+                          "description": "What truly suits you"
+                        },
+                        {
+                          "icon": "lotus",
+                          "title": "Tailored Plan",
+                          "description": "Cuts, colour and care"
+                        },
+                        {
+                          "icon": "heart",
+                          "title": "Home Care Tips",
+                          "description": "Maintain your look"
+                        }
+                      ]
+                    },
+                    "process": {
+                      "heading": {
+                        "main": "Our Consultation",
+                        "highlight": "Process"
+                      },
+                      "steps": [
+                        {
+                          "icon": "chat",
+                          "title": "Get to Know You",
+                          "description": "We talk about your lifestyle, routine and hair goals."
+                        },
+                        {
+                          "icon": "user",
+                          "title": "Hair Analysis",
+                          "description": "A detailed look at your hair type, texture and scalp."
+                        },
+                        {
+                          "icon": "sparkles",
+                          "title": "Personal Plan",
+                          "description": "We recommend services and products just for you."
+                        },
+                        {
+                          "icon": "smile",
+                          "title": "Book with Confidence",
+                          "description": "Leave with clarity and a plan you'll love."
+                        }
+                      ],
+                      "images": [
+                        {
+                          "src": "/images/Hair_salon_07.jpg",
+                          "alt": "Consultation session"
+                        },
+                        {
+                          "src": "/images/Hair_salon_08.jpg",
+                          "alt": "Hair texture analysis"
+                        },
+                        {
+                          "src": "/images/Hair_salon_09.jpg",
+                          "alt": "Style recommendations"
+                        },
+                        {
+                          "src": "/images/Hair_salon_10.jpg",
+                          "alt": "Happy client"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "WhyChooseUs": {
+          "variants": {
+            "HairAtelierWhyChooseUs1": {
+              "badge": "Why Choose Us",
+              "heading": {
+                "main": "More Than a Salon",
+                "highlight": "A Personal Experience"
+              },
+              "description": "We combine expert care, premium products and a relaxing atmosphere to give you the best hair care experience.",
+              "list": [
+                {
+                  "icon": "scissors",
+                  "title": "Expert Stylists",
+                  "description": "Our skilled professionals stay updated with the latest trends and techniques."
+                },
+                {
+                  "icon": "diamond",
+                  "title": "Premium Products",
+                  "description": "We use high-quality, salon-grade products for safe and long-lasting results."
+                },
+                {
+                  "icon": "user-heart",
+                  "title": "Personalised Care",
+                  "description": "Every service is tailored to your hair type, style and individual needs."
+                },
+                {
+                  "icon": "lotus",
+                  "title": "Relaxing Atmosphere",
+                  "description": "Enjoy a calm and comfortable environment designed for your well-being."
+                },
+                {
+                  "icon": "users",
+                  "title": "Wide Range of Services",
+                  "description": "From haircuts to coloring, treatments and bridal styling — everything under one roof."
+                },
+                {
+                  "icon": "shield",
+                  "title": "Hygiene & Safety",
+                  "description": "We maintain the highest standards of cleanliness for a safe and healthy experience."
+                },
+                {
+                  "icon": "clock",
+                  "title": "Punctual Service",
+                  "description": "Your time matters. We ensure on-time appointments and efficient service."
+                },
+                {
+                  "icon": "heart",
+                  "title": "Client Satisfaction",
+                  "description": "Our focus is always on making sure you love your experience and want to come back."
+                }
+              ]
+            }
+          }
+        },
+        "Stats": {
+          "variants": {
+            "HairAtelierStats1": {
+              "badge": "Our Numbers",
+              "heading": {
+                "main": "Real People.",
+                "highlight": "Remarkable Results."
+              },
+              "description": "Trusted by thousands, we continue to create beautiful transformations every day.",
+              "background": {
+                "src": "/images/stats-bg.jpg",
+                "alt": "Hair Atelier salon interior"
+              },
+              "list": [
+                {
+                  "icon": "users",
+                  "value": 32500,
+                  "decimals": 0,
+                  "suffix": "+",
+                  "label": "Happy Clients"
+                },
+                {
+                  "icon": "scissors",
+                  "value": 1.2,
+                  "decimals": 1,
+                  "suffix": "M+",
+                  "label": "Hairstyles Created"
+                },
+                {
+                  "icon": "star",
+                  "value": 98.6,
+                  "decimals": 1,
+                  "suffix": "%",
+                  "label": "Client Satisfaction"
+                },
+                {
+                  "icon": "calendar",
+                  "value": 86000,
+                  "decimals": 0,
+                  "suffix": "+",
+                  "label": "Appointments Completed"
+                }
+              ]
+            }
+          }
+        },
+        "Gallery": {
+          "variants": {
+            "HairAtelierGallery1": {
+              "badge": "Our Gallery",
+              "heading": {
+                "main": "A Glimpse of",
+                "highlight": "Our Work"
+              },
+              "description": "Real transformations, happy clients and a space designed for your comfort.",
+              "rows": [
+                [
+                  {
+                    "src": "/images/stats-bg.jpg",
+                    "alt": "Salon styling stations"
+                  },
+                  {
+                    "src": "/images/Hair_salon_01.jpg",
+                    "alt": "Precision haircut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_02.jpg",
+                    "alt": "Fresh towels and decor"
+                  },
+                  {
+                    "src": "/images/Hair_salon_03.jpg",
+                    "alt": "Relaxing hair wash"
+                  }
+                ],
+                [
+                  {
+                    "src": "/images/Hair_salon_04.jpg",
+                    "alt": "Soft balayage waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_05.jpg",
+                    "alt": "Premium hair care products"
+                  },
+                  {
+                    "src": "/images/Hair_salon_06.jpg",
+                    "alt": "Facial treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_07.jpg",
+                    "alt": "Salon reception lounge"
+                  },
+                  {
+                    "src": "/images/Hair_salon_08.jpg",
+                    "alt": "Hair colouring service"
+                  }
+                ]
+              ],
+              "page": {
+                "badge": "Our Gallery",
+                "heading": {
+                  "main": "Moments That",
+                  "highlight": "Inspire"
+                },
+                "description": "Take a look at our salon experience - real moments, real transformations, and a glimpse of the care and artistry we provide.",
+                "perPage": 20,
+                "list": [
+                  {
+                    "src": "/images/Hair_salon_02.jpg",
+                    "alt": "Soft balayage waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_03.jpg",
+                    "alt": "Barber styling a client"
+                  },
+                  {
+                    "src": "/images/Hair_salon_04.jpg",
+                    "alt": "Bridal updo with accessories"
+                  },
+                  {
+                    "src": "/images/Hair_salon_05.jpg",
+                    "alt": "Salon styling stations"
+                  },
+                  {
+                    "src": "/images/Hair_salon_06.jpg",
+                    "alt": "Relaxing hair wash"
+                  },
+                  {
+                    "src": "/images/Hair_salon_07.jpg",
+                    "alt": "Hair straightening treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_08.jpg",
+                    "alt": "Precision haircut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_09.jpg",
+                    "alt": "Glossy curls finish"
+                  },
+                  {
+                    "src": "/images/Hair_salon_10.jpg",
+                    "alt": "Bronze waves styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_11.jpg",
+                    "alt": "Foil highlights application"
+                  },
+                  {
+                    "src": "/images/Hair_salon_12.jpg",
+                    "alt": "Premium hair care products"
+                  },
+                  {
+                    "src": "/images/Hair_salon_13.jpg",
+                    "alt": "Modern skin fade"
+                  },
+                  {
+                    "src": "/images/Hair_salon_14.jpg",
+                    "alt": "Salon reception lounge"
+                  },
+                  {
+                    "src": "/images/Hair_salon_15.jpg",
+                    "alt": "Caramel blowout"
+                  },
+                  {
+                    "src": "/images/Hair_salon_16.jpg",
+                    "alt": "Volume styling session"
+                  },
+                  {
+                    "src": "/images/Hair_salon_17.jpg",
+                    "alt": "Pearl hair accessories"
+                  },
+                  {
+                    "src": "/images/Hair_salon_18.jpg",
+                    "alt": "Professional styling brushes"
+                  },
+                  {
+                    "src": "/images/Hair_salon_19.jpg",
+                    "alt": "Silky straight hair"
+                  },
+                  {
+                    "src": "/images/Hair_salon_21.jpg",
+                    "alt": "Hair wash lounge"
+                  },
+                  {
+                    "src": "/images/Hair_salon_22.jpg",
+                    "alt": "Honey-toned waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_23.jpg",
+                    "alt": "Textured crop haircut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_24.jpg",
+                    "alt": "Keratin smoothening"
+                  },
+                  {
+                    "src": "/images/Hair_salon_25.jpg",
+                    "alt": "Elegant braided updo"
+                  },
+                  {
+                    "src": "/images/Hair_salon_26.jpg",
+                    "alt": "Golden salon mirrors"
+                  },
+                  {
+                    "src": "/images/Hair_salon_27.jpg",
+                    "alt": "Scalp massage therapy"
+                  },
+                  {
+                    "src": "/images/Hair_salon_28.jpg",
+                    "alt": "Glossy brunette blowout"
+                  },
+                  {
+                    "src": "/images/Hair_salon_29.jpg",
+                    "alt": "Beard sculpting"
+                  },
+                  {
+                    "src": "/images/Hair_salon_30.jpg",
+                    "alt": "Hair colour consultation"
+                  },
+                  {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Soft romantic curls"
+                  },
+                  {
+                    "src": "/images/about-salon.jpg",
+                    "alt": "Salon product shelf"
+                  },
+                  {
+                    "src": "/images/about-styling.jpg",
+                    "alt": "Layered haircut"
+                  },
+                  {
+                    "src": "/images/man.jpg",
+                    "alt": "Party styling"
+                  },
+                  {
+                    "src": "/images/stats-bg.jpg",
+                    "alt": "Hair spa treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_01.jpg",
+                    "alt": "Ash blonde toning"
+                  },
+                  {
+                    "src": "/images/Hair_salon_02.jpg",
+                    "alt": "Classic gentleman's cut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_03.jpg",
+                    "alt": "Salon interior details"
+                  },
+                  {
+                    "src": "/images/Hair_salon_04.jpg",
+                    "alt": "Bridal hair styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_05.jpg",
+                    "alt": "Chocolate brown waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_06.jpg",
+                    "alt": "Blow-dry finishing"
+                  },
+                  {
+                    "src": "/images/Hair_salon_07.jpg",
+                    "alt": "Hair styling tools"
+                  },
+                  {
+                    "src": "/images/Hair_salon_08.jpg",
+                    "alt": "Copper highlights"
+                  },
+                  {
+                    "src": "/images/Hair_salon_09.jpg",
+                    "alt": "Fresh trim"
+                  },
+                  {
+                    "src": "/images/Hair_salon_10.jpg",
+                    "alt": "Deep conditioning"
+                  },
+                  {
+                    "src": "/images/Hair_salon_11.jpg",
+                    "alt": "Sleek ponytail"
+                  },
+                  {
+                    "src": "/images/Hair_salon_12.jpg",
+                    "alt": "Luxury salon chairs"
+                  },
+                  {
+                    "src": "/images/Hair_salon_13.jpg",
+                    "alt": "Beach waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_14.jpg",
+                    "alt": "Pompadour styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_15.jpg",
+                    "alt": "Balayage reveal"
+                  },
+                  {
+                    "src": "/images/Hair_salon_16.jpg",
+                    "alt": "Hair serum application"
+                  },
+                  {
+                    "src": "/images/Hair_salon_17.jpg",
+                    "alt": "Elegant low bun"
+                  },
+                  {
+                    "src": "/images/Hair_salon_18.jpg",
+                    "alt": "Salon wash station"
+                  },
+                  {
+                    "src": "/images/Hair_salon_19.jpg",
+                    "alt": "Rich auburn colour"
+                  },
+                  {
+                    "src": "/images/Hair_salon_21.jpg",
+                    "alt": "Clipper fade detail"
+                  },
+                  {
+                    "src": "/images/Hair_salon_22.jpg",
+                    "alt": "Glamour curls"
+                  },
+                  {
+                    "src": "/images/Hair_salon_23.jpg",
+                    "alt": "Hair mask treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_24.jpg",
+                    "alt": "Shiny straight finish"
+                  },
+                  {
+                    "src": "/images/Hair_salon_25.jpg",
+                    "alt": "Stylist at work"
+                  },
+                  {
+                    "src": "/images/Hair_salon_26.jpg",
+                    "alt": "Floral hair accessories"
+                  },
+                  {
+                    "src": "/images/Hair_salon_27.jpg",
+                    "alt": "Salon ambience"
+                  },
+                  {
+                    "src": "/images/Hair_salon_28.jpg",
+                    "alt": "Golden brown waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_29.jpg",
+                    "alt": "Short bob cut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_30.jpg",
+                    "alt": "Root touch-up"
+                  },
+                  {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Hollywood waves"
+                  },
+                  {
+                    "src": "/images/about-salon.jpg",
+                    "alt": "Barber station"
+                  },
+                  {
+                    "src": "/images/about-styling.jpg",
+                    "alt": "Hair oil therapy"
+                  },
+                  {
+                    "src": "/images/man.jpg",
+                    "alt": "Sun-kissed highlights"
+                  },
+                  {
+                    "src": "/images/stats-bg.jpg",
+                    "alt": "Side part styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_01.jpg",
+                    "alt": "Bridal crown braid"
+                  },
+                  {
+                    "src": "/images/Hair_salon_02.jpg",
+                    "alt": "Salon towel service"
+                  },
+                  {
+                    "src": "/images/Hair_salon_03.jpg",
+                    "alt": "Mocha balayage"
+                  },
+                  {
+                    "src": "/images/Hair_salon_04.jpg",
+                    "alt": "Curly hair care"
+                  },
+                  {
+                    "src": "/images/Hair_salon_05.jpg",
+                    "alt": "Hair gloss treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_06.jpg",
+                    "alt": "Undercut design"
+                  },
+                  {
+                    "src": "/images/Hair_salon_07.jpg",
+                    "alt": "Evening glam styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_08.jpg",
+                    "alt": "Salon lighting"
+                  },
+                  {
+                    "src": "/images/Hair_salon_09.jpg",
+                    "alt": "Bouncy blowout"
+                  },
+                  {
+                    "src": "/images/Hair_salon_10.jpg",
+                    "alt": "Fringe trim"
+                  },
+                  {
+                    "src": "/images/Hair_salon_11.jpg",
+                    "alt": "Colour mixing"
+                  },
+                  {
+                    "src": "/images/Hair_salon_12.jpg",
+                    "alt": "Half-up hairstyle"
+                  },
+                  {
+                    "src": "/images/Hair_salon_13.jpg",
+                    "alt": "Grooming essentials"
+                  },
+                  {
+                    "src": "/images/Hair_salon_14.jpg",
+                    "alt": "Long layered waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_15.jpg",
+                    "alt": "Hot towel shave"
+                  },
+                  {
+                    "src": "/images/Hair_salon_16.jpg",
+                    "alt": "Smoothening result"
+                  },
+                  {
+                    "src": "/images/Hair_salon_17.jpg",
+                    "alt": "Vintage curls"
+                  },
+                  {
+                    "src": "/images/Hair_salon_18.jpg",
+                    "alt": "Salon lounge seating"
+                  },
+                  {
+                    "src": "/images/Hair_salon_19.jpg",
+                    "alt": "Champagne blonde"
+                  },
+                  {
+                    "src": "/images/Hair_salon_21.jpg",
+                    "alt": "Crew cut"
+                  },
+                  {
+                    "src": "/images/Hair_salon_22.jpg",
+                    "alt": "Hair botox treatment"
+                  },
+                  {
+                    "src": "/images/Hair_salon_23.jpg",
+                    "alt": "Messy bun styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_24.jpg",
+                    "alt": "Product display"
+                  },
+                  {
+                    "src": "/images/Hair_salon_25.jpg",
+                    "alt": "Dimensional colour"
+                  },
+                  {
+                    "src": "/images/Hair_salon_26.jpg",
+                    "alt": "Hair tinting"
+                  },
+                  {
+                    "src": "/images/Hair_salon_27.jpg",
+                    "alt": "Glossy finish waves"
+                  },
+                  {
+                    "src": "/images/Hair_salon_28.jpg",
+                    "alt": "Quiff styling"
+                  },
+                  {
+                    "src": "/images/Hair_salon_29.jpg",
+                    "alt": "Spa relaxation"
+                  },
+                  {
+                    "src": "/images/Hair_salon_30.jpg",
+                    "alt": "Bridal veil styling"
+                  },
+                  {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Salon mirror reflections"
+                  },
+                  {
+                    "src": "/images/about-salon.jpg",
+                    "alt": "Rose gold tones"
+                  },
+                  {
+                    "src": "/images/about-styling.jpg",
+                    "alt": "Texture spray finish"
+                  },
+                  {
+                    "src": "/images/man.jpg",
+                    "alt": "Signature Hair Atelier look"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Testimonials": {
+          "variants": {
+            "HairAtelierTestimonials1": {
+              "badge": "Client Testimonials",
+              "heading": {
+                "main": "Loved by Clients Who",
+                "highlight": "Always Come Back"
+              },
+              "description": "Real stories from happy clients who trust us for their grooming and self-care experience.",
+              "autoplayInterval": 5000,
+              "list": [
+                {
+                  "id": 1,
+                  "name": "Rahul Mehta",
+                  "role": "Marketing Manager",
+                  "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+                  "rating": 5,
+                  "quote": "Amazing experience! The haircut, styling and overall service was top-notch. The staff is professional and really understands your style. I always leave feeling more confident."
+                },
+                {
+                  "id": 2,
+                  "name": "Arjun Kapoor",
+                  "role": "Entrepreneur",
+                  "avatar": "https://randomuser.me/api/portraits/men/46.jpg",
+                  "rating": 5,
+                  "quote": "The attention to detail is incredible. From consultation to the final look, everything was perfect. This is now my go-to place for grooming. Highly recommended!"
+                },
+                {
+                  "id": 3,
+                  "name": "Karan Singh",
+                  "role": "IT Professional",
+                  "avatar": "https://randomuser.me/api/portraits/men/75.jpg",
+                  "rating": 5,
+                  "quote": "Professional, clean and a very relaxing atmosphere. The stylists are skilled and genuinely care about your preferences. Always a great experience here!"
+                },
+                {
+                  "id": 4,
+                  "name": "Priya Sharma",
+                  "role": "Fashion Designer",
+                  "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+                  "rating": 5,
+                  "quote": "My hair colour came out exactly how I imagined it. The team took time to understand what I wanted and the result was stunning. Truly a luxury experience."
+                },
+                {
+                  "id": 5,
+                  "name": "Neha Verma",
+                  "role": "Content Creator",
+                  "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+                  "rating": 5,
+                  "quote": "The hair spa therapy was so relaxing and my hair has never felt healthier. Beautiful space, friendly staff and amazing service every single visit."
+                }
+              ]
+            }
+          }
+        },
+        "BlogNews": {
+          "variants": {
+            "HairAtelierBlogNews1": {
+              "badge": "Our Blogs",
+              "heading": {
+                "main": "Tips, Trends and Insights",
+                "highlight": "for a Better You"
+              },
+              "description": "Explore expert tips, grooming trends and care guides to look and feel your best.",
+              "readMoreLabel": "Read More",
+              "emptyMessage": "No articles found. Try a different search or category.",
+              "clearFiltersLabel": "Clear filters",
+              "posts": [
+                {
+                  "id": 1,
+                  "slug": "how-ai-reads-your-face-shape",
+                  "tag": "AI Guide",
+                  "category": "Salon Tips",
+                  "date": "2026-06-04",
+                  "title": "How AI Reads Your Face Shape in 3 Seconds",
+                  "titleHighlight": "in 3 Seconds",
+                  "excerpt": "A behind-the-scenes look at the landmark detection that powers every recommendation.",
+                  "image": {
+                    "src": "/images/hero-1.jpg",
+                    "alt": "Barber tools and clippers on a workstation"
+                  },
+                  "content": {
+                    "intro": "Choosing a haircut used to be guesswork. Today, smart face-mapping technology can analyse your features in seconds and suggest styles that flatter you best. Here's how it works and how our stylists use it to give you better results.",
+                    "sections": [
+                      {
+                        "heading": "Mapping Facial Landmarks",
+                        "body": "The technology identifies key points on your face — forehead width, cheekbones, jawline and chin. These landmarks create a precise outline of your face shape, whether oval, round, square, heart or diamond."
+                      },
+                      {
+                        "heading": "Measuring Proportions",
+                        "body": "Once the landmarks are mapped, the system compares length and width ratios. These proportions reveal which features to balance and which to highlight with the right cut and volume."
+                      },
+                      {
+                        "heading": "Matching Styles",
+                        "body": "Your face shape is matched against hundreds of hairstyles that are known to complement it. The result is a shortlist of looks tailored to your features — not just the latest trend."
+                      },
+                      {
+                        "heading": "The Stylist's Touch",
+                        "body": "Technology gives a great starting point, but our stylists consider your hair texture, lifestyle and personality to refine the final recommendation into a look that's truly yours."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "Face-mapping makes your consultation faster and more accurate, but the magic still happens in the chair. Book a consultation at Hair Atelier and let our experts combine smart insights with skilled hands."
+                  }
+                },
+                {
+                  "id": 2,
+                  "slug": "hairstyles-that-will-define-2026",
+                  "tag": "Trends",
+                  "category": "Hairstyle Trends",
+                  "date": "2026-05-28",
+                  "title": "5 Hairstyles That Will Define 2026",
+                  "titleHighlight": "Define 2026",
+                  "excerpt": "Our trend radar reveals the cuts about to dominate barbershops worldwide.",
+                  "image": {
+                    "src": "/images/about-salon.jpg",
+                    "alt": "Stylist styling long glossy waves"
+                  },
+                  "content": {
+                    "intro": "The world of hairstyling is constantly evolving, and 2026 is bringing a fresh wave of trends that are stylish, versatile and perfect for every personality. Whether you love classic looks or prefer something modern and bold, this year's hairstyle trends offer something for everyone. In this blog, we'll explore five stunning hairstyles that are set to dominate in 2026 and how you can make them work for your unique style.",
+                    "sections": [
+                      {
+                        "heading": "Soft Layered Waves",
+                        "body": "Soft, effortless waves with face-framing layers continue to be a timeless favourite. This look adds natural volume, movement and a youthful charm, making it perfect for both casual and formal occasions. It suits almost all hair types and can be styled with minimal effort."
+                      },
+                      {
+                        "heading": "Sleek Blunt Bob",
+                        "body": "The blunt bob is making a huge statement in 2026. With its clean, sharp edges and sleek finish, this hairstyle gives a modern, confident and sophisticated look. It works beautifully on straight and slightly wavy hair and is easy to maintain, making it a top choice for busy lifestyles."
+                      },
+                      {
+                        "heading": "Curtain Bangs",
+                        "body": "Curtain bangs remain a top trend, adding softness and dimension to any hairstyle. They frame the face beautifully and work well with long, medium or even short hair. Curtain bangs are versatile and can be styled with waves, straight looks or updos."
+                      },
+                      {
+                        "heading": "Textured Shag Cut",
+                        "body": "The modern shag cut is all about texture, volume and a relaxed, edgy vibe. This hairstyle is perfect for those who want a trendy, low-maintenance look with lots of personality. It adds movement and works great for both straight and wavy hair."
+                      },
+                      {
+                        "heading": "Glossy High Ponytail",
+                        "body": "A sleek, high ponytail with a glossy finish is a go-to style for a chic and polished appearance. It's versatile, easy to achieve and perfect for both everyday wear and special events. You can keep it ultra-sleek or add soft waves for a more relaxed look."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "2026 is all about hairstyles that enhance your natural beauty while allowing you to express your individuality. From soft waves to edgy cuts, these trends are designed to suit every hair type and lifestyle. Visit Hair Atelier today and let our expert stylists help you achieve the perfect look for 2026."
+                  }
+                },
+                {
+                  "id": 3,
+                  "slug": "how-to-choose-the-right-haircut",
+                  "tag": "Guide",
+                  "category": "Hair Care Tips",
+                  "date": "2026-05-20",
+                  "title": "How to Choose the Right Haircut for Your Face Shape",
+                  "titleHighlight": "Your Face Shape",
+                  "excerpt": "A simple guide to finding the cut that balances your features and suits your lifestyle.",
+                  "image": {
+                    "src": "/images/about-styling.jpg",
+                    "alt": "Barber discussing a haircut with a client"
+                  },
+                  "content": {
+                    "intro": "The right haircut can completely transform how you look and feel. The secret lies in understanding your face shape and choosing a style that balances your features. Here's a quick guide to help you pick the perfect cut.",
+                    "sections": [
+                      {
+                        "heading": "Oval Face",
+                        "body": "Lucky you — almost every style works. Try long layers, a sleek bob or a textured crop. Avoid heavy fringes that hide your balanced proportions."
+                      },
+                      {
+                        "heading": "Round Face",
+                        "body": "Add height and length to create definition. Long layers, side-swept bangs and volume at the crown help elongate the face beautifully."
+                      },
+                      {
+                        "heading": "Square Face",
+                        "body": "Soften strong jawlines with waves, layers and side parts. Textured lobs and curtain bangs add a gentle, flattering touch."
+                      },
+                      {
+                        "heading": "Heart Face",
+                        "body": "Balance a wider forehead with chin-length bobs, side-swept fringes and volume around the jaw to create harmony."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "Your face shape is a great guide, but your hair texture and lifestyle matter too. Book a personal consultation at Hair Atelier and our stylists will recommend a cut that's made for you."
+                  }
+                },
+                {
+                  "id": 4,
+                  "slug": "science-of-a-healthy-beard",
+                  "tag": "Care",
+                  "category": "Hair Care Tips",
+                  "date": "2026-05-19",
+                  "title": "The Science of a Perfectly Healthy Beard",
+                  "titleHighlight": "Healthy Beard",
+                  "excerpt": "From follicle care to AI-matched oils — build a routine that actually works.",
+                  "image": {
+                    "src": "/images/man.jpg",
+                    "alt": "Client receiving a beard trim and shave"
+                  },
+                  "content": {
+                    "intro": "A great beard doesn't happen by accident. Healthy growth starts at the follicle and depends on the right cleansing, nourishment and grooming routine. Here's the science behind a beard that looks full, soft and well-kept.",
+                    "sections": [
+                      {
+                        "heading": "Start with the Skin",
+                        "body": "Healthy beard hair grows from healthy skin. Cleanse and exfoliate gently to remove dead cells and prevent ingrown hairs and itchiness."
+                      },
+                      {
+                        "heading": "Nourish with Oils",
+                        "body": "Beard oils with jojoba, argan or almond oil mimic natural sebum, keeping both hair and skin hydrated and reducing flakes."
+                      },
+                      {
+                        "heading": "Trim Regularly",
+                        "body": "Regular trims remove split ends and keep the shape sharp. A professional shape-up every 3–4 weeks makes a huge difference."
+                      },
+                      {
+                        "heading": "Lifestyle Matters",
+                        "body": "Sleep, hydration, a protein-rich diet and stress management all influence beard growth and thickness."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "Consistency is the key to a healthy beard. Pair a simple daily routine with expert grooming at Hair Atelier for a beard that always looks its best."
+                  }
+                },
+                {
+                  "id": 5,
+                  "slug": "hair-coloring-trends",
+                  "tag": "Coloring",
+                  "category": "Hair Coloring",
+                  "date": "2026-05-14",
+                  "title": "Hair Coloring Trends You Need to Try This Year",
+                  "titleHighlight": "Try This Year",
+                  "excerpt": "From expensive brunette to copper glow — the shades everyone will be asking for.",
+                  "image": {
+                    "src": "/images/stats-bg.jpg",
+                    "alt": "Stylist applying hair colour"
+                  },
+                  "content": {
+                    "intro": "Hair colour is one of the easiest ways to refresh your look. This year's trends are all about dimension, warmth and low-maintenance glamour. Here are the shades our colourists love right now.",
+                    "sections": [
+                      {
+                        "heading": "Expensive Brunette",
+                        "body": "Rich, glossy brown with subtle dimension that looks luxurious and grows out beautifully."
+                      },
+                      {
+                        "heading": "Copper Glow",
+                        "body": "Warm copper and auburn tones add vibrancy and suit a wide range of skin tones."
+                      },
+                      {
+                        "heading": "Soft Balayage",
+                        "body": "Hand-painted highlights create a natural, sun-kissed effect with minimal regrowth lines."
+                      },
+                      {
+                        "heading": "Champagne Blonde",
+                        "body": "A creamy, softer blonde that feels modern and elegant without harsh brassiness."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "The best colour is one that complements your skin tone and lifestyle. Book a colour consultation at Hair Atelier to find your perfect shade."
+                  }
+                },
+                {
+                  "id": 6,
+                  "slug": "benefits-of-keratin-treatment",
+                  "tag": "Treatments",
+                  "category": "Treatments",
+                  "date": "2026-05-08",
+                  "title": "The Benefits of Keratin Treatment for Smooth and Shiny Hair",
+                  "titleHighlight": "Smooth and Shiny Hair",
+                  "excerpt": "Why keratin is the secret to frizz-free, manageable hair that lasts for months.",
+                  "image": {
+                    "src": "/images/Hair_salon_01.jpg",
+                    "alt": "Stylist straightening glossy hair"
+                  },
+                  "content": {
+                    "intro": "If frizz, tangles and long styling sessions are part of your daily routine, a keratin treatment could change everything. Here's why it's one of our most-loved salon services.",
+                    "sections": [
+                      {
+                        "heading": "Frizz-Free Hair",
+                        "body": "Keratin smooths the hair cuticle, sealing out humidity and keeping frizz under control for weeks."
+                      },
+                      {
+                        "heading": "Faster Styling",
+                        "body": "Blow-drying time can be cut in half, making your daily routine quicker and easier."
+                      },
+                      {
+                        "heading": "Mirror-Like Shine",
+                        "body": "Smoother cuticles reflect more light, giving your hair a healthy, glossy finish."
+                      },
+                      {
+                        "heading": "Long-Lasting Results",
+                        "body": "With the right aftercare, results can last three to five months."
+                      }
+                    ],
+                    "conclusionHeading": "Final Thoughts",
+                    "conclusion": "A keratin treatment is an investment in easier, healthier-looking hair. Visit Hair Atelier and our experts will tailor the treatment to your hair type."
+                  }
+                }
+              ],
+              "sidebar": {
+                "searchTitle": "Search Blog",
+                "searchPlaceholder": "Search articles...",
+                "recentTitle": "Recent Posts",
+                "recentCount": 4,
+                "categoriesTitle": "Categories",
+                "categoryEmptyLabel": "No articles in this category yet.",
+                "categories": [
+                  "Hair Care Tips",
+                  "Hairstyle Trends",
+                  "Hair Coloring",
+                  "Treatments",
+                  "Bridal Styling",
+                  "Salon Tips",
+                  "Product Guides"
+                ],
+                "cta": {
+                  "badge": "Expert Care",
+                  "heading": {
+                    "main": "Transform Your",
+                    "highlight": "Look Today"
+                  },
+                  "description": "Book a consultation with our professional stylists and get a hairstyle that suits your style.",
+                  "image": {
+                    "src": "/images/about-styling.jpg",
+                    "alt": "Stylist preparing a haircut"
+                  },
+                  "button": {
+                    "label": "Book Appointment",
+                    "href": "/get-a-quote"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ContactPage": {
+          "variants": {
+            "HairAtelierContactPage1": {
+              "infoCards": [
+                {
+                  "icon": "location",
+                  "title": "Our Location",
+                  "lines": ["25 W 39th St, 4th Floor, New York, NY 10018"],
+                  "href": "https://maps.google.com/?q=New+York, NY 10018"
+                },
+                {
+                  "icon": "phone",
+                  "title": "Call Us",
+                  "lines": ["+1 00000 00000"],
+                  "href": "tel:+1 00000 00000"
+                },
+                {
+                  "icon": "mail",
+                  "title": "Email Us",
+                  "lines": ["info@xyz.com"],
+                  "href": "mailto:info@xyz.com"
+                },
+                {
+                  "icon": "clock",
+                  "title": "Working Hours",
+                  "lines": ["Mon - Sun: 10:00 AM - 8:00 PM"]
+                }
+              ],
+              "form": {
+                "badge": "Send Us a Message",
+                "heading": {
+                  "main": "Get In",
+                  "highlight": "Touch"
+                },
+                "description": "Fill out the form below and our team will get back to you as soon as possible.",
+                "image": {
+                  "src": "/images/about-salon.jpg",
+                  "alt": "Hair Atelier salon interior",
+                  "width": 864,
+                  "height": 1152
+                },
+                "fields": {
+                  "name": "Your Name *",
+                  "phone": "Phone Number *",
+                  "email": "Email Address *",
+                  "service": "Select Service *",
+                  "message": "Your Message *"
+                },
+                "services": [
+                  "Signature Haircut",
+                  "Hair Styling",
+                  "Hair Spa Therapy",
+                  "Hair Coloring",
+                  "Keratin & Smoothening",
+                  "Bridal & Party Styling",
+                  "Skin Grooming",
+                  "Personal Consultation"
+                ],
+                "submitLabel": "Send Message",
+                "submittingLabel": "Sending...",
+                "errors": {
+                  "name": "Please enter your name.",
+                  "phone": "Please enter a valid phone number.",
+                  "email": "Please enter a valid email address.",
+                  "service": "Please select a service.",
+                  "message": "Please enter your message."
+                }
+              },
+              "map": {
+                "badge": "Our Location",
+                "heading": {
+                  "main": "Find Us",
+                  "highlight": "Here"
+                },
+                "embedUrl": "https://www.google.com/maps?q=Connaught+Place,+New+Delhi&z=12&output=embed",
+                "title": "Hair Atelier location on Google Maps"
+              }
+            }
+          }
+        },
+        "QuotePage": {
+          "variants": {
+            "HairAtelierQuotePage1": {
+              "background": {
+                "src": "/images/stats-bg.jpg",
+                "alt": "Hair Atelier salon interior"
+              },
+              "intro": {
+                "heading": {
+                  "main": "Why Get a Quote",
+                  "middle": "from",
+                  "highlight": "Hair Atelier?"
+                },
+                "list": [
+                  {
+                    "icon": "scissors",
+                    "title": "Personalized Solutions",
+                    "description": "Tailored recommendations based on your hair type, style goals and preferences."
+                  },
+                  {
+                    "icon": "diamond",
+                    "title": "Transparent Pricing",
+                    "description": "Clear and upfront quotes with no hidden charges."
+                  },
+                  {
+                    "icon": "lotus",
+                    "title": "Expert Guidance",
+                    "description": "Get advice from our professional stylists for the best results."
+                  },
+                  {
+                    "icon": "clock",
+                    "title": "Quick Response",
+                    "description": "Our team will get back to you as soon as possible with a customized quote."
+                  }
+                ]
+              },
+              "form": {
+                "heading": {
+                  "main": "Request a",
+                  "highlight": "Quote"
+                },
+                "description": "Fill out the form below and our team will contact you with a personalized quote.",
+                "fields": {
+                  "name": "Your Name *",
+                  "phone": "Phone Number *",
+                  "email": "Email Address *",
+                  "date": "Preferred Date",
+                  "service": "Select Service *",
+                  "message": "Additional Requirements (Optional)"
+                },
+                "services": [
+                  "Signature Haircut",
+                  "Hair Styling",
+                  "Hair Spa Therapy",
+                  "Hair Coloring",
+                  "Keratin & Smoothening",
+                  "Bridal & Party Styling",
+                  "Skin Grooming",
+                  "Personal Consultation"
+                ],
+                "submitLabel": "Get a Quote",
+                "submittingLabel": "Sending...",
+                "privacyNote": "Your information is safe with us. We never share your details with third parties.",
+                "errors": {
+                  "name": "Please enter your name.",
+                  "phone": "Please enter a valid phone number.",
+                  "email": "Please enter a valid email address.",
+                  "service": "Please select a service."
+                }
+              }
+            }
+          }
+        },
+        "ThankYouPage": {
+          "variants": {
+            "HairAtelierThankYouPage1": {
+              "background": {
+                "src": "/images/stats-bg.jpg",
+                "alt": "Hair Atelier salon interior"
+              },
+              "heading": {
+                "main": "Thank",
+                "highlight": "You!"
+              },
+              "lines": [
+                "Your message has been sent successfully.",
+                "We truly appreciate you reaching out to Hair Atelier.",
+                "Our team will get back to you as soon as possible."
+              ],
+              "button": {
+                "label": "Back to Home",
+                "href": "/"
+              }
+            }
+          }
+        },
+        "Footer": {
+          "variants": {
+            "HairAtelierFooter1": {
+              "logo": {
+                "src": "/images/logo.png",
+                "alt": "Hair Atelier",
+                "width": 2172,
+                "height": 724,
+                "href": "/"
+              },
+              "description": "Premium hair care and styling services designed to bring out your best look. Experience expert care, modern techniques and a relaxing salon atmosphere.",
+              "socials": [
+                {
+                  "icon": "facebook",
+                  "label": "Facebook",
+                  "href": "https://facebook.com"
+                },
+                {
+                  "icon": "instagram",
+                  "label": "Instagram",
+                  "href": "https://instagram.com"
+                },
+                {
+                  "icon": "youtube",
+                  "label": "YouTube",
+                  "href": "https://youtube.com"
+                },
+                {
+                  "icon": "pinterest",
+                  "label": "Pinterest",
+                  "href": "https://pinterest.com"
+                }
+              ],
+              "columns": [
+                {
+                  "heading": {
+                    "main": "Quick",
+                    "highlight": "Links"
+                  },
+                  "list": [
+                    {
+                      "label": "Home",
+                      "href": "/"
+                    },
+                    {
+                      "label": "About Us",
+                      "href": "/about"
+                    },
+                    {
+                      "label": "Our Services",
+                      "href": "/services"
+                    },
+                    {
+                      "label": "Gallery",
+                      "href": "/gallery"
+                    },
+                    {
+                      "label": "Blogs",
+                      "href": "/blogs"
+                    },
+                    {
+                      "label": "Contact Us",
+                      "href": "/contact"
+                    },
+                    {
+                      "label": "Thank You",
+                      "href": "/thank-you"
+                    }
+                  ]
+                },
+                {
+                  "heading": {
+                    "main": "Our",
+                    "highlight": "Services"
+                  },
+                  "list": [
+                    {
+                      "label": "Signature Haircut",
+                      "href": "/services/signature-haircut"
+                    },
+                    {
+                      "label": "Hair Styling",
+                      "href": "/services/hair-styling"
+                    },
+                    {
+                      "label": "Hair Spa Therapy",
+                      "href": "/services/hair-spa-therapy"
+                    },
+                    {
+                      "label": "Hair Coloring",
+                      "href": "/services/hair-coloring"
+                    },
+                    {
+                      "label": "Skin Grooming",
+                      "href": "/services/skin-grooming"
+                    },
+                    {
+                      "label": "Personal Consultation",
+                      "href": "/services/personal-consultation"
+                    }
+                  ]
+                }
+              ],
+              "contact": {
+                "heading": {
+                  "main": "Get In",
+                  "highlight": "Touch"
+                },
+                "list": [
+                  {
+                    "icon": "location",
+                    "lines": ["25 W 39th St, 4th Floor, New York, NY 10018"],
+                    "href": "https://maps.google.com/?q=New+York, NY 10018"
+                  },
+                  {
+                    "icon": "phone",
+                    "lines": ["+1 00000 00000"],
+                    "href": "tel:+1 00000 00000"
+                  },
+                  {
+                    "icon": "mail",
+                    "lines": ["info@xyz.com"],
+                    "href": "mailto:info@xyz.com"
+                  },
+                  {
+                    "icon": "clock",
+                    "lines": ["Mon – Sun : 10:00 AM – 8:00 PM"]
+                  }
+                ]
+              },
+              "copyright": "copyright @ 2026. All Rights Reserved. Powerd by Lestow."
+            }
+          }
+        }
+      }
     }
+  }
   }
 }

@@ -12,6 +12,14 @@ import {
 } from "lucide-react";
 import { FloatingActionButtons } from "./src/lib/FloatingActionButtons";
 import {
+  isBlogOwnedSection,
+  isGalleryOwnedSection,
+  isHiddenBlogsPage,
+  isHiddenGalleryPage,
+  isHiddenServicesPage,
+  isServiceOwnedSection,
+} from "./src/lib/navVisibility";
+import {
   buildSelectedConfig,
   createAddableSection,
   createAboutPageSection,
@@ -44,6 +52,7 @@ import {
   withTopbarLayoutSkin,
   applyTopbarLayoutSkins,
   withCoolFixContent,
+  withHairAtelierContent,
   withCoolFixBreadcrumbBackground,
   isCoolFixTemplate,
   isStockBreadcrumbImage,
@@ -260,6 +269,15 @@ const getEditorSectionDisplayLabel = (section: {
   data?: SectionItem["data"];
 }) => {
   if (section.variant === "PetAboutPage1") return "About";
+  if (section.variant === "HairAtelierAboutPage1") return "About";
+  if (section.variant === "HairAtelierServicePage1") return "Services";
+  if (section.variant === "HairAtelierBlogPage1") return "Blogs";
+  if (section.variant === "HairAtelierGalleryPage1") return "Gallery";
+  if (section.variant === "HairAtelierContactPage1") return "Contact details";
+  if (section.variant === "HairAtelierContactForm1") return "Contact form";
+  if (section.variant === "HairAtelierContactMap1") return "Map";
+  if (section.variant === "HairAtelierQuotePage1") return "Get a Quote";
+  if (section.variant === "HairAtelierPageBanners1") return "Page banner";
   if (section.variant?.startsWith("AboutPage")) return "About Story";
   if (section.type === "CTA") return "Call to action";
   if (section.type === "MissionPage") return "How we work";
@@ -339,6 +357,8 @@ type EditorPageLink = {
   longDescription?: string;
   category?: string;
   createdAt?: string;
+  slug?: string;
+  order?: number;
 };
 
 const createBlogPageSection = (
@@ -678,6 +698,126 @@ const getMultiPageSlugFromHref = (href: string) => {
   if (!normalizedHref.startsWith("#page-")) return "";
   return normalizePageSlug(normalizedHref.slice("#page-".length));
 };
+
+const hairSrc = (src?: string) => {
+  const value = String(src || "").trim();
+  if (!value) return "";
+  if (/^(https?:|data:|blob:)/i.test(value)) return value;
+  const base = "/beauty%20and%20personal%20care";
+  if (value.startsWith("/images/")) return `${base}${value}`;
+  if (value.startsWith("images/")) return `${base}/${value}`;
+  return value.replace(/ /g, "%20");
+};
+
+const hairStoredImageSrc = (src: string) => {
+  const prefix = "/beauty%20and%20personal%20care";
+  return src.startsWith(`${prefix}/images/`) ? src.slice(prefix.length) : src;
+};
+
+const hairPostImage = (image: unknown) => {
+  if (typeof image === "string") return hairSrc(image);
+  if (image && typeof image === "object") {
+    const src = (image as { src?: unknown }).src;
+    if (typeof src === "string") return hairSrc(src);
+  }
+  return "";
+};
+
+const hairPostPlainText = (content: unknown) => {
+  if (typeof content === "string") return content;
+  if (!content || typeof content !== "object") return "";
+  const record = content as {
+    intro?: unknown;
+    conclusion?: unknown;
+    sections?: Array<{ heading?: unknown; body?: unknown }>;
+  };
+  const parts: string[] = [];
+  if (typeof record.intro === "string" && record.intro.trim()) {
+    parts.push(record.intro);
+  }
+  if (Array.isArray(record.sections)) {
+    record.sections.forEach((section) => {
+      if (typeof section?.heading === "string" && section.heading.trim()) {
+        parts.push(section.heading);
+      }
+      if (typeof section?.body === "string" && section.body.trim()) {
+        parts.push(section.body);
+      }
+    });
+  }
+  if (typeof record.conclusion === "string" && record.conclusion.trim()) {
+    parts.push(record.conclusion);
+  }
+  return parts.join("\n\n");
+};
+
+const findHairBlogSection = (sections: SectionItem[]) =>
+  sections.find(
+    (section) =>
+      section.variant === "HairAtelierBlogPage1" ||
+      Boolean(section.data?.HairAtelierBlogPage1),
+  ) ||
+  sections.find(
+    (section) =>
+      section.variant === "HairAtelierBlogNews1" ||
+      Boolean(section.data?.HairAtelierBlogNews1),
+  );
+
+const readHairBlogVariantData = (section: SectionItem) => {
+  const variant =
+    section.variant === "HairAtelierBlogPage1" ||
+    section.variant === "HairAtelierBlogNews1"
+      ? section.variant
+      : section.data?.HairAtelierBlogPage1
+        ? "HairAtelierBlogPage1"
+        : "HairAtelierBlogNews1";
+  const stored =
+    (section.data?.[variant] as Record<string, unknown> | undefined) ??
+    (section.data?.HairAtelierBlogPage1 as Record<string, unknown> | undefined) ??
+    (section.data?.HairAtelierBlogNews1 as Record<string, unknown> | undefined);
+  const data = (withHairAtelierContent(variant, stored) ??
+    stored ??
+    {}) as Record<string, unknown>;
+  const posts = Array.isArray(data.posts) ? data.posts : [];
+  return { variant, data, posts };
+};
+
+const blogSlugFromLink = (blog: EditorPageLink) => {
+  const fromHref = blog.href.replace(/^#page-blog-/i, "").replace(/^\/+/, "");
+  return blog.slug || fromHref || createPageSlug(blog.label);
+};
+
+const hairBlogLinksFromPosts = (posts: unknown[]): EditorPageLink[] =>
+  posts.flatMap((item, index) => {
+    if (!item || typeof item !== "object") return [];
+    const record = item as Record<string, unknown>;
+    const title = typeof record.title === "string" ? record.title.trim() : "";
+    if (!title) return [];
+    const slug =
+      (typeof record.slug === "string" && record.slug.trim()) ||
+      createPageSlug(title) ||
+      `post-${index + 1}`;
+    return [
+      {
+        label: title,
+        href: `#page-blog-${slug}`,
+        kind: "blog" as const,
+        slug,
+        image: hairPostImage(record.image),
+        shortDescription:
+          typeof record.excerpt === "string" ? record.excerpt : "",
+        longDescription: hairPostPlainText(record.content),
+        category:
+          typeof record.category === "string" && record.category.trim()
+            ? record.category
+            : "Salon Tips",
+        createdAt: typeof record.date === "string" ? record.date : "",
+        order: index + 1,
+        hidden: record.hidden === true,
+        layout: "BlogPage-1",
+      },
+    ];
+  });
 
 const resolveEditorPageLabel = (
   raw: string | null | undefined,
@@ -2443,6 +2583,99 @@ const ensureMissingAboutPageCompanions = (
       }
       return;
     }
+    if (aboutVariant.startsWith("HairAtelier")) {
+      const onThisPage = (section: SectionItem) =>
+        normalizePageSlug(section.page || "") === slug;
+      const bannerPreview = resolveLayoutPreview(
+        "HairAtelierPageBanners1",
+        category,
+      )?.data as
+        | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+        | undefined;
+      const aboutBanner = bannerPreview?.pages?.about?.banner ?? {
+        title: "About Us",
+        breadcrumbs: [
+          { label: "Home", href: "/" },
+          { label: "About Us" },
+        ],
+      };
+      const whyVariant =
+        template.sectionVariants.WhyChooseUs || "HairAtelierWhyChooseUs1";
+      const testimonialVariant =
+        template.sectionVariants.Testimonial || "HairAtelierTestimonials1";
+      const companions: Array<{
+        type: string;
+        variant: string;
+        content: unknown;
+      }> = [
+        {
+          type: "PageBanner",
+          variant: "HairAtelierPageBanners1",
+          content: aboutBanner,
+        },
+        {
+          type: "WhyChooseUs",
+          variant: whyVariant,
+          content: resolveLayoutPreview(whyVariant, category)?.data ?? {},
+        },
+        {
+          type: "Testimonial",
+          variant: testimonialVariant,
+          content:
+            resolveLayoutPreview(testimonialVariant, category)?.data ?? {},
+        },
+      ];
+      const existing = new Map(
+        next
+          .filter(
+            (section) =>
+              onThisPage(section) &&
+              companions.some((item) => item.type === section.type),
+          )
+          .map((section) => [section.type, section]),
+      );
+      const ordered = companions.map((item) => {
+        const saved = existing.get(item.type);
+        if (saved) return saved;
+        return {
+          id: `${item.type}-${pageDefinition.id}`,
+          page: pageDefinition.id,
+          type: item.type,
+          variant: item.variant,
+          data: {
+            [item.variant]:
+              item.content && typeof item.content === "object"
+                ? (item.content as SectionData)
+                : ({} as SectionData),
+          },
+        };
+      });
+      const withoutCompanions = next.filter(
+        (section) =>
+          !onThisPage(section) ||
+          !companions.some((item) => item.type === section.type),
+      );
+      const aboutIndex = withoutCompanions.findIndex(
+        (section) => section === body || section.id === body.id,
+      );
+      const insertAt =
+        aboutIndex === -1 ? withoutCompanions.length : aboutIndex;
+      const arranged = [
+        ...withoutCompanions.slice(0, insertAt),
+        ordered[0],
+        ...(aboutIndex === -1 ? [] : [withoutCompanions[aboutIndex]]),
+        ...ordered.slice(1),
+        ...withoutCompanions.slice(insertAt + (aboutIndex === -1 ? 0 : 1)),
+      ];
+      const hairSame =
+        arranged.length === next.length &&
+        arranged.every((section, index) => section === next[index]);
+      if (!hairSame) {
+        next = arranged;
+        changed = true;
+      }
+      return;
+    }
     if (
       pageBodyHasOwnBreadcrumb(String(body.variant || "")) ||
       pageBodyHasOwnBreadcrumb(
@@ -2568,6 +2801,55 @@ const DEDICATED_PAGE_SHELL_TYPES = new Set([
   "CountriesServe",
 ]);
 
+const HAIR_TEMPLATE_BANNER_KEYS: Record<string, string> = {
+  about: "about",
+  "about-us": "about",
+  services: "services",
+  "service-detail": "serviceDetails",
+  "service-details": "serviceDetails",
+  gallery: "gallery",
+  blogs: "blogs",
+  blog: "blogs",
+  "blog-detail": "blogDetail",
+  "blog-details": "blogDetail",
+  contact: "contact",
+  "contact-us": "contact",
+  quote: "quote",
+  "get-a-quote": "quote",
+  "thank-you": "thankYou",
+};
+
+function hairPageBannerForTemplatePage(
+  variant: string,
+  preview: Record<string, unknown>,
+  pageId: string,
+  pageLabel: string,
+) {
+  if (variant !== "HairAtelierPageBanners1") return preview;
+  const pages = preview.pages;
+  if (!pages || typeof pages !== "object" || Array.isArray(pages)) return preview;
+  const book = pages as Record<
+    string,
+    { banner?: Record<string, unknown>; bannerTitle?: string }
+  >;
+  const slug = normalizePageSlug(pageId || pageLabel);
+  const entry = book[HAIR_TEMPLATE_BANNER_KEYS[slug] || slug];
+  if (entry?.banner && (entry.banner.title || entry.banner.breadcrumbs)) {
+    return entry.banner;
+  }
+  const title =
+    (typeof entry?.bannerTitle === "string" && entry.bannerTitle.trim()) ||
+    pageLabel.trim();
+  if (!title) return preview;
+  return {
+    title,
+    breadcrumbs: [
+      { label: "Home", href: "/" },
+      { label: title },
+    ],
+  };
+}
+
 /** CoolFix inner pages must keep their own component, even if a draft stored About there. */
 const ensureDedicatedThemePageBodies = (
   sections: SectionItem[],
@@ -2575,7 +2857,6 @@ const ensureDedicatedThemePageBodies = (
   category: string,
 ): SectionItem[] => {
   const template = getBuilderTemplate(templateId, category);
-  if (template.type === "Single Page Website") return sections;
 
   const typeAlias: Record<string, string> = {
     AboutPage: "About",
@@ -2774,6 +3055,59 @@ const ensureDedicatedThemePageBodies = (
     }
   }
 
+  if (template.sectionVariants.Header !== "CoolFixHeader1") {
+    const homeOrder = (
+      Array.isArray(template.homeSectionOrder) ? template.homeSectionOrder : []
+    ).filter((type) => typeof type === "string" && type.trim());
+    for (const type of homeOrder) {
+      const variant = template.sectionVariants[type];
+      if (!variant) continue;
+      const onHome = next.some((section) => {
+        const slug = normalizePageSlug(section.page || "");
+        if (slug && slug !== "home") return false;
+        return section.type === type || section.variant === variant;
+      });
+      if (onHome) continue;
+      const usedIds = new Set(next.map((section) => section.id));
+      const id = usedIds.has(type) ? `${type}-home` : type;
+      const preview =
+        (resolveLayoutPreview(variant, category)?.data as SectionData) ||
+        ({} as SectionData);
+      next = [
+        ...next,
+        {
+          id,
+          type,
+          variant,
+          data: { [variant]: preview },
+        },
+      ];
+      changed = true;
+    }
+    if (
+      homeOrder.length &&
+      String(template.sectionVariants.Header || "").startsWith("HairAtelier")
+    ) {
+      const rank = new Map(homeOrder.map((type, index) => [type, index]));
+      const pages = next.filter((section) => section.page);
+      const home = next.filter((section) => !section.page);
+      const ordered = [...home].sort(
+        (left, right) =>
+          (rank.get(left.type) ?? 50) - (rank.get(right.type) ?? 50),
+      );
+      const footer = ordered.filter((section) => section.type === "Footer");
+      const body = ordered.filter((section) => section.type !== "Footer");
+      const arranged = [...body, ...pages, ...footer];
+      const same =
+        arranged.length === next.length &&
+        arranged.every((section, index) => section === next[index]);
+      if (!same) {
+        next = arranged;
+        changed = true;
+      }
+    }
+  }
+
   const sectionRank = (type: string, rank: Map<string, number>) => {
     if (rank.has(type)) return rank.get(type) ?? 100;
     if (type === "About" && rank.has("AboutPage")) return rank.get("AboutPage") ?? 100;
@@ -2805,12 +3139,24 @@ const ensureDedicatedThemePageBodies = (
         return false;
       });
       if (exists) continue;
+      const preview =
+        (resolveLayoutPreview(variant, category)?.data as Record<
+          string,
+          unknown
+        >) || {};
       const created: SectionItem = {
         id: `${type}-${page.id}`,
         page: page.id,
         type,
         variant,
-        data: { [variant]: {} as SectionData },
+        data: {
+          [variant]: hairPageBannerForTemplatePage(
+            variant,
+            preview,
+            page.id,
+            page.label,
+          ) as SectionData,
+        },
       };
       const footerIndex = next.findIndex(
         (section) => section.type === "Footer" && !section.page,
@@ -3092,7 +3438,12 @@ const ensureMissingPageBreadcrumbs = (
     ];
     changed = true;
   });
-  return ensureCoolFixServicePageCompanions(
+  return ensureHairAtelierQuotePageSections(
+    ensureHairAtelierContactPageSections(
+    ensureHairAtelierGalleryPageSections(
+    ensureHairAtelierBlogPageSections(
+    ensureHairAtelierServicePageSections(
+    ensureCoolFixServicePageCompanions(
     ensureMissingAboutPageCompanions(
     expandPetAboutPageSections(changed ? next : sections),
     templateId,
@@ -3100,7 +3451,457 @@ const ensureMissingPageBreadcrumbs = (
   ),
     templateId,
     category,
+  ),
+    templateId,
+    category,
+  ),
+    templateId,
+    category,
+  ),
+    templateId,
+    category,
+  ),
+    templateId,
+    category,
+  ),
+    templateId,
+    category,
   );
+};
+
+const ensureHairAtelierServicePageSections = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.sectionVariants?.ServicePage !== "HairAtelierServicePage1") {
+    return sections;
+  }
+  let next = sections;
+  let changed = false;
+  getTemplatePages(template).forEach((pageDefinition) => {
+    if (pageDefinition.sectionType !== "ServicePage") return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      const page = normalizePageSlug(section.page || "");
+      return (
+        page === slug &&
+        (section.type === "ServicePage" ||
+          section.variant === "HairAtelierServicePage1")
+      );
+    });
+    if (bodyIndex === -1) return;
+    const body = next[bodyIndex];
+    const onThisPage = (section: SectionItem) =>
+      normalizePageSlug(section.page || "") === slug;
+    const bannerPreview = resolveLayoutPreview(
+      "HairAtelierPageBanners1",
+      category,
+    )?.data as
+      | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+      | undefined;
+    const servicesBanner = bannerPreview?.pages?.services?.banner ?? {
+      title: "Services",
+      breadcrumbs: [
+        { label: "Home", href: "/" },
+        { label: "Services" },
+      ],
+    };
+    const bannerVariant = "HairAtelierPageBanners1";
+    const savedBanner = next.find(
+      (section) => onThisPage(section) && section.type === "PageBanner",
+    );
+    const banner = savedBanner ?? {
+      id: `PageBanner-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "PageBanner",
+      variant: bannerVariant,
+      data: {
+        [bannerVariant]: servicesBanner as SectionData,
+      },
+    };
+    const withoutBanner = next.filter(
+      (section) => !(onThisPage(section) && section.type === "PageBanner"),
+    );
+    const serviceIndex = withoutBanner.findIndex(
+      (section) => section === body || section.id === body.id,
+    );
+    const insertAt = serviceIndex === -1 ? withoutBanner.length : serviceIndex;
+    const arranged = [
+      ...withoutBanner.slice(0, insertAt),
+      banner,
+      ...withoutBanner.slice(insertAt),
+    ];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  });
+  return changed ? next : sections;
+};
+
+const ensureHairAtelierBlogPageSections = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.sectionVariants?.BlogPage !== "HairAtelierBlogPage1") {
+    return sections;
+  }
+  let next = sections;
+  let changed = false;
+  getTemplatePages(template).forEach((pageDefinition) => {
+    if (pageDefinition.sectionType !== "BlogPage") return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      const page = normalizePageSlug(section.page || "");
+      return (
+        page === slug &&
+        (section.type === "BlogPage" ||
+          section.variant === "HairAtelierBlogPage1")
+      );
+    });
+    if (bodyIndex === -1) return;
+    const body = next[bodyIndex];
+    const onThisPage = (section: SectionItem) =>
+      normalizePageSlug(section.page || "") === slug;
+    const bannerPreview = resolveLayoutPreview(
+      "HairAtelierPageBanners1",
+      category,
+    )?.data as
+      | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+      | undefined;
+    const blogsBanner = bannerPreview?.pages?.blogs?.banner ?? {
+      title: "Blogs",
+      breadcrumbs: [
+        { label: "Home", href: "/" },
+        { label: "Blogs" },
+      ],
+    };
+    const bannerVariant = "HairAtelierPageBanners1";
+    const savedBanner = next.find(
+      (section) => onThisPage(section) && section.type === "PageBanner",
+    );
+    const banner = savedBanner ?? {
+      id: `PageBanner-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "PageBanner",
+      variant: bannerVariant,
+      data: {
+        [bannerVariant]: blogsBanner as SectionData,
+      },
+    };
+    const withoutBanner = next.filter(
+      (section) => !(onThisPage(section) && section.type === "PageBanner"),
+    );
+    const blogIndex = withoutBanner.findIndex(
+      (section) => section === body || section.id === body.id,
+    );
+    const insertAt = blogIndex === -1 ? withoutBanner.length : blogIndex;
+    const arranged = [
+      ...withoutBanner.slice(0, insertAt),
+      banner,
+      ...withoutBanner.slice(insertAt),
+    ];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  });
+  return changed ? next : sections;
+};
+
+const ensureHairAtelierGalleryPageSections = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.sectionVariants?.GalleryPage !== "HairAtelierGalleryPage1") {
+    return sections;
+  }
+  let next = sections;
+  let changed = false;
+  getTemplatePages(template).forEach((pageDefinition) => {
+    if (pageDefinition.sectionType !== "GalleryPage") return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      const page = normalizePageSlug(section.page || "");
+      return (
+        page === slug &&
+        (section.type === "GalleryPage" ||
+          section.variant === "HairAtelierGalleryPage1")
+      );
+    });
+    if (bodyIndex === -1) return;
+    const body = next[bodyIndex];
+    const onThisPage = (section: SectionItem) =>
+      normalizePageSlug(section.page || "") === slug;
+    const bannerPreview = resolveLayoutPreview(
+      "HairAtelierPageBanners1",
+      category,
+    )?.data as
+      | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+      | undefined;
+    const galleryBanner = bannerPreview?.pages?.gallery?.banner ?? {
+      title: "Gallery",
+      breadcrumbs: [
+        { label: "Home", href: "/" },
+        { label: "Gallery" },
+      ],
+    };
+    const bannerVariant = "HairAtelierPageBanners1";
+    const savedBanner = next.find(
+      (section) => onThisPage(section) && section.type === "PageBanner",
+    );
+    const banner = savedBanner ?? {
+      id: `PageBanner-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "PageBanner",
+      variant: bannerVariant,
+      data: {
+        [bannerVariant]: galleryBanner as SectionData,
+      },
+    };
+    const withoutBanner = next.filter(
+      (section) => !(onThisPage(section) && section.type === "PageBanner"),
+    );
+    const galleryIndex = withoutBanner.findIndex(
+      (section) => section === body || section.id === body.id,
+    );
+    const insertAt = galleryIndex === -1 ? withoutBanner.length : galleryIndex;
+    const arranged = [
+      ...withoutBanner.slice(0, insertAt),
+      banner,
+      ...withoutBanner.slice(insertAt),
+    ];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  });
+  return changed ? next : sections;
+};
+
+const ensureHairAtelierContactPageSections = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.sectionVariants?.ContactPage !== "HairAtelierContactPage1") {
+    return sections;
+  }
+  let next = sections;
+  let changed = false;
+  getTemplatePages(template).forEach((pageDefinition) => {
+    if (pageDefinition.sectionType !== "ContactPage") return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      const page = normalizePageSlug(section.page || "");
+      return (
+        page === slug &&
+        (section.type === "ContactPage" ||
+          section.variant === "HairAtelierContactPage1")
+      );
+    });
+    if (bodyIndex === -1) return;
+    const body = next[bodyIndex];
+    const onThisPage = (section: SectionItem) =>
+      normalizePageSlug(section.page || "") === slug;
+    const bannerPreview = resolveLayoutPreview(
+      "HairAtelierPageBanners1",
+      category,
+    )?.data as
+      | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+      | undefined;
+    const contactBanner = bannerPreview?.pages?.contact?.banner ?? {
+      title: "Contact Us",
+      breadcrumbs: [
+        { label: "Home", href: "/" },
+        { label: "Contact Us" },
+      ],
+    };
+    const formPreview = resolveLayoutPreview(
+      "HairAtelierContactForm1",
+      category,
+    )?.data;
+    const mapPreview = resolveLayoutPreview(
+      "HairAtelierContactMap1",
+      category,
+    )?.data;
+    const bodyRecord = (body.data?.[body.variant] ||
+      body.data?.HairAtelierContactPage1) as
+      | { form?: unknown; map?: unknown }
+      | undefined;
+    const formData =
+      bodyRecord?.form && typeof bodyRecord.form === "object"
+        ? bodyRecord.form
+        : formPreview;
+    const mapData =
+      bodyRecord?.map && typeof bodyRecord.map === "object"
+        ? bodyRecord.map
+        : mapPreview;
+    const savedBanner = next.find(
+      (section) => onThisPage(section) && section.type === "PageBanner",
+    );
+    const banner = savedBanner ?? {
+      id: `PageBanner-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "PageBanner",
+      variant: "HairAtelierPageBanners1",
+      data: {
+        HairAtelierPageBanners1: contactBanner as SectionData,
+      },
+    };
+    const savedForm = next.find(
+      (section) =>
+        onThisPage(section) &&
+        (section.type === "ContactForm" ||
+          section.variant === "HairAtelierContactForm1"),
+    );
+    const form = savedForm ?? {
+      id: `ContactForm-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "ContactForm",
+      variant: "HairAtelierContactForm1",
+      data: {
+        HairAtelierContactForm1: (formData || {}) as SectionData,
+      },
+    };
+    const savedMap = next.find(
+      (section) =>
+        onThisPage(section) &&
+        (section.type === "ContactMap" ||
+          section.variant === "HairAtelierContactMap1"),
+    );
+    const map = savedMap ?? {
+      id: `ContactMap-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "ContactMap",
+      variant: "HairAtelierContactMap1",
+      data: {
+        HairAtelierContactMap1: (mapData || {}) as SectionData,
+      },
+    };
+    const rest = next.filter(
+      (section) =>
+        !(
+          onThisPage(section) &&
+          (section.type === "PageBanner" ||
+            section.type === "ContactForm" ||
+            section.type === "ContactMap" ||
+            section.variant === "HairAtelierContactForm1" ||
+            section.variant === "HairAtelierContactMap1")
+        ),
+    );
+    const cardsIndex = rest.findIndex(
+      (section) => section === body || section.id === body.id,
+    );
+    const insertAt = cardsIndex === -1 ? rest.length : cardsIndex;
+    const arranged = [
+      ...rest.slice(0, insertAt),
+      banner,
+      body,
+      form,
+      map,
+      ...rest.slice(insertAt + (cardsIndex === -1 ? 0 : 1)),
+    ];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  });
+  return changed ? next : sections;
+};
+
+const ensureHairAtelierQuotePageSections = (
+  sections: SectionItem[],
+  templateId: string,
+  category: string,
+): SectionItem[] => {
+  const template = getBuilderTemplate(templateId, category);
+  if (template.sectionVariants?.QuotePage !== "HairAtelierQuotePage1") {
+    return sections;
+  }
+  let next = sections;
+  let changed = false;
+  getTemplatePages(template).forEach((pageDefinition) => {
+    if (pageDefinition.sectionType !== "QuotePage") return;
+    const slug = normalizePageSlug(pageDefinition.id);
+    const bodyIndex = next.findIndex((section) => {
+      const page = normalizePageSlug(section.page || "");
+      return (
+        page === slug &&
+        (section.type === "QuotePage" ||
+          section.variant === "HairAtelierQuotePage1")
+      );
+    });
+    if (bodyIndex === -1) return;
+    const body = next[bodyIndex];
+    const onThisPage = (section: SectionItem) =>
+      normalizePageSlug(section.page || "") === slug;
+    const bannerPreview = resolveLayoutPreview(
+      "HairAtelierPageBanners1",
+      category,
+    )?.data as
+      | { pages?: Record<string, { banner?: Record<string, unknown> }> }
+      | undefined;
+    const quoteBanner = bannerPreview?.pages?.quote?.banner ?? {
+      title: "Get a Quote",
+      breadcrumbs: [
+        { label: "Home", href: "/" },
+        { label: "Get a Quote" },
+      ],
+    };
+    const bannerVariant = "HairAtelierPageBanners1";
+    const savedBanner = next.find(
+      (section) => onThisPage(section) && section.type === "PageBanner",
+    );
+    const banner = savedBanner ?? {
+      id: `PageBanner-${pageDefinition.id}`,
+      page: pageDefinition.id,
+      type: "PageBanner",
+      variant: bannerVariant,
+      data: {
+        [bannerVariant]: quoteBanner as SectionData,
+      },
+    };
+    const withoutBanner = next.filter(
+      (section) => !(onThisPage(section) && section.type === "PageBanner"),
+    );
+    const quoteIndex = withoutBanner.findIndex(
+      (section) => section === body || section.id === body.id,
+    );
+    const insertAt = quoteIndex === -1 ? withoutBanner.length : quoteIndex;
+    const arranged = [
+      ...withoutBanner.slice(0, insertAt),
+      banner,
+      ...withoutBanner.slice(insertAt),
+    ];
+    const same =
+      arranged.length === next.length &&
+      arranged.every((section, index) => section === next[index]);
+    if (!same) {
+      next = arranged;
+      changed = true;
+    }
+  });
+  return changed ? next : sections;
 };
 
 const dropOrphanManagerPageLinks = (
@@ -3175,7 +3976,13 @@ const addAboutPageSection = (sections: SectionItem[], category: string) => {
 };
 
 const addGalleryPageSection = (sections: SectionItem[], category: string) => {
-  if (sections.some((section) => section.id === "GalleryPage")) return sections;
+  if (
+    sections.some(
+      (section) => section.id === "GalleryPage" || section.type === "GalleryPage",
+    )
+  ) {
+    return sections;
+  }
 
   const galleryPageSection = createGalleryPageSection(category);
   const footerIndex = sections.findIndex((section) => section.type === "Footer");
@@ -3228,7 +4035,16 @@ const addContactPageSection = (sections: SectionItem[], category: string) => {
 };
 
 const addServicePageSection = (sections: SectionItem[], category: string) => {
-  if (sections.some((section) => section.id === "ServicePage")) return sections;
+  if (
+    sections.some(
+      (section) =>
+        section.id === "ServicePage" ||
+        section.type === "ServicePage" ||
+        String(section.variant || "").startsWith("HairAtelierService"),
+    )
+  ) {
+    return sections;
+  }
 
   const servicePageSection = createServicePageSection(category);
   const galleryIndex = sections.findIndex((section) => section.id === "GalleryPage");
@@ -3280,7 +4096,7 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
         item &&
         typeof item === "object" &&
         typeof (item as { title?: unknown }).title === "string" &&
-        typeof (item as { image?: unknown }).image === "string",
+        String((item as { title?: string }).title).trim(),
     )
   ) {
     return data.list
@@ -3290,21 +4106,39 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
         const title = typeof record.title === "string" ? record.title : "";
         if (!title) return null;
         const href = typeof record.href === "string" ? record.href : "";
-        const slugFromHref =
-          href.split("/").filter(Boolean).pop() || "";
+        const slugFromHref = href.split("/").filter(Boolean).pop() || "";
+        const rawImage = record.image;
+        const image =
+          typeof rawImage === "string"
+            ? hairSrc(rawImage)
+            : rawImage &&
+                typeof rawImage === "object" &&
+                typeof (rawImage as { src?: unknown }).src === "string"
+              ? hairSrc((rawImage as { src: string }).src)
+              : "";
         return {
           id:
             (typeof record.id === "string" && record.id) ||
             (typeof record.id === "number" ? String(record.id) : "") ||
             `service-${index + 1}`,
           title,
-          category: "Service",
-          desc: typeof record.description === "string" ? record.description : "",
-          content: "",
-          image: typeof record.image === "string" ? record.image : "/bg1.jpg",
+          category:
+            typeof record.category === "string" && record.category.trim()
+              ? record.category
+              : "Service",
+          desc:
+            (typeof record.description === "string" && record.description) ||
+            (typeof record.desc === "string" && record.desc) ||
+            "",
+          content: typeof record.price === "string" ? record.price : "",
+          image: image || "/bg1.jpg",
           alt: title,
-          slug: slugFromHref || createPageSlug(title) || `service-${index + 1}`,
-          order: index + 1,
+          slug:
+            (typeof record.slug === "string" && record.slug.trim()) ||
+            slugFromHref ||
+            createPageSlug(title) ||
+            `service-${index + 1}`,
+          order: typeof record.order === "number" ? record.order : index + 1,
           active: record.active !== false,
           layout: "",
           seoTitle: "",
@@ -4694,6 +5528,48 @@ const buildTeamPageState = (data: SectionData): TeamPageState => ({
 });
 
 const readGalleryItemsFromData = (data: SectionData): GalleryItem[] => {
+  const hairList = (data as { list?: unknown }).list;
+  if (Array.isArray(hairList) && hairList.length > 0) {
+    return hairList
+      .map((item, index) => {
+        if (!item || typeof item !== "object") return null;
+        const row = item as {
+          id?: string;
+          src?: string;
+          image?: string;
+          alt?: string;
+          title?: string;
+          category?: string;
+          desc?: string;
+          order?: number;
+          active?: boolean;
+        };
+        const image = hairSrc(
+          (typeof row.src === "string" && row.src) ||
+            (typeof row.image === "string" && row.image) ||
+            "",
+        );
+        if (!image) return null;
+        const alt = typeof row.alt === "string" ? row.alt : "";
+        const title =
+          (typeof row.title === "string" && row.title) ||
+          alt ||
+          `Photo ${index + 1}`;
+        return {
+          id: (typeof row.id === "string" && row.id) || `gallery-${index + 1}`,
+          title,
+          category: row.category || "Gallery",
+          desc: row.desc || "",
+          image,
+          alt: alt || title,
+          order: typeof row.order === "number" ? row.order : index + 1,
+          active: row.active !== false,
+        };
+      })
+      .filter((item): item is GalleryItem => item !== null)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
   const source = Array.isArray(data.galleryItems)
     ? data.galleryItems
     : Array.isArray(data.items)
@@ -4773,6 +5649,22 @@ const applyGalleryPageStateToData = (
     order: item.order ?? 1,
     active: item.active !== false,
   }));
+  if (Array.isArray((current as { list?: unknown }).list)) {
+    return {
+      ...current,
+      list: galleryItems.map((item) => {
+        const image = item.image || "";
+        const prefix = "/beauty%20and%20personal%20care";
+        const src = image.startsWith(`${prefix}/images/`)
+          ? image.slice(prefix.length)
+          : image;
+        return {
+          src,
+          alt: item.alt || item.title,
+        };
+      }),
+    };
+  }
   const next: SectionData = {
     ...current,
     pretitle: state.pretitle,
@@ -7392,7 +8284,7 @@ function EditorLayoutPage() {
     const prepareTimeout = window.setTimeout(() => {
       setContentReady(false);
       void (async () => {
-        await refreshCategoryContentFromApi();
+        await refreshCategoryContentFromApi(undefined, true);
         if (!cancelled) setContentReady(true);
       })();
     }, 0);
@@ -8607,60 +9499,74 @@ function EditorPage({
         event as CustomEvent<{ manager?: string }>
       ).detail?.manager;
       if (manager !== "Blogs") return;
-      const hasPetBlog = sectionsRef.current.some(
-        (section) =>
-          section.variant === "PetBlog1" || Boolean(section.data?.PetBlog1),
-      );
-      if (!hasPetBlog) return;
       setPageLinks((current) => {
+        const hairSection = findHairBlogSection(sectionsRef.current);
+        if (hairSection) {
+          const existing = new Set(
+            flattenPageLinks(current)
+              .filter((link) => link.kind === "blog")
+              .flatMap((link) => [link.href, link.slug || ""])
+              .filter(Boolean),
+          );
+          const missing = hairBlogLinksFromPosts(
+            readHairBlogVariantData(hairSection).posts,
+          ).filter(
+            (link) => !existing.has(link.href) && !existing.has(link.slug || ""),
+          );
+          if (missing.length) return [...current, ...missing];
+        }
         if (flattenPageLinks(current).some((link) => link.kind === "blog")) {
           return current;
         }
-        const section = sectionsRef.current.find(
+        const petSection = sectionsRef.current.find(
           (item) => item.variant === "PetBlog1" || item.data?.PetBlog1,
         );
-        const variant =
-          section?.variant === "PetBlog1" ? "PetBlog1" : section?.variant;
-        const data =
-          (variant && section
-            ? (section.data?.[variant] as SectionData | undefined)
-            : undefined) ??
-          (section?.data?.PetBlog1 as SectionData | undefined);
-        const sectionPosts = Array.isArray(data?.posts) ? data.posts : [];
-        const defaultPosts = Array.isArray(petDefaultSite.ourBlogs?.posts)
-          ? petDefaultSite.ourBlogs.posts
-          : [];
-        const posts = sectionPosts.length ? sectionPosts : defaultPosts;
-        const blogLinks = posts.flatMap((item, index) => {
-          if (!item || typeof item !== "object") return [];
-          const record = item as Record<string, unknown>;
-          const title = typeof record.title === "string" ? record.title : "";
-          if (!title) return [];
-          const link = typeof record.link === "string" ? record.link : "";
-          const slug =
-            link.replace(/^\/+/, "").split("/")[0] ||
-            createPageSlug(title) ||
-            `post-${index + 1}`;
-          return [
-            {
-              label: title,
-              href: `#page-blog-${slug}`,
-              kind: "blog" as const,
-              slug,
-              image: typeof record.image === "string" ? record.image : "",
-              shortDescription:
-                typeof record.excerpt === "string" ? record.excerpt : "",
-              category:
-                typeof record.category === "string" ? record.category : "General",
-              createdAt: typeof record.date === "string" ? record.date : "",
-              order: index + 1,
-              hidden: record.hidden === true,
-              layout: "BlogPage-1",
-            },
-          ];
-        });
-        if (!blogLinks.length) return current;
-        return [...current, ...blogLinks];
+        if (petSection) {
+          const variant =
+            petSection.variant === "PetBlog1" ? "PetBlog1" : petSection.variant;
+          const data =
+            (variant
+              ? (petSection.data?.[variant] as SectionData | undefined)
+              : undefined) ??
+            (petSection.data?.PetBlog1 as SectionData | undefined);
+          const sectionPosts = Array.isArray(data?.posts) ? data.posts : [];
+          const defaultPosts = Array.isArray(petDefaultSite.ourBlogs?.posts)
+            ? petDefaultSite.ourBlogs.posts
+            : [];
+          const posts = sectionPosts.length ? sectionPosts : defaultPosts;
+          const blogLinks = posts.flatMap((item, index) => {
+            if (!item || typeof item !== "object") return [];
+            const record = item as Record<string, unknown>;
+            const title = typeof record.title === "string" ? record.title : "";
+            if (!title) return [];
+            const link = typeof record.link === "string" ? record.link : "";
+            const slug =
+              link.replace(/^\/+/, "").split("/")[0] ||
+              createPageSlug(title) ||
+              `post-${index + 1}`;
+            return [
+              {
+                label: title,
+                href: `#page-blog-${slug}`,
+                kind: "blog" as const,
+                slug,
+                image: typeof record.image === "string" ? record.image : "",
+                shortDescription:
+                  typeof record.excerpt === "string" ? record.excerpt : "",
+                category:
+                  typeof record.category === "string"
+                    ? record.category
+                    : "General",
+                createdAt: typeof record.date === "string" ? record.date : "",
+                order: index + 1,
+                hidden: record.hidden === true,
+                layout: "BlogPage-1",
+              },
+            ];
+          });
+          if (blogLinks.length) return [...current, ...blogLinks];
+        }
+        return current;
       });
     };
     window.addEventListener("ai-builder-open-manager", onOpenManager);
@@ -8768,14 +9674,159 @@ function EditorPage({
   }, [pageLinks]);
 
   useEffect(() => {
-    const findServiceSection = (items: SectionItem[]) =>
-      items.find(
+    const blogs = flattenPageLinks(pageLinks).filter(
+      (link) => link.kind === "blog",
+    );
+    if (!blogs.length || !findHairBlogSection(sectionsRef.current)) return;
+
+    setSections((current) => {
+      let changed = false;
+      const next = current.map((section) => {
+        const isHairBlog =
+          section.variant === "HairAtelierBlogPage1" ||
+          section.variant === "HairAtelierBlogNews1" ||
+          Boolean(section.data?.HairAtelierBlogPage1) ||
+          Boolean(section.data?.HairAtelierBlogNews1);
+        if (!isHairBlog) return section;
+        const { variant, data, posts } = readHairBlogVariantData(section);
+        const bySlug = new Map<string, Record<string, unknown>>();
+        posts.forEach((post) => {
+          if (!post || typeof post !== "object") return;
+          const record = post as Record<string, unknown>;
+          const slug = typeof record.slug === "string" ? record.slug : "";
+          if (slug) bySlug.set(slug, record);
+        });
+        const orderedBlogs = [...blogs].sort((left, right) => {
+          const leftOrder = Number(left.order);
+          const rightOrder = Number(right.order);
+          const leftRank =
+            Number.isFinite(leftOrder) && leftOrder > 0
+              ? leftOrder
+              : Number.MAX_SAFE_INTEGER;
+          const rightRank =
+            Number.isFinite(rightOrder) && rightOrder > 0
+              ? rightOrder
+              : Number.MAX_SAFE_INTEGER;
+          return leftRank - rightRank;
+        });
+        const nextPosts = orderedBlogs.map((blog, index) => {
+          const slug = blogSlugFromLink(blog) || `post-${index + 1}`;
+          const existing = bySlug.get(slug) ?? {};
+          const image = hairStoredImageSrc(blog.image || "");
+          const previousImage =
+            existing.image && typeof existing.image === "object"
+              ? (existing.image as Record<string, unknown>)
+              : {};
+          const existingContent = existing.content;
+          const plain = hairPostPlainText(existingContent).trim();
+          const longText =
+            typeof blog.longDescription === "string"
+              ? blog.longDescription.trim()
+              : "";
+          const content =
+            longText && longText !== plain
+              ? existingContent &&
+                typeof existingContent === "object" &&
+                !Array.isArray(existingContent)
+                ? {
+                    ...(existingContent as Record<string, unknown>),
+                    intro: longText,
+                    sections: [],
+                    conclusion: "",
+                  }
+                : { intro: longText, sections: [], conclusion: "" }
+              : existingContent;
+          const orderValue = Number(blog.order);
+          return {
+            ...existing,
+            slug,
+            title: blog.label,
+            excerpt: blog.shortDescription ?? existing.excerpt ?? "",
+            category: blog.category || existing.category || "Salon Tips",
+            date: blog.createdAt || existing.date || "",
+            order:
+              Number.isFinite(orderValue) && orderValue > 0
+                ? orderValue
+                : index + 1,
+            content,
+            image: image
+              ? {
+                  ...previousImage,
+                  src: image,
+                  alt:
+                    (typeof previousImage.alt === "string" &&
+                      previousImage.alt) ||
+                    blog.label,
+                }
+              : existing.image,
+            hidden: blog.hidden === true,
+          };
+        });
+        if (JSON.stringify(posts) === JSON.stringify(nextPosts)) return section;
+        changed = true;
+        const nestedBlog =
+          data.blog && typeof data.blog === "object" && !Array.isArray(data.blog)
+            ? { ...(data.blog as Record<string, unknown>), posts: nextPosts }
+            : data.blog;
+        return {
+          ...section,
+          data: {
+            ...section.data,
+            [variant]: {
+              ...data,
+              posts: nextPosts,
+              ...(nestedBlog ? { blog: nestedBlog } : {}),
+            },
+          },
+        };
+      });
+      return changed ? next : current;
+    });
+  }, [pageLinks]);
+
+  useEffect(() => {
+    const findServiceSection = (items: SectionItem[]) => {
+      const matches = items.filter(
         (section) =>
           section.id === "ServicePage" ||
           section.type === "ServicePage" ||
           (section.type === "Service" &&
-            ["service", "services"].includes(normalizePageSlug(section.page || ""))),
+            ["service", "services"].includes(
+              normalizePageSlug(section.page || ""),
+            )),
       );
+      return (
+        matches.find((section) =>
+          String(section.variant || "").startsWith("HairAtelier"),
+        ) ||
+        matches.find((section) => section.type === "ServicePage") ||
+        matches[0]
+      );
+    };
+
+    const readHomeHairServices = (items: SectionItem[]) => {
+      const home = items.find(
+        (section) =>
+          section.variant === "HairAtelierServices1" ||
+          section.variant === "HairAtelierServicePage1" ||
+          Boolean(section.data?.HairAtelierServices1) ||
+          Boolean(section.data?.HairAtelierServicePage1),
+      );
+      if (!home) return [] as ServiceItem[];
+      const variant = String(home.variant || "");
+      const stored =
+        (home.data?.[home.variant] as SectionData | undefined) ??
+        (home.data?.HairAtelierServicePage1 as SectionData | undefined) ??
+        (home.data?.HairAtelierServices1 as SectionData | undefined);
+      if (!stored) return [] as ServiceItem[];
+      const data = (
+        variant.startsWith("HairAtelier")
+          ? withHairAtelierContent(variant, stored as Record<string, unknown>) ??
+            stored
+          : stored
+      ) as SectionData;
+      return readServiceItemsFromData(data);
+    };
 
     const readHomePetServices = (items: SectionItem[]) => {
       const home = items.find(
@@ -8800,7 +9851,13 @@ function EditorPage({
         (section.data[section.variant] as SectionData | undefined) ??
         (section.data["ServicePage-1"] as SectionData | undefined) ??
         ({} as SectionData);
-      const data = String(section.variant || "").startsWith("CoolFix")
+      const variantName = String(section.variant || "");
+      const data = variantName.startsWith("HairAtelier")
+        ? ((withHairAtelierContent(
+            section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
+        : variantName.startsWith("CoolFix")
         ? ((withCoolFixContent(
             section.variant,
             stored as Record<string, unknown>,
@@ -8808,8 +9865,13 @@ function EditorPage({
         : stored;
       const state = buildServicePageState(data);
       const homeServices = readHomePetServices(items);
+      const hairServices = readHomeHairServices(items);
       const services =
-        state.services.length > 0 ? state.services : homeServices;
+        state.services.length > 0
+          ? state.services
+          : hairServices.length > 0
+            ? hairServices
+            : homeServices;
       const listingLayout = section.variant?.startsWith("ServicePage-")
         ? section.variant
         : typeof data.layout === "string" &&
@@ -8903,6 +9965,105 @@ function EditorPage({
         const withSection = addServicePageSection(current, category);
         const next = withSection.map((section) => {
           const pageSlug = normalizePageSlug(section.page || "");
+          if (String(section.variant || "").startsWith("HairAtelier")) {
+            const variant = section.variant;
+            const storedData =
+              (section.data?.[variant] as SectionData | undefined) ??
+              ({} as SectionData);
+            const currentData = (withHairAtelierContent(
+              variant,
+              storedData as Record<string, unknown>,
+            ) ?? storedData) as SectionData;
+            const existing = Array.isArray(
+              (currentData as { list?: unknown }).list,
+            )
+              ? ((currentData as { list: unknown[] }).list)
+              : [];
+            const list = [...detail.services]
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((service, index) => {
+                const previous =
+                  existing.find(
+                    (item) =>
+                      item &&
+                      typeof item === "object" &&
+                      ((item as { id?: unknown }).id === service.id ||
+                        (item as { slug?: unknown }).slug === service.slug),
+                  ) || existing[index];
+                const previousRecord =
+                  previous && typeof previous === "object"
+                    ? (previous as Record<string, unknown>)
+                    : {};
+                const previousImage = previousRecord.image;
+                const nextImage =
+                  service.image &&
+                  service.image !== "/bg1.jpg" &&
+                  !service.image.endsWith("/bg1.jpg")
+                    ? hairStoredImageSrc(service.image)
+                    : "";
+                const slug =
+                  service.slug?.trim() ||
+                  (typeof previousRecord.slug === "string" &&
+                    previousRecord.slug) ||
+                  createPageSlug(service.title) ||
+                  service.id;
+                const price =
+                  (typeof service.content === "string" &&
+                    service.content.trim()) ||
+                  (typeof previousRecord.price === "string" &&
+                    previousRecord.price) ||
+                  "";
+                return {
+                  ...previousRecord,
+                  id: service.id,
+                  title: service.title,
+                  description: service.desc,
+                  category: service.category,
+                  slug,
+                  href: `/services/${slug}`,
+                  price,
+                  order: service.order ?? index + 1,
+                  active: service.active !== false,
+                  seoTitle: service.seoTitle || "",
+                  seoDescription: service.seoDescription || "",
+                  seoKeywords: service.seoKeywords || "",
+                  ...(nextImage
+                    ? typeof previousImage === "object" && previousImage
+                      ? {
+                          image: {
+                            ...(previousImage as Record<string, unknown>),
+                            src: nextImage,
+                            alt: service.alt || service.title,
+                          },
+                        }
+                      : { image: nextImage }
+                    : previousImage
+                      ? { image: previousImage }
+                      : {}),
+                };
+              });
+            const nestedServices =
+              currentData.services &&
+              typeof currentData.services === "object" &&
+              !Array.isArray(currentData.services)
+                ? {
+                    ...(currentData.services as Record<string, unknown>),
+                    list,
+                  }
+                : currentData.services;
+            return {
+              ...section,
+              variant,
+              data: {
+                ...section.data,
+                [variant]: {
+                  ...currentData,
+                  list,
+                  ...(nestedServices ? { services: nestedServices } : {}),
+                },
+              },
+            };
+          }
           const isPetService =
             section.variant === "PetService1" || Boolean(section.data?.PetService1);
           const requestedLayout =
@@ -9526,14 +10687,22 @@ function EditorPage({
   }, [category, setCurrentPage, setPageLinks]);
 
   useEffect(() => {
-    const findGallerySection = (items: SectionItem[]) =>
-      items.find(
+    const findGallerySection = (items: SectionItem[]) => {
+      const matches = items.filter(
         (section) =>
           section.id === "GalleryPage" ||
           section.type === "GalleryPage" ||
           (section.type === "Gallery" &&
             normalizePageSlug(section.page || "") === "gallery"),
       );
+      return (
+        matches.find((section) =>
+          String(section.variant || "").startsWith("HairAtelier"),
+        ) ||
+        matches.find((section) => section.type === "GalleryPage") ||
+        matches[0]
+      );
+    };
 
     const emitGalleryState = (items: SectionItem[]) => {
       const section = findGallerySection(items);
@@ -9542,7 +10711,13 @@ function EditorPage({
         (section.data[section.variant] as SectionData | undefined) ??
         (section.data["GalleryPage-1"] as SectionData | undefined) ??
         ({} as SectionData);
-      const data = String(section.variant || "").startsWith("CoolFix")
+      const variantName = String(section.variant || "");
+      const data = variantName.startsWith("HairAtelier")
+        ? ((withHairAtelierContent(
+            section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
+        : variantName.startsWith("CoolFix")
         ? ((withCoolFixContent(
             section.variant,
             stored as Record<string, unknown>,
@@ -9611,16 +10786,23 @@ function EditorPage({
           const currentVariant = section.variant || "GalleryPage-1";
           const nextVariant =
             currentVariant.startsWith("Pet") ||
-            currentVariant.startsWith("CoolFix")
+            currentVariant.startsWith("CoolFix") ||
+            currentVariant.startsWith("HairAtelier")
               ? currentVariant
               : detail.layout && /^GalleryPage-[1-5]$/.test(detail.layout)
                 ? detail.layout
                 : currentVariant;
-          const currentData =
+          const storedData =
             (section.data[nextVariant] as SectionData | undefined) ??
             (section.data[currentVariant] as SectionData | undefined) ??
             (section.data["GalleryPage-1"] as SectionData | undefined) ??
             ({} as SectionData);
+          const currentData = nextVariant.startsWith("HairAtelier")
+            ? ((withHairAtelierContent(
+                nextVariant,
+                storedData as Record<string, unknown>,
+              ) ?? storedData) as SectionData)
+            : storedData;
           const nextVariantData = applyGalleryPageStateToData(currentData, {
             ...detail,
             layout: nextVariant,
@@ -10881,6 +12063,42 @@ function EditorPage({
       window.removeEventListener("ai-builder-blog-updated", handleBlogUpdated);
     };
   }, [category, isSinglePageTemplate, templateId]);
+
+  useEffect(() => {
+    const servicesOff = isHiddenServicesPage(pageLinks);
+    const blogsOff = isHiddenBlogsPage(pageLinks);
+    const galleryOff = isHiddenGalleryPage(pageLinks);
+    if (!servicesOff && !blogsOff && !galleryOff) return;
+    const current = flattenPageLinks(pageLinks).find(
+      (link) => normalizePageSlug(link.label) === normalizePageSlug(page),
+    );
+    const slug =
+      getMultiPageSlugFromHref(current?.href || "") || normalizePageSlug(page);
+    const onServicePage =
+      servicesOff &&
+      (slug === "services" ||
+        slug === "service" ||
+        slug === "our-services" ||
+        slug === "service-detail" ||
+        slug === "service-details" ||
+        isServicesPageLink({ label: page }));
+    const onBlogPage =
+      blogsOff &&
+      (slug === "blogs" ||
+        slug === "blog" ||
+        slug === "blog-detail" ||
+        slug === "blog-details" ||
+        current?.kind === "blog" ||
+        current?.kind === "blogIndex" ||
+        isBlogIndexPageLink(current || { label: page }));
+    const onGalleryPage =
+      galleryOff &&
+      (slug === "gallery" || isGalleryPageLink(current || { label: page }));
+    if (servicesOff && masterDetailView?.master === "service") {
+      setMasterDetailView(null);
+    }
+    if (onServicePage || onBlogPage || onGalleryPage) setCurrentPage("Home");
+  }, [masterDetailView, page, pageLinks, setCurrentPage]);
 
   const commitSections = (
     mutate: (currentSections: SectionItem[]) => SectionItem[],
@@ -17168,32 +18386,62 @@ function EditorPage({
   const editorTemplate = getBuilderTemplate(templateId, category);
   const petOwnsBlogListing =
     editorTemplate?.sectionVariants?.BlogPage === "PetBlogPage1";
+  const hairOwnsBlogListing =
+    editorTemplate?.sectionVariants?.BlogPage === "HairAtelierBlogPage1";
   const isViewingBlogIndex = Boolean(
     currentPageLink &&
       isBlogIndexPageLink(currentPageLink) &&
-      !petOwnsBlogListing,
+      !petOwnsBlogListing &&
+      !hairOwnsBlogListing,
   );
   const pageScopedSlug = getMultiPageSlugFromHref(currentPageLink?.href || "");
   const currentPageSlug =
     pageScopedSlug ||
     (isSinglePageTemplate ? "home" : normalizePageSlug(page));
   const pageShellSectionTypes = ["Topbar", "Header", "Footer"];
+  const servicesWebsiteOff = isHiddenServicesPage(pageLinks);
+  const blogsWebsiteOff = isHiddenBlogsPage(pageLinks);
+  const galleryWebsiteOff = isHiddenGalleryPage(pageLinks);
+  const viewingHiddenServicePage =
+    servicesWebsiteOff &&
+    (currentPageSlug === "services" ||
+      currentPageSlug === "service" ||
+      currentPageSlug === "our-services" ||
+      currentPageSlug === "service-detail" ||
+      currentPageSlug === "service-details" ||
+      masterDetailView?.master === "service");
+  const viewingHiddenBlogPage =
+    blogsWebsiteOff &&
+    (currentPageSlug === "blogs" ||
+      currentPageSlug === "blog" ||
+      currentPageSlug === "blog-detail" ||
+      currentPageSlug === "blog-details" ||
+      isViewingBlogIndex ||
+      currentPageLink?.kind === "blog" ||
+      currentPageLink?.kind === "blogIndex");
+  const viewingHiddenGalleryPage =
+    galleryWebsiteOff && currentPageSlug === "gallery";
+  const canvasPageSlug =
+    viewingHiddenServicePage || viewingHiddenBlogPage || viewingHiddenGalleryPage
+      ? "home"
+      : currentPageSlug;
   const petTheme = editorTemplate?.sectionVariants?.Header === "PetHeader1";
   const coolFixTheme = editorTemplate?.sectionVariants?.Header === "CoolFixHeader1";
   const countriesServeSection = petTheme
     ? null
     : findEnabledCountriesServeSection(syncedSections);
   const visibleSectionsRaw = dropExtraPageBreadcrumbs(
-    isViewingBlogIndex || masterDetailView
+    ((isViewingBlogIndex && !viewingHiddenBlogPage) ||
+    (masterDetailView && !viewingHiddenServicePage)
       ? syncedSections.filter((section) =>
           pageShellSectionTypes.includes(section.type),
         )
-      : currentPageSlug && currentPageSlug !== "home"
+      : canvasPageSlug && canvasPageSlug !== "home"
       ? syncedSections.filter(
           (section) =>
             pageShellSectionTypes.includes(section.type) ||
             (section.type === "CountriesServe" && !petTheme) ||
-            (normalizePageSlug(section.page || "") === currentPageSlug &&
+            (normalizePageSlug(section.page || "") === canvasPageSlug &&
               !(petTheme && section.type === "CTA")),
         )
       : syncedSections.filter(
@@ -17203,7 +18451,13 @@ function EditorPage({
               petTheme &&
               (section.type === "CountriesServe" || section.type === "CTA")
             ),
-        ),
+        )
+    ).filter((section) => {
+      if (servicesWebsiteOff && isServiceOwnedSection(section)) return false;
+      if (blogsWebsiteOff && isBlogOwnedSection(section)) return false;
+      if (galleryWebsiteOff && isGalleryOwnedSection(section)) return false;
+      return true;
+    }),
     editorTemplate,
   );
   const hasInnerPageBody = visibleSectionsRaw.some(
@@ -17841,7 +19095,10 @@ function EditorPage({
           section.data?.[defaultVariant];
 
         const storedVariantData = isRecord(variantData) ? variantData : undefined;
-        const filledVariantData = withCoolFixContent(renderVariant, storedVariantData);
+        const filledVariantData = withHairAtelierContent(
+          renderVariant,
+          withCoolFixContent(renderVariant, storedVariantData),
+        );
         const rawVariantData = isRecord(filledVariantData)
           ? filledVariantData
           : isRecord(variantData)

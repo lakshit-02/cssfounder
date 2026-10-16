@@ -142,7 +142,10 @@ export const applyContentBundle = (
 
 export const getContentBundle = () => categoryContent;
 
-export async function refreshCategoryContentFromApi(signal?: AbortSignal) {
+export async function refreshCategoryContentFromApi(
+  signal?: AbortSignal,
+  force = false,
+) {
   const base =
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
 
@@ -151,6 +154,7 @@ export async function refreshCategoryContentFromApi(signal?: AbortSignal) {
   }
 
   if (
+    !force &&
     Date.now() - bundleLastRefreshAt < BUNDLE_REFRESH_TTL_MS &&
     categoryContent.layouts.length > 0
   ) {
@@ -252,6 +256,107 @@ if (!coolfixVariants.has("CoolFixServicePage1") && coolfixVariants.has("CoolFixS
   coolfixVariants.set("CoolFixServicePage1", coolfixVariants.get("CoolFixService1")!);
 }
 
+const hairAtelierVariants = new Map<string, Record<string, unknown>>();
+const hairSections =
+  (
+    categoryContentJson as {
+      categories?: {
+        "Beauty & Personal Care"?: {
+          HairAtelier?: {
+            sections?: Record<string, { variants?: Record<string, unknown> }>;
+          };
+        };
+      };
+    }
+  ).categories?.["Beauty & Personal Care"]?.HairAtelier?.sections || {};
+for (const pack of Object.values(hairSections)) {
+  const variants = pack?.variants;
+  if (!variants) continue;
+  for (const [key, value] of Object.entries(variants)) {
+    if (
+      key.startsWith("HairAtelier") &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      hairAtelierVariants.set(key, value as Record<string, unknown>);
+    }
+  }
+}
+
+const cloneHair = <T,>(value: T): T =>
+  value == null ? value : (JSON.parse(JSON.stringify(value)) as T);
+
+const hairBannerPages = (
+  hairAtelierVariants.get("HairAtelierPageBanners1") as
+    | { pages?: Record<string, { banner?: unknown; bannerTitle?: string }> }
+    | undefined
+)?.pages;
+const hairAbout = hairAtelierVariants.get("HairAtelierAboutUs1");
+const hairServices = hairAtelierVariants.get("HairAtelierServices1");
+const hairGallery = hairAtelierVariants.get("HairAtelierGallery1") as
+  | { page?: unknown }
+  | undefined;
+const hairBlog = hairAtelierVariants.get("HairAtelierBlogNews1");
+
+if (hairAbout) {
+  hairAtelierVariants.set("HairAtelierAboutPage1", cloneHair(hairAbout));
+}
+if (hairServices) {
+  const servicesRecord = { ...(hairServices as Record<string, unknown>) };
+  delete servicesRecord.serviceDetails;
+  hairAtelierVariants.set(
+    "HairAtelierServicePage1",
+    cloneHair(servicesRecord),
+  );
+  hairAtelierVariants.set("HairAtelierServiceDetailPage1", {
+    services: cloneHair(hairServices),
+  });
+}
+if (hairGallery?.page) {
+  hairAtelierVariants.set(
+    "HairAtelierGalleryPage1",
+    cloneHair(hairGallery.page) as Record<string, unknown>,
+  );
+}
+if (hairBlog) {
+  hairAtelierVariants.set("HairAtelierBlogPage1", cloneHair(hairBlog));
+  hairAtelierVariants.set("HairAtelierBlogDetailPage1", {
+    bannerTitle: hairBannerPages?.blogDetail?.bannerTitle || "Blog Detail",
+    blog: cloneHair(hairBlog),
+  });
+}
+const hairContact = hairAtelierVariants.get("HairAtelierContactPage1") as
+  | { infoCards?: unknown; form?: unknown; map?: unknown }
+  | undefined;
+if (hairContact) {
+  hairAtelierVariants.set("HairAtelierContactPage1", {
+    infoCards: cloneHair(hairContact.infoCards),
+  });
+  if (hairContact.form && typeof hairContact.form === "object") {
+    hairAtelierVariants.set(
+      "HairAtelierContactForm1",
+      cloneHair(hairContact.form) as Record<string, unknown>,
+    );
+  }
+  if (hairContact.map && typeof hairContact.map === "object") {
+    hairAtelierVariants.set(
+      "HairAtelierContactMap1",
+      cloneHair(hairContact.map) as Record<string, unknown>,
+    );
+  }
+}
+const hairQuote = hairAtelierVariants.get("HairAtelierQuotePage1") as
+  | { banner?: unknown; background?: unknown; intro?: unknown; form?: unknown }
+  | undefined;
+if (hairQuote) {
+  const { banner: _banner, ...quoteBody } = hairQuote;
+  hairAtelierVariants.set(
+    "HairAtelierQuotePage1",
+    cloneHair(quoteBody) as Record<string, unknown>,
+  );
+}
+
 /** Local multi-page pet theme. The content bundle only lists the single-page starter. */
 const localPetTemplateIds: string[] = (
   (
@@ -259,6 +364,15 @@ const localPetTemplateIds: string[] = (
       categories?: { "Pet Services"?: { templates?: string[] } };
     }
   ).categories?.["Pet Services"]?.templates ?? []
+).filter((id): id is string => typeof id === "string" && id.length > 0);
+
+/** Local Hair Atelier theme. The API bundle category may not list it yet. */
+const localBeautyTemplateIds: string[] = (
+  (
+    categoryContentJson as {
+      categories?: { "Beauty & Personal Care"?: { templates?: string[] } };
+    }
+  ).categories?.["Beauty & Personal Care"]?.templates ?? []
 ).filter((id): id is string => typeof id === "string" && id.length > 0);
 
 export const PLUMBING_TEMPLATE_ID = "template-plumbing-1";
@@ -324,6 +438,85 @@ export const withCoolFixContent = (
   if (!variant.startsWith("CoolFix")) return stored;
   const base = coolfixVariants.get(variant);
   if (!base) return stored;
+  const overlap =
+    stored &&
+    Object.keys(base).some(
+      (key) => key in stored && !isEmptyCoolFixValue(stored[key]),
+    );
+  if (!overlap) return { ...base };
+  return mergeCoolFixContent(base, stored);
+};
+
+/** Hair Atelier canvas content lives in categoryContent.json. Empty drafts fall back to it. */
+export const withHairAtelierContent = (
+  variant: string,
+  stored: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined => {
+  if (!variant.startsWith("HairAtelier")) return stored;
+  if (
+    variant === "HairAtelierPageBanners1" &&
+    stored &&
+    (typeof stored.title === "string" || Array.isArray(stored.breadcrumbs))
+  ) {
+    return stored;
+  }
+  const base = hairAtelierVariants.get(variant);
+  if (!base) return stored;
+  if (
+    variant === "HairAtelierAboutPage1" &&
+    stored?.about &&
+    typeof stored.about === "object" &&
+    !Array.isArray(stored.about)
+  ) {
+    return mergeCoolFixContent(base, stored.about as Record<string, unknown>);
+  }
+  if (
+    variant === "HairAtelierServicePage1" &&
+    stored?.services &&
+    typeof stored.services === "object" &&
+    !Array.isArray(stored.services)
+  ) {
+    return mergeCoolFixContent(
+      base,
+      stored.services as Record<string, unknown>,
+    );
+  }
+  if (
+    variant === "HairAtelierBlogPage1" &&
+    stored?.blog &&
+    typeof stored.blog === "object" &&
+    !Array.isArray(stored.blog)
+  ) {
+    return mergeCoolFixContent(base, stored.blog as Record<string, unknown>);
+  }
+  if (
+    variant === "HairAtelierGalleryPage1" &&
+    stored?.gallery &&
+    typeof stored.gallery === "object" &&
+    !Array.isArray(stored.gallery)
+  ) {
+    return mergeCoolFixContent(base, stored.gallery as Record<string, unknown>);
+  }
+  if (variant === "HairAtelierContactPage1") {
+    if (Array.isArray(stored?.infoCards)) {
+      return { infoCards: stored.infoCards };
+    }
+    return { ...base };
+  }
+  if (variant === "HairAtelierQuotePage1") {
+    if (
+      stored &&
+      (stored.background || stored.intro || stored.form || stored.quote)
+    ) {
+      const source =
+        stored.quote && typeof stored.quote === "object" && !Array.isArray(stored.quote)
+          ? (stored.quote as Record<string, unknown>)
+          : stored;
+      const { banner: _banner, ...quoteBody } = source;
+      return mergeCoolFixContent(base, quoteBody);
+    }
+    return { ...base };
+  }
   const overlap =
     stored &&
     Object.keys(base).some(
@@ -563,8 +756,17 @@ export const getTemplatesForCategory = (
     return [plumbing, coolFix];
   }
   const templateIds = [...getTemplateIdsForCategory(category)];
-  if (category.trim().toLowerCase() === "pet services") {
+  const categoryName = category.trim().toLowerCase().replace(/\s+/g, " ");
+  if (categoryName === "pet services") {
     for (const id of localPetTemplateIds) {
+      if (!templateIds.includes(id)) templateIds.push(id);
+    }
+  }
+  if (
+    categoryName === "beauty & personal care" ||
+    categoryName === "beauty and personal care"
+  ) {
+    for (const id of localBeautyTemplateIds) {
       if (!templateIds.includes(id)) templateIds.push(id);
     }
   }
@@ -959,6 +1161,10 @@ const mergeCategoryData = (
       if (plumbing) return [variant, plumbing as SectionData];
       const pet = variant.startsWith("Pet") ? petVariants.get(variant) : undefined;
       if (pet) return [variant, pet as SectionData];
+      const hairAtelier = variant.startsWith("HairAtelier")
+        ? hairAtelierVariants.get(variant)
+        : undefined;
+      if (hairAtelier) return [variant, hairAtelier as SectionData];
 
       const merged = sanitizeSectionListFields(
         {
@@ -2058,7 +2264,8 @@ const MANAGER_THEME_LOCK_TYPES = new Set([
 const isDedicatedThemeVariant = (variant: string) =>
   variant.startsWith("Pet") ||
   variant.startsWith("CoolFix") ||
-  variant.startsWith("Plumbing");
+  variant.startsWith("Plumbing") ||
+  variant.startsWith("HairAtelier");
 
 /** Honor editor layout picks. Dedicated theme skins (Pet, CoolFix, Plumbing) stay locked. */
 export const resolveTemplateSectionVariant = (
@@ -2109,6 +2316,8 @@ export const resolveTemplateSectionVariant = (
     return expected;
   }
   if (isDedicatedThemeVariant(expected)) {
+    // Keep the theme skin until the editor picks a different layout.
+    // A picked Banner-1 / Header-2 must stay; choosing the theme skin again restores it.
     if (!current || isDedicatedThemeVariant(current)) return expected;
     return current;
   }
@@ -2372,6 +2581,16 @@ const PAGE_BODIES_WITH_OWN_BREADCRUMB = new Set<string>([
   "PetServiceDetails1",
   "PetTeamDetails1",
   "PetServiceAreaDetails1",
+  "HairAtelierAboutPage1",
+  "HairAtelierServicePage1",
+  "HairAtelierServiceDetailPage1",
+  "HairAtelierGalleryPage1",
+  "HairAtelierBlogPage1",
+  "HairAtelierBlogDetailPage1",
+  "HairAtelierContactPage1",
+  "HairAtelierQuotePage1",
+  "HairAtelierThankYouPage1",
+  "HairAtelierPageBanners1",
 ]);
 
 export function pageBodyHasOwnBreadcrumb(pageBodyKey?: string) {
@@ -2676,6 +2895,28 @@ function pageVariantsFor(
       next.WhyChooseUs = source.WhyChooseUs || "CoolFixWhyChooseUs1";
       next.HowWeWork = source.HowWeWork || "CoolFixHowWeWork1";
     }
+    if (pageBodyKey === "HairAtelierAboutPage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+      next.WhyChooseUs = source.WhyChooseUs || "HairAtelierWhyChooseUs1";
+      next.Testimonial = source.Testimonial || "HairAtelierTestimonials1";
+    }
+    if (pageBodyKey === "HairAtelierServicePage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+    }
+    if (pageBodyKey === "HairAtelierBlogPage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+    }
+    if (pageBodyKey === "HairAtelierGalleryPage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+    }
+    if (pageBodyKey === "HairAtelierContactPage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+      next.ContactForm = "HairAtelierContactForm1";
+      next.ContactMap = "HairAtelierContactMap1";
+    }
+    if (pageBodyKey === "HairAtelierQuotePage1") {
+      next.PageBanner = "HairAtelierPageBanners1";
+    }
     if (pageBodyKey === "CoolFixServicePage1") {
       next.CTA = source.CTA || "CoolFixCTA1";
       next.Highlights = source.Highlights || "CoolFixHighlights1";
@@ -2853,6 +3094,15 @@ export const resolveLayoutPreview = (
       return {
         sectionType: variantKey.replace(/\d+$/, "") || variantKey,
         data: pet as SectionData,
+      };
+    }
+  }
+  if (variantKey.startsWith("HairAtelier")) {
+    const hairAtelier = hairAtelierVariants.get(variantKey);
+    if (hairAtelier) {
+      return {
+        sectionType: variantKey.replace(/\d+$/, "") || variantKey,
+        data: hairAtelier as SectionData,
       };
     }
   }

@@ -233,6 +233,166 @@ export const SITE_THEME_GLOBAL_CSS = `
 .coolfix-theme svg [fill="#ff6b00"] { fill: var(--primary-bg, #ff6b00); }
 .coolfix-theme svg [stroke="#0b2a5b"] { stroke: var(--header-bg, #0b2a5b); }
 .coolfix-theme svg [fill="#0b2a5b"] { fill: var(--header-bg, #0b2a5b); }
+/* Hair Atelier: Theme Fonts drive body and headings. Fallbacks are the original pair. */
+.hair-atelier-root {
+  font-family: var(--font-body, "Montserrat", Arial, Helvetica, sans-serif) !important;
+}
+.hair-atelier-root .font-heading,
+.hair-atelier-root :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif) !important;
+}
+/* Hair Atelier: only the real gold classes follow Theme Color. Pseudo classes like after:bg stay on ::after. */
+.hair-atelier-root [class~="text-[#e0a458]"],
+.hair-atelier-root [class~="text-[#f0c48c]"],
+.hair-atelier-root [class~="text-[#f5a524]"] {
+  color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="text-[#e0a458]/20"] {
+  color: color-mix(in srgb, var(--primary-bg, #e0a458) 20%, transparent) !important;
+}
+.hair-atelier-root [class~="hover:text-[#e0a458]"]:hover,
+.hair-atelier-root [class~="hover:text-[#f0c48c]"]:hover {
+  color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:text-[#e0a458]"],
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:text-[#f0c48c]"],
+.hair-atelier-root [class~="group/card"]:hover [class~="group-hover/card:text-[#f0c48c]"],
+.hair-atelier-root [class~="group/contact"]:hover [class~="group-hover/contact:text-[#e0a458]"],
+.hair-atelier-root [class*="group/post"]:hover [class~="group-hover/post:text-[#f0c48c]"] {
+  color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:text-[#e0a458]/35"],
+.hair-atelier-root [class~="group/card"]:hover [class~="group-hover/card:text-[#e0a458]/35"] {
+  color: color-mix(in srgb, var(--primary-bg, #e0a458) 35%, transparent) !important;
+}
+.hair-atelier-root [class~="bg-[#e0a458]"],
+.hair-atelier-root [class~="bg-[#f29a1f]"] {
+  background-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="bg-[#e0a458]/5"] {
+  background-color: color-mix(in srgb, var(--primary-bg, #e0a458) 5%, transparent) !important;
+}
+.hair-atelier-root [class~="bg-[#e0a458]/10"] {
+  background-color: color-mix(in srgb, var(--primary-bg, #e0a458) 10%, transparent) !important;
+}
+.hair-atelier-root [class~="bg-[#c98a4b]/25"] {
+  background-color: color-mix(in srgb, var(--primary-bg, #e0a458) 25%, transparent) !important;
+}
+.hair-atelier-root [class~="after:bg-[#e0a458]/60"]::after {
+  background-color: color-mix(in srgb, var(--primary-bg, #e0a458) 60%, transparent) !important;
+}
+.hair-atelier-root [class~="hover:bg-[#e0a458]"]:hover,
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:bg-[#e0a458]"] {
+  background-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="hover:text-black"]:hover,
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:text-black"] {
+  color: #000000 !important;
+}
+.hair-atelier-root [class*="group"]:hover [class~="group-hover:text-black"] svg {
+  stroke: #000000 !important;
+}
+.hair-atelier-root [class~="group/card"]:hover [class~="group-hover/card:bg-[#e0a458]"],
+.hair-atelier-root .hair-contact-card:hover .hair-contact-icon,
+.hair-atelier-root .hair-choose-card:hover .hair-choose-icon,
+.hair-atelier-root .hair-quote-card:hover .hair-quote-icon {
+  background-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="group/card"]:hover [class~="group-hover/card:text-black"],
+.hair-atelier-root .hair-contact-card:hover .hair-contact-icon,
+.hair-atelier-root .hair-choose-card:hover .hair-choose-icon,
+.hair-atelier-root .hair-quote-card:hover .hair-quote-icon {
+  color: #000000 !important;
+}
+.hair-atelier-root [class~="group/card"]:hover [class~="group-hover/card:text-black"] svg,
+.hair-atelier-root .hair-contact-card:hover .hair-contact-icon svg,
+.hair-atelier-root .hair-service-card:hover .hair-service-arrow svg,
+.hair-atelier-root .hair-choose-card:hover .hair-choose-icon svg,
+.hair-atelier-root .hair-quote-card:hover .hair-quote-icon svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+.hair-atelier-root .hair-service-card:hover .hair-service-arrow {
+  background-color: var(--primary-bg, #e0a458) !important;
+  color: #000000 !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]"],
+.hair-atelier-root [class~="border-[#0e5c5c]"] {
+  border-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]/40"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 40%, transparent) !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]/50"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 50%, transparent) !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]/60"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 60%, transparent) !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]/70"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 70%, transparent) !important;
+}
+.hair-atelier-root [class~="border-[#e0a458]/80"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 80%, transparent) !important;
+}
+.hair-atelier-root [class~="hover:border-[#e0a458]"]:hover,
+.hair-atelier-root [class~="focus:border-[#e0a458]"]:focus {
+  border-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class~="hover:border-[#e0a458]/40"]:hover {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 40%, transparent) !important;
+}
+.hair-atelier-root [class~="hover:border-[#e0a458]/70"]:hover {
+  border-color: color-mix(in srgb, var(--primary-bg, #e0a458) 70%, transparent) !important;
+}
+@media (min-width: 1024px) {
+  .hair-atelier-root [class~="lg:hover:border-[#e0a458]"]:hover {
+    border-color: var(--primary-bg, #e0a458) !important;
+  }
+}
+.hair-atelier-root [class~="focus-visible:outline-[#e0a458]"]:focus-visible {
+  outline-color: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class*="from-[#e8b47a]"],
+.hair-atelier-root [class*="from-[#e0a458]"],
+.hair-atelier-root [class*="from-[#f0b866]"],
+.hair-atelier-root [class*="from-[#f0c48c]"] {
+  --tw-gradient-from: var(--primary-bg, #e0a458) !important;
+}
+.hair-atelier-root [class*="via-[#f0c48c]"],
+.hair-atelier-root [class*="via-[#e8b47a]"],
+.hair-atelier-root [class*="via-[#e0a458]"] {
+  --tw-gradient-via: color-mix(in srgb, var(--primary-bg, #e0a458) 78%, white) !important;
+}
+.hair-atelier-root [class*="to-[#c98a4b]"],
+.hair-atelier-root [class*="to-[#e8a850]"],
+.hair-atelier-root [class*="to-[#e0a458]"],
+.hair-atelier-root [class*="to-[#b8763a]"] {
+  --tw-gradient-to: color-mix(in srgb, var(--primary-bg, #e0a458) 82%, black) !important;
+}
+.hair-atelier-root [class*="rgba(224,164,88"] {
+  --tw-shadow-color: color-mix(in srgb, var(--primary-bg, #e0a458) 45%, transparent);
+}
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="from-[#e8b47a]"],
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="from-[#c98a4b]"],
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="from-[#f0b866]"],
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="from-[#f0c48c]"] {
+  background-image: linear-gradient(to right, var(--primary-bg, #e0a458), color-mix(in srgb, var(--primary-bg, #e0a458) 72%, white), color-mix(in srgb, var(--primary-bg, #e0a458) 78%, black)) !important;
+}
+.hair-atelier-root [class*="bg-gradient-to-br"][class*="from-[#e8b47a]"],
+.hair-atelier-root [class*="bg-gradient-to-br"][class*="from-[#f0c48c]"] {
+  background-image: linear-gradient(to bottom right, var(--primary-bg, #e0a458), color-mix(in srgb, var(--primary-bg, #e0a458) 72%, black)) !important;
+}
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="to-[#e0a458]"] {
+  background-image: linear-gradient(to right, transparent, var(--primary-bg, #e0a458)) !important;
+}
+.hair-atelier-root [class*="bg-gradient-to-l"][class*="to-[#e0a458]"] {
+  background-image: linear-gradient(to left, transparent, var(--primary-bg, #e0a458)) !important;
+}
+.hair-atelier-root [class*="bg-gradient-to-r"][class*="text-black"],
+.hair-atelier-root [class*="bg-gradient-to-br"][class*="text-black"] {
+  color: var(--primary-text, #000000) !important;
+}
 /* Manager detail bodies (blog/service/event/…): restore heading hierarchy */
 [data-site-theme-root] .manager-detail-prose h1 {
   font-family: var(--font-heading);

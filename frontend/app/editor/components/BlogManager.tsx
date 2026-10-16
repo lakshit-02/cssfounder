@@ -123,6 +123,7 @@ type BlogManagerProps = {
   onDeleteBlog: (blog: PageLink) => void;
   onDeleteBlogs?: (blogs: PageLink[]) => void;
   onClose: () => void;
+  cardOnly?: boolean;
 };
 
 const tabItems: Array<{
@@ -303,6 +304,7 @@ export default function BlogManager({
   onDeleteBlog,
   onDeleteBlogs,
   onClose,
+  cardOnly = false,
 }: BlogManagerProps) {
   const { siteSeoConfig, setSiteSeoConfig } = usePreview();
   const blogsIndexSeo = useMemo(
@@ -602,6 +604,7 @@ export default function BlogManager({
     setShowLongDescriptionEditor(false);
     setShowComposer(false);
     resetComposerFields();
+    if (cardOnly) onClose();
   };
 
   const openComposer = () => {
@@ -632,20 +635,32 @@ export default function BlogManager({
     if (typeof window === "undefined") return;
     const STORAGE_KEY = "ai-builder-open-manager-item:Blogs";
     const raw = window.sessionStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
+    if (!raw || blogs.length === 0) return;
 
     window.sessionStorage.removeItem(STORAGE_KEY);
     try {
-      const payload = JSON.parse(raw) as unknown;
-      const href =
-        typeof (payload as any)?.href === "string"
-          ? ((payload as any).href as string)
-          : undefined;
-      if (!href) return;
-      const found = blogs.find((b) => b.href === href);
-      if (!found) return;
-
-      openEditComposer(found);
+      const payload = JSON.parse(raw) as {
+        href?: string;
+        slug?: string;
+        title?: string;
+      };
+      const href = typeof payload?.href === "string" ? payload.href : "";
+      const slug = typeof payload?.slug === "string" ? payload.slug : "";
+      const title = typeof payload?.title === "string" ? payload.title : "";
+      const found = blogs.find((blog) => {
+        if (href && blog.href === href) return true;
+        if (slug && (blog.slug === slug || blog.href === `#page-blog-${slug}`)) return true;
+        if (title && blog.label.trim().toLowerCase() === title.trim().toLowerCase()) return true;
+        return false;
+      });
+      openEditComposer(
+        found || {
+          label: title || "Blog post",
+          href: href || (slug ? `#page-blog-${slug}` : "#page-blog-post"),
+          slug: slug || undefined,
+          kind: "blog",
+        },
+      );
     } catch {
       // ignore malformed storage payload
     }
@@ -783,12 +798,12 @@ export default function BlogManager({
 
   const content = (
     <div
-      className="fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800"
+      className={`fixed inset-0 z-[10050] flex min-h-0 flex-col text-slate-800 ${cardOnly ? "pointer-events-none bg-transparent" : "bg-white"}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="blog-manager-title"
     >
-      <header className="flex h-[66px] shrink-0 items-center justify-between gap-4 border-b border-slate-200 px-5 sm:px-7">
+      <header className={`flex h-[66px] shrink-0 items-center justify-between gap-4 border-b border-slate-200 px-5 sm:px-7 ${cardOnly ? "hidden" : ""}`}>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
             Blog
@@ -849,17 +864,15 @@ export default function BlogManager({
         </div>
       </header>
 
-      {!blogsWebsiteEnabled ? (
+      {!cardOnly && !blogsWebsiteEnabled ? (
         <div className="shrink-0 border-b border-amber-200 bg-amber-50 px-5 py-2.5 text-sm text-amber-900 sm:px-7">
-          Blogs are hidden on the live website. Posts stay saved here —{" "}
-          <span className="font-semibold">/blogs</span> and post links will show
-          404 until you turn{" "}
-          <span className="font-semibold">Show on website</span> on, then
-          republish.
+          Blogs are hidden. The blog page and any blog section on other pages,
+          including Home, stay saved here and come back when you turn{" "}
+          <span className="font-semibold">Show on website</span> on.
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1">
+      <div className={`flex min-h-0 flex-1 ${cardOnly ? "hidden" : ""}`}>
         <aside className="w-[116px] shrink-0 border-r border-slate-200 bg-white p-2 sm:w-[148px] sm:p-3">
           <nav className="space-y-1" aria-label="Blog manager sections">
             {tabItems.map(({ id, label, icon: Icon }) => (
@@ -1506,7 +1519,7 @@ export default function BlogManager({
 
       {showComposer && (
         <div
-          className="fixed inset-0 z-[10070] flex items-center justify-center overflow-y-auto bg-slate-950/40 p-4 backdrop-blur-[2px]"
+          className="pointer-events-auto fixed inset-0 z-[10070] flex items-center justify-center overflow-y-auto bg-slate-950/40 p-4 backdrop-blur-[2px]"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) closeComposer();
           }}

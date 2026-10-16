@@ -310,6 +310,94 @@ function sortVariants(keys: string[]) {
   return [...keys];
 }
 
+const HAIR_BANNER_PAGE_KEYS: Record<string, string> = {
+  about: "about",
+  "about-us": "about",
+  services: "services",
+  service: "services",
+  "service-detail": "serviceDetails",
+  "service-details": "serviceDetails",
+  gallery: "gallery",
+  blogs: "blogs",
+  blog: "blogs",
+  "blog-detail": "blogDetail",
+  "blog-details": "blogDetail",
+  contact: "contact",
+  "contact-us": "contact",
+  quote: "quote",
+  "get-a-quote": "quote",
+  "thank-you": "thankYou",
+};
+
+function previewSlug(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/** Page banner JSON stores every page under `pages`. The editor flattens the current page. */
+function flattenHairAtelierPageBanner(
+  data: Record<string, unknown>,
+  pageId: string,
+  pageTitle: string,
+) {
+  if (
+    typeof data.title === "string" &&
+    data.title.trim() &&
+    Array.isArray(data.breadcrumbs)
+  ) {
+    return data;
+  }
+  const pages = data.pages;
+  if (!pages || typeof pages !== "object" || Array.isArray(pages)) return data;
+  const book = pages as Record<
+    string,
+    {
+      banner?: { title?: string; breadcrumbs?: unknown };
+      bannerTitle?: string;
+    }
+  >;
+  let entry: (typeof book)[string] | undefined;
+  for (const slug of [pageId, pageTitle].map(previewSlug).filter(Boolean)) {
+    const key = HAIR_BANNER_PAGE_KEYS[slug];
+    if (key && book[key]) {
+      entry = book[key];
+      break;
+    }
+    if (book[slug]) {
+      entry = book[slug];
+      break;
+    }
+  }
+  if (!entry && pageTitle.trim()) {
+    const wanted = pageTitle.trim().toLowerCase();
+    entry = Object.values(book).find(
+      (page) => page?.banner?.title?.trim().toLowerCase() === wanted,
+    );
+  }
+  const banner = entry?.banner;
+  if (banner && (banner.title || Array.isArray(banner.breadcrumbs))) {
+    return {
+      title: banner.title || pageTitle,
+      breadcrumbs: Array.isArray(banner.breadcrumbs) ? banner.breadcrumbs : [],
+    };
+  }
+  const fallbackTitle =
+    (typeof entry?.bannerTitle === "string" && entry.bannerTitle.trim()) ||
+    pageTitle.trim();
+  if (!fallbackTitle) return data;
+  return {
+    title: fallbackTitle,
+    breadcrumbs: [
+      { label: "Home", href: "/" },
+      { label: fallbackTitle },
+    ],
+  };
+}
+
 const COOLFIX_HOME_KEYS = [
   "CoolFixTopbar1",
   "CoolFixHeader1",
@@ -502,7 +590,8 @@ function ComposeNavSync({
     if (currentPage.toLowerCase() === active.label.toLowerCase()) return;
     skipPageMatchRef.current = true;
     setCurrentPage(active.label);
-    // Sync label from the active tab only — do not ping-pong with currentPage.
+    // Follow the open tab only. Clicks update currentPage and the effect below
+    // switches the page; do not snap those clicks back to the previous tab.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePageId, sitePages, setCurrentPage]);
 
@@ -666,6 +755,29 @@ function ComposeInner() {
         scrollComposeToTop();
         return;
       }
+      const hairServiceMatch = path.match(/^\/services\/([^/]+)\/?$/i);
+      if (hairServiceMatch?.[1]) {
+        const detailPage =
+          sitePages.find((page) => page.id === "service-detail")?.id ||
+          sitePages.find(
+            (page) => page.label.trim().toLowerCase() === "service detail",
+          )?.id;
+        if (detailPage) {
+          event.preventDefault();
+          event.stopPropagation();
+          const slug = decodeURIComponent(hairServiceMatch[1]);
+          try {
+            sessionStorage.setItem("hair-atelier-service-slug", slug);
+          } catch {
+            /* ignore */
+          }
+          window.dispatchEvent(new CustomEvent("hair-atelier-nav"));
+          setPreviewDetail(null);
+          if (detailPage !== activePageId) setActivePageId(detailPage);
+          scrollComposeToTop();
+          return;
+        }
+      }
       const serviceDetailMatch = path.match(/^\/service-details\/([^/]+)\/?$/i);
       if (serviceDetailMatch?.[1]) {
         event.preventDefault();
@@ -787,6 +899,14 @@ function ComposeInner() {
 
       if (sectionType === "Breadcrumb" && pageTitle) {
         data = { ...data, title: pageTitle };
+      }
+
+      if (key === "HairAtelierPageBanners1") {
+        data = flattenHairAtelierPageBanner(
+          data,
+          showNav ? activePageId : "",
+          pageTitle,
+        );
       }
 
       if (
@@ -1042,7 +1162,11 @@ function ComposeInner() {
   if (!showNav) return body;
 
   return (
-    <PreviewProvider>
+    <PreviewProvider
+      initialCurrentPage={
+        sitePages.find((page) => page.id === activePageId)?.label || "Home"
+      }
+    >
       <ComposeNavSync
         sitePages={sitePages}
         activePageId={activePageId}
