@@ -294,7 +294,53 @@ function mergeHomeSectionOrder(
       insertByPreferredOrder(next, type, COOLFIX_HOME_ORDER);
     }
   }
+  if (variants && String(variants.Header || "").startsWith("HairAtelier")) {
+    const hairHome = [
+      "Header",
+      "Banner",
+      "About",
+      "Service",
+      "WhyChooseUs",
+      "Stats",
+      "Gallery",
+      "Testimonial",
+      "Blog",
+      "Footer",
+    ];
+    for (const type of hairHome) {
+      if (!variants[type] || LOCKED_HOME_SECTIONS.has(type)) continue;
+      insertByPreferredOrder(next, type, hairHome);
+    }
+  }
   return next;
+}
+
+function hairInnerSectionOrder(sectionType: string) {
+  const shell = (middle: string[]) => [
+    "Header",
+    "PageBanner",
+    ...middle,
+    "Footer",
+  ];
+  if (sectionType === "AboutPage") {
+    return shell(["AboutPage", "WhyChooseUs", "Testimonial"]);
+  }
+  if (sectionType === "ContactPage") {
+    return shell(["ContactPage", "ContactForm", "ContactMap"]);
+  }
+  if (sectionType === "ServiceDetailPage" || sectionType === "BlogDetailPage") {
+    return ["Header", sectionType, "Footer"];
+  }
+  if (
+    sectionType === "ServicePage" ||
+    sectionType === "GalleryPage" ||
+    sectionType === "BlogPage" ||
+    sectionType === "QuotePage" ||
+    sectionType === "ThankYouPage"
+  ) {
+    return shell([sectionType]);
+  }
+  return ["Header", "PageBanner", sectionType, "Footer"];
 }
 
 function defaultInnerSectionOrder(
@@ -302,6 +348,9 @@ function defaultInnerSectionOrder(
   layoutKey: string,
   keepThemeSections = false,
 ) {
+  if (String(layoutKey || "").startsWith("HairAtelier")) {
+    return hairInnerSectionOrder(sectionType);
+  }
   const order = ["Topbar", "Header", "Breadcrumb", sectionType];
   const coolFixAbout =
     keepThemeSections || layoutKey === "CoolFixAboutPage1";
@@ -382,6 +431,13 @@ const SECTION_TYPE_LABELS: Record<string, string> = {
   ContactPage: "Contact Page",
   CustomPage: "Custom Page",
   Breadcrumb: "Breadcrumb",
+  PageBanner: "Page Banner",
+  ContactForm: "Contact Form",
+  ContactMap: "Contact Map",
+  QuotePage: "Get a Quote",
+  ThankYouPage: "Thank You",
+  ServiceDetailPage: "Service Detail",
+  BlogDetailPage: "Blog Detail",
   WhyChooseUs: "Why Choose Us",
   FormDetail: "Form Detail",
   HowWeWork: "How We Work",
@@ -462,7 +518,17 @@ function preferredLayoutKey(
   sectionType: string,
   options: LayoutRow[],
   coolFix = false,
+  hair = false,
 ) {
+  if (hair) {
+    const hairRow = options.find((row) =>
+      String(row.key || "").startsWith("HairAtelier"),
+    );
+    if (hairRow) return hairRow.key;
+    if (sectionType === "PageBanner") return "HairAtelierPageBanners1";
+    if (sectionType === "ContactForm") return "HairAtelierContactForm1";
+    if (sectionType === "ContactMap") return "HairAtelierContactMap1";
+  }
   if (coolFix && sectionType === "Breadcrumb") {
     return options.find((row) => row.key === "Breadcrumb-1")?.key || "Breadcrumb-1";
   }
@@ -711,6 +777,7 @@ const TemplatesPage = () => {
     builderData.type,
     builderData.pages,
     builderData.homeSectionOrder,
+    builderData.sectionVariants,
     activeBuilderPageId,
   ]);
 
@@ -1221,7 +1288,13 @@ const TemplatesPage = () => {
     );
     if (!page?.sectionType) return;
 
-    const needed = [page.sectionType, ...INNER_PAGE_CHROME];
+    const pageLayout = builderData.sectionVariants[page.sectionType] || "";
+    const hairPage = String(pageLayout).startsWith("HairAtelier");
+    const needed = hairPage
+      ? defaultInnerSectionOrder(page.sectionType, pageLayout, false).filter(
+          (type) => !LOCKED_HOME_SECTIONS.has(type),
+        )
+      : [page.sectionType, ...INNER_PAGE_CHROME];
     const patch: Record<string, string> = {};
     for (const sectionType of needed) {
       if (pinnedSectionTypes.includes(sectionType)) continue;
@@ -1232,6 +1305,7 @@ const TemplatesPage = () => {
         sectionType,
         options,
         isCoolFixBuilder(builderData),
+        hairPage,
       );
       if (next) patch[sectionType] = next;
     }
@@ -1457,6 +1531,7 @@ const TemplatesPage = () => {
         "Business",
     );
     qs.set("chrome", "0");
+    if (builderData.key) qs.set("templateId", builderData.key);
     return `${FRONTEND_URL}/preview/compose?${qs.toString()}`;
   };
 
@@ -1479,6 +1554,7 @@ const TemplatesPage = () => {
       const coolFixPage = Object.values(source).some((key) =>
         String(key || "").startsWith("CoolFix"),
       );
+      const hairPage = String(pageBodyKey || "").startsWith("HairAtelier");
       const order = mergeInnerSectionOrder(
         innerSectionOrder,
         defaultInnerSectionOrder(pageBodyType, pageBodyKey, coolFixPage),
@@ -1488,6 +1564,25 @@ const TemplatesPage = () => {
           next[section] = pageBodyKey;
           continue;
         }
+        if (hairPage && section === "PageBanner") {
+          if (
+            pageBodyType === "ServiceDetailPage" ||
+            pageBodyType === "BlogDetailPage"
+          ) {
+            continue;
+          }
+          next.PageBanner = source.PageBanner || "HairAtelierPageBanners1";
+          continue;
+        }
+        if (hairPage && section === "ContactForm") {
+          next.ContactForm = source.ContactForm || "HairAtelierContactForm1";
+          continue;
+        }
+        if (hairPage && section === "ContactMap") {
+          next.ContactMap = source.ContactMap || "HairAtelierContactMap1";
+          continue;
+        }
+        if (hairPage && section === "Breadcrumb") continue;
         if (section === "Breadcrumb") {
           next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
           continue;
@@ -1664,6 +1759,10 @@ const TemplatesPage = () => {
             page.sectionType,
             pageOptions,
             isCoolFixBuilder(builderData),
+            String(savedLayout || "").startsWith("HairAtelier") ||
+              String(builderData.sectionVariants.Header || "").startsWith(
+                "HairAtelier",
+              ),
           ));
     if (!pageLayout) return null;
 
