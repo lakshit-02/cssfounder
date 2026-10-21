@@ -71,12 +71,32 @@ const defaultPageLinks: PageLink[] = [
 const currentPageStorageKey = LEGACY_CURRENT_PAGE_KEY;
 const pageLinksStorageKey = LEGACY_PAGE_LINKS_KEY;
 
+function pageSlugKey(value: string) {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/^#page-/, "")
+    .replace(/^\/+/, "")
+    .split(/[/?#]/)[0]
+    .replace(/\s+/g, "-");
+  if (!slug || slug === "home") return "home";
+  if (slug === "teams" || slug === "our-team") return "team";
+  if (slug === "service" || slug === "our-services") return "services";
+  if (slug === "about-us") return "about";
+  if (slug === "contact-us") return "contact";
+  if (slug === "appointment" || slug === "appointments") return "book-appointment";
+  return slug;
+}
+
 function pageLinkLabels(links: PageLink[]): Set<string> {
   const labels = new Set<string>();
   const walk = (items: PageLink[]) => {
     for (const item of items) {
       const label = (item.label || "").trim();
       if (label) labels.add(label.toLowerCase());
+      const href = (item.href || "").trim();
+      if (href) labels.add(pageSlugKey(href));
+      if (label) labels.add(pageSlugKey(label));
       if (item.children?.length) walk(item.children);
     }
   };
@@ -320,7 +340,7 @@ export function PreviewProvider({
     const labels = pageLinkLabels(pageLinks);
     const current = (currentPage || "").trim().toLowerCase();
     if (!current || current === "home") return;
-    if (labels.has(current)) return;
+    if (labels.has(current) || labels.has(pageSlugKey(currentPage))) return;
     setCurrentPage("Home");
   }, [pageLinks, currentPage]);
 

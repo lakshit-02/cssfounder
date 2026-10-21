@@ -58,6 +58,7 @@ import {
   TOPBAR_LAYOUT_SKINS,
   withCoolFixContent,
   withHairAtelierContent,
+  withMediCareContent,
   withTopbarLayoutSkin,
 } from "../../data/templateFlow";
 import { PageLink, usePreview } from "../context/PreviewContext";
@@ -837,6 +838,10 @@ const sidebarItemsBySection: Record<string, string[]> = {
 
 const componentContentFieldsByVariant: Record<string, string[]> = {
   HairAtelierPageBanners1: ["title", "breadcrumbs", "image"],
+  MediCarePageBanner1: ["title", "phone", "image", "breadcrumbs"],
+  MediCareFaq1: ["badge", "heading", "description", "image", "contactBox", "list"],
+  MediCareContactPage1: ["badge", "heading", "description", "infoCards", "form", "map"],
+  MediCareBookAppointment1: ["badge", "heading", "description", "formTitle", "submitLabel", "image", "departments", "timeSlots", "list"],
   HairAtelierAboutPage1: ["badge", "heading", "paragraphs", "experience", "images", "features", "cta"],
   HairAtelierAboutUs1: ["badge", "heading", "paragraphs", "experience", "images", "features", "cta"],
   HairAtelierWhyChooseUs1: ["badge", "heading", "description", "list"],
@@ -2362,6 +2367,45 @@ const COOLFIX_CONTENT_FIELDS: Record<string, string[]> = {
   CoolFixFooter1: ["logo", "description", "titles", "quickLinks", "services", "contacts", "socials", "copyright"],
 };
 
+const withThemeEditorContent = (
+  variant: string,
+  stored?: Record<string, unknown>,
+) => {
+  if (variant.startsWith("MediCare")) return withMediCareContent(variant, stored);
+  if (variant.startsWith("HairAtelier")) return withHairAtelierContent(variant, stored);
+  if (variant.startsWith("CoolFix")) return withCoolFixContent(variant, stored);
+  return stored;
+};
+
+const medicarePageBannerEditorData = (
+  source: Record<string, unknown>,
+  page?: string,
+) => {
+  const pages = source.pages;
+  const pageKey = String(page || "").trim().toLowerCase();
+  const book =
+    pages && typeof pages === "object" && !Array.isArray(pages)
+      ? (pages as Record<string, Record<string, unknown>>)
+      : {};
+  const alias =
+    pageKey === "teams" ? "team" : pageKey === "team" ? "teams" : pageKey;
+  const fromPage = book[pageKey] || book[alias] || {};
+  const title = String(source.title || fromPage.title || "");
+  const phone = String(source.phone || fromPage.phone || "");
+  const image = String(
+    source.image || source.bgImage || fromPage.image || fromPage.bgImage || "",
+  );
+  const breadcrumbs = Array.isArray(source.breadcrumbs)
+    ? source.breadcrumbs
+    : Array.isArray(fromPage.breadcrumbs)
+      ? fromPage.breadcrumbs
+      : [
+          { label: "Home", href: "/" },
+          { label: title },
+        ];
+  return { title, phone, image, breadcrumbs };
+};
+
 const userManageableCollectionFields = new Set([
   "productItems",
   "serviceSlides",
@@ -2427,6 +2471,7 @@ const GenericArrayFieldEditor = ({
     (userManageableCollectionFields.has(fieldName) ||
       contentVariant?.startsWith("CoolFix") ||
       contentVariant?.startsWith("HairAtelier") ||
+      contentVariant?.startsWith("MediCare") ||
       (fieldName === "items" &&
         (sectionType === "FeaturedDev" ||
           sectionType === "InvestmentOpportunities"))) &&
@@ -3130,7 +3175,7 @@ const GenericFieldEditor = ({
             }
           }
 
-          if (contentVariant?.startsWith("CoolFix")) {
+          if (contentVariant?.startsWith("CoolFix") || contentVariant?.startsWith("MediCare")) {
             entries = entries.filter(
               ([key]) => !/^(id|width|height|color|slug)$/i.test(key),
             );
@@ -3166,8 +3211,12 @@ const GenericFieldEditor = ({
         /^(https?:|data:|\/)/.test(value)
         ? "image"
         : null) ||
-      (contentVariant?.startsWith("CoolFix") &&
+      ((contentVariant?.startsWith("CoolFix") ||
+        contentVariant?.startsWith("MediCare")) &&
       (fieldName === "avatar" ||
+        fieldName === "src" ||
+        fieldName === "thumbnail" ||
+        fieldName === "bgImage" ||
         fieldName === "backgroundImage" ||
         path[0] === "photos" ||
         ((fieldName === "main" || fieldName === "secondary") &&
@@ -3767,7 +3816,8 @@ export default function EditSectionModal({
   const activeSectionKey = currentSection?.id ?? currentSection?.type ?? sectionId;
   const isPageSection = Boolean(currentSection?.page);
   const activeVariant = currentSection?.variant?.startsWith("CoolFix") ||
-    currentSection?.variant?.startsWith("HairAtelier")
+    currentSection?.variant?.startsWith("HairAtelier") ||
+    currentSection?.variant?.startsWith("MediCare")
     ? currentSection.variant
     : currentSection?.data?.[currentSection.variant]
     ? currentSection.variant
@@ -3782,7 +3832,8 @@ export default function EditSectionModal({
     (activeVariant.startsWith("Plumbing") ||
     activeVariant.startsWith("Pet") ||
     activeVariant.startsWith("CoolFix") ||
-    activeVariant.startsWith("HairAtelier")
+    activeVariant.startsWith("HairAtelier") ||
+    activeVariant.startsWith("MediCare")
       ? [`${activeSectionType} Content`]
       : []);
 
@@ -3791,7 +3842,8 @@ export default function EditSectionModal({
       !activeVariant.startsWith("Plumbing") &&
       !activeVariant.startsWith("Pet") &&
       !activeVariant.startsWith("CoolFix") &&
-      !activeVariant.startsWith("HairAtelier")
+      !activeVariant.startsWith("HairAtelier") &&
+      !activeVariant.startsWith("MediCare")
     ) {
       return;
     }
@@ -3926,13 +3978,10 @@ export default function EditSectionModal({
     | SectionData
     | undefined;
   const activeGenericData = (
-    activeVariant.startsWith("HairAtelier")
-      ? withHairAtelierContent(
-          activeVariant,
-          storedGenericData as Record<string, unknown> | undefined,
-        ) ?? storedGenericData
-      : activeVariant.startsWith("CoolFix")
-      ? withCoolFixContent(
+    activeVariant.startsWith("HairAtelier") ||
+    activeVariant.startsWith("CoolFix") ||
+    activeVariant.startsWith("MediCare")
+      ? withThemeEditorContent(
           activeVariant,
           storedGenericData as Record<string, unknown> | undefined,
         ) ?? storedGenericData
@@ -3970,7 +4019,8 @@ export default function EditSectionModal({
     if (field.startsWith("__")) return false;
     if (
       (activeVariant.startsWith("Plumbing") ||
-        activeVariant.startsWith("HairAtelier")) &&
+        activeVariant.startsWith("HairAtelier") ||
+        activeVariant.startsWith("MediCare")) &&
       activeComponentContentFields
     ) {
       return activeComponentContentFields.includes(field);
@@ -3989,15 +4039,13 @@ export default function EditSectionModal({
         ? (savedRecord.pageBanner as Record<string, unknown>)
         : undefined;
     const { pageBanner: _savedPageBanner, ...savedWithoutBanner } = savedRecord;
-    const themeRecord = activeVariant.startsWith("HairAtelier")
-      ? (withHairAtelierContent(activeVariant, savedRecord) as
-          | Record<string, unknown>
-          | undefined)
-      : activeVariant.startsWith("CoolFix")
-      ? (withCoolFixContent(activeVariant, savedRecord) as
-          | Record<string, unknown>
-          | undefined)
-      : undefined;
+    const themeRecord = (
+      activeVariant.startsWith("HairAtelier") ||
+      activeVariant.startsWith("CoolFix") ||
+      activeVariant.startsWith("MediCare")
+        ? withThemeEditorContent(activeVariant, savedRecord)
+        : undefined
+    ) as Record<string, unknown> | undefined;
     const source: Record<string, unknown> = themeRecord
       ? themeRecord
       : {
@@ -4021,6 +4069,12 @@ export default function EditSectionModal({
           .filter((field) => field in source)
           .map((field) => [field, source[field]] as [string, unknown]);
       }
+    }
+    if (activeVariant === "MediCarePageBanner1") {
+      const sliced = medicarePageBannerEditorData(source, currentSection?.page);
+      return (["title", "phone", "image", "breadcrumbs"] as const).map(
+        (field) => [field, sliced[field]] as [string, unknown],
+      );
     }
     const entries = Object.entries(source).filter(([field]) => {
       if (/^id$/i.test(field)) return false;
@@ -4849,7 +4903,7 @@ export default function EditSectionModal({
   const activeLayoutId = currentSection?.variant;
   const originLayoutId = Object.keys(currentSection?.data || {}).find(
     (key) =>
-      /^(CoolFix|HairAtelier|Pet|Plumbing)/.test(key) &&
+      /^(CoolFix|HairAtelier|MediCare|Pet|Plumbing)/.test(key) &&
       key.toLowerCase().includes(activeSectionType.toLowerCase()),
   );
   const layoutOptionsWithOrigin: LayoutOption[] =
@@ -5378,13 +5432,10 @@ export default function EditSectionModal({
       | SectionData
       | undefined;
     const baseGenericData = (
-      activeVariant.startsWith("HairAtelier")
-        ? withHairAtelierContent(
-            activeVariant,
-            storedGenericData as Record<string, unknown> | undefined,
-          )
-        : activeVariant.startsWith("CoolFix")
-        ? withCoolFixContent(
+      activeVariant.startsWith("HairAtelier") ||
+      activeVariant.startsWith("CoolFix") ||
+      activeVariant.startsWith("MediCare")
+        ? withThemeEditorContent(
             activeVariant,
             storedGenericData as Record<string, unknown> | undefined,
           )
@@ -5449,8 +5500,9 @@ export default function EditSectionModal({
     if (typeof field !== "string") return;
 
     const storedItems = activeGenericData?.[field as keyof SectionData];
-    const mergedItems = activeVariant.startsWith("CoolFix")
-      ? withCoolFixContent(
+    const mergedItems =
+      activeVariant.startsWith("CoolFix") || activeVariant.startsWith("MediCare")
+      ? withThemeEditorContent(
           activeVariant,
           (activeGenericData ?? {}) as Record<string, unknown>,
         )?.[field]
@@ -5461,7 +5513,12 @@ export default function EditSectionModal({
         ? mergedItems
         : undefined;
     if (!Array.isArray(items)) return;
-    if (field === "features" && !activeVariant.startsWith("CoolFix") && items.length >= 4) return;
+    if (
+      field === "features" &&
+      !activeVariant.startsWith("CoolFix") &&
+      !activeVariant.startsWith("MediCare") &&
+      items.length >= 4
+    ) return;
     if (field === "whyChooseUsItems" && items.length >= 4) return;
     if (field === "steps" && items.length >= 4) return;
     if (field === "awardItems" && activeSectionType === "Awards" && items.length >= 5) return;
@@ -5473,7 +5530,9 @@ export default function EditSectionModal({
       field === "items" &&
       activeSectionType !== "FeaturedDev" &&
       activeSectionType !== "InvestmentOpportunities" &&
-      !activeVariant.startsWith("CoolFix")
+      !activeVariant.startsWith("CoolFix") &&
+      !activeVariant.startsWith("HairAtelier") &&
+      !activeVariant.startsWith("MediCare")
     ) {
       return;
     }
@@ -5617,7 +5676,8 @@ export default function EditSectionModal({
     const newItem =
       newItems[field] ??
       (activeVariant.startsWith("CoolFix") ||
-      activeVariant.startsWith("HairAtelier")
+      activeVariant.startsWith("HairAtelier") ||
+      activeVariant.startsWith("MediCare")
         ? structuredClone(items[items.length - 1] ?? {})
         : undefined);
 
@@ -5633,8 +5693,9 @@ export default function EditSectionModal({
     if (typeof field !== "string") return;
 
     const storedItems = activeGenericData?.[field as keyof SectionData];
-    const mergedItems = activeVariant.startsWith("CoolFix")
-      ? withCoolFixContent(
+    const mergedItems =
+      activeVariant.startsWith("CoolFix") || activeVariant.startsWith("MediCare")
+      ? withThemeEditorContent(
           activeVariant,
           (activeGenericData ?? {}) as Record<string, unknown>,
         )?.[field]
@@ -5659,7 +5720,7 @@ export default function EditSectionModal({
 
   const selectSectionVariant = (variant: string) => {
     const isThemeSkin =
-      /^(CoolFix|Pet|Plumbing|HairAtelier)/.test(variant) &&
+      /^(CoolFix|Pet|Plumbing|HairAtelier|MediCare)/.test(variant) &&
       variant.toLowerCase().includes(activeSectionType.toLowerCase());
     const isAllowedVariant =
       variant.startsWith(`${activeSectionType}-`) ||
@@ -7037,7 +7098,8 @@ export default function EditSectionModal({
 
             {activeSectionType === "Topbar" &&
               activeTab === "Topbar Content" &&
-              !activeVariant.startsWith("CoolFix") && (
+              !activeVariant.startsWith("CoolFix") &&
+              !activeVariant.startsWith("MediCare") && (
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] sm:p-5">
                     <div className="flex items-center justify-between gap-3">
@@ -7183,7 +7245,8 @@ export default function EditSectionModal({
             {activeSectionType === "Header" &&
               activeTab === "Header Content" &&
               !activeVariant.startsWith("Plumbing") &&
-              !activeVariant.startsWith("CoolFix") && (
+              !activeVariant.startsWith("CoolFix") &&
+              !activeVariant.startsWith("MediCare") && (
                 <div className="space-y-5">
                   <div className="space-y-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] sm:p-5">
                     <h4 className="text-sm font-bold text-slate-900">
@@ -7568,7 +7631,8 @@ export default function EditSectionModal({
 
             {activeSectionType === "Banner" &&
               activeTab === "Banner Content" &&
-              !activeVariant.startsWith("CoolFix") && (
+              !activeVariant.startsWith("CoolFix") &&
+              !activeVariant.startsWith("MediCare") && (
                 <div className="space-y-4">
                   {petBannerSlides.length > 0 && (
                     <div className="space-y-3">
@@ -9150,6 +9214,8 @@ export default function EditSectionModal({
                 activeTab.endsWith("Content")) ||
               (activeVariant.startsWith("HairAtelier") &&
                 activeTab.endsWith("Content")) ||
+              (activeVariant.startsWith("MediCare") &&
+                activeTab.endsWith("Content")) ||
               (activeVariant.startsWith("Pet") &&
                 activeTab.endsWith("Content") &&
                 ![
@@ -9405,7 +9471,8 @@ export default function EditSectionModal({
             {activeSectionType === "Footer" &&
               activeTab === "Footer Content" &&
               !activeVariant.startsWith("Plumbing") &&
-              !activeVariant.startsWith("CoolFix") && (
+              !activeVariant.startsWith("CoolFix") &&
+              !activeVariant.startsWith("MediCare") && (
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h3 className="text-xs font-semibold text-slate-800">Footer logo</h3>
@@ -9619,6 +9686,7 @@ export default function EditSectionModal({
 
             {activeTab.endsWith("Content") &&
               !activeVariant.startsWith("CoolFix") &&
+              !activeVariant.startsWith("MediCare") &&
               activeVariant !== "HairAtelierHeroBanner1" &&
               activeVariant !== "HairAtelierFooter1" &&
               activeSectionType !== "Topbar" &&

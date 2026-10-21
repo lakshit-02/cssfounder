@@ -69,6 +69,43 @@ const BLOG_SECTION_TYPES = new Set([
   "BlogSidebar",
 ]);
 
+const TEAM_PAGE_SLUGS = new Set(["teams", "team", "our-team"]);
+
+const TEAM_SECTION_TYPES = new Set(["Team", "TeamPage", "TeamDetailPage"]);
+
+/** Home team listing and the Our Team page. */
+export function isTeamOwnedSection(section: {
+  type?: string;
+  page?: string;
+  variant?: string;
+}): boolean {
+  const type = section.type || "";
+  if (type === "Topbar" || type === "Header" || type === "Footer") return false;
+  if (TEAM_PAGE_SLUGS.has(sectionPageSlug(section.page))) return true;
+  if (TEAM_SECTION_TYPES.has(type)) return true;
+  const variant = section.variant || "";
+  return variant === "MediCareTeam1" || variant === "HairAtelierTeam1";
+}
+
+export function isHiddenTeamsPage(pageLinks: NavLinkLike[] | undefined | null) {
+  const flat = flattenLinks(Array.isArray(pageLinks) ? pageLinks : []);
+  return flat.some((link) => {
+    if (!link.hidden) return false;
+    const href = normalizeHref(link.href);
+    const label = (link.label || "").trim().toLowerCase();
+    const slug = hrefSlug(link.href) || label.replace(/\s+/g, "-");
+    return (
+      TEAM_PAGE_SLUGS.has(slug) ||
+      href === "#page-team" ||
+      href === "#page-teams" ||
+      href === "#page-our-team" ||
+      label === "team" ||
+      label === "teams" ||
+      label === "our team"
+    );
+  });
+}
+
 const GALLERY_PAGE_SLUGS = new Set(["gallery"]);
 
 const GALLERY_SECTION_TYPES = new Set(["Gallery", "GalleryPage"]);
@@ -191,8 +228,22 @@ export function filterMenuByHiddenPageLinks<T extends NavLinkLike>(
       const linkLabel = (link.label || "").trim().toLowerCase();
       if (itemHref && linkHref && itemHref === linkHref) return true;
       const canonical = (value: string) => {
-        if (value === "service" || value === "services") return "service";
-        if (value === "team" || value === "teams") return "team";
+        if (
+          value === "service" ||
+          value === "services" ||
+          value === "our-services" ||
+          value === "our services"
+        ) {
+          return "service";
+        }
+        if (
+          value === "team" ||
+          value === "teams" ||
+          value === "our-team" ||
+          value === "our team"
+        ) {
+          return "team";
+        }
         if (value === "blog" || value === "blogs") return "blog";
         if (value === "event" || value === "events") return "event";
         if (value === "gallery" || value === "galleries") return "gallery";

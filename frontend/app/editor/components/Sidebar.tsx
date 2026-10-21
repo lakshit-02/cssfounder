@@ -271,6 +271,7 @@ function SidebarContent({
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [serviceCardOnly, setServiceCardOnly] = useState(false);
   const [blogCardOnly, setBlogCardOnly] = useState(false);
+  const [teamCardOnly, setTeamCardOnly] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
@@ -903,6 +904,7 @@ function SidebarContent({
         return;
       }
       if (manager === "Teams") {
+        setTeamCardOnly(Boolean(detail?.cardOnly));
         setShowTeamModal(true);
         return;
       }
@@ -1845,7 +1847,11 @@ function SidebarContent({
       {showTeamModal && (
         <TeamManager
           siteId={searchParams.get("siteId") || "draft"}
-          onClose={() => closeManagerModal(setShowTeamModal)}
+          cardOnly={teamCardOnly}
+          onClose={() => {
+            setTeamCardOnly(false);
+            closeManagerModal(setShowTeamModal);
+          }}
         />
       )}
 

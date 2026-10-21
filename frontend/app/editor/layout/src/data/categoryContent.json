@@ -1309,6 +1309,85 @@
         { "id": "get-a-quote", "label": "Get a Quote", "sectionType": "QuotePage" },
         { "id": "thank-you", "label": "Thank You", "sectionType": "ThankYouPage" }
       ]
+    },
+    {
+      "id": "template-medicare-1",
+      "numericId": 17,
+      "title": "MediCare",
+      "type": "Multiple Pages Website",
+      "image": "/health%20and%20wellness/images/medicare_01.jpg",
+      "previewimage": "/health%20and%20wellness/images/medicare_01.jpg",
+      "preview_description": "Clinic and healthcare website.",
+      "prebuilt_pages": 7,
+      "sectionVariants": {
+        "Topbar": "MediCareTopbar1",
+        "Header": "MediCareHeader1",
+        "Footer": "MediCareFooter1",
+        "Banner": "MediCareHeroBanner1",
+        "About": "MediCareAboutUs1",
+        "Service": "MediCareServices1",
+        "Stats": "MediCareStats1",
+        "Team": "MediCareTeam1",
+        "Testimonial": "MediCareTestimonials1",
+        "FAQ": "MediCareFaq1",
+        "PageBanner": "MediCarePageBanner1",
+        "AboutPage": "MediCareAboutUs1",
+        "Mission": "MediCareMissionAndVision1",
+        "WhyChooseUs": "MediCareWhyChooseUs1",
+        "ServicePage": "MediCareServices1",
+        "TeamPage": "MediCareTeam1",
+        "FaqPage": "MediCareFaq1",
+        "ContactPage": "MediCareContactPage1",
+        "AppointmentPage": "MediCareBookAppointment1",
+        "WorkingProcess": "MediCareWorkingProcess1",
+        "ThankYouPage": "MediCareThankYouPage1"
+      },
+      "variables": {
+        "--font-body": "\"Plus Jakarta Sans\", Arial, Helvetica, sans-serif",
+        "--font-heading": "\"Plus Jakarta Sans\", Arial, Helvetica, sans-serif",
+        "--primary-bg": "#00a859",
+        "--primary-text": "#ffffff",
+        "--secondary-bg": "#043365",
+        "--secondary-text": "#ffffff",
+        "--header-bg": "#ffffff",
+        "--header-text": "#043365",
+        "--hero-bg": "#043365",
+        "--hero-title": "#043365",
+        "--primary-pretitle-text": "#00a859",
+        "--primary-title-text": "#043365",
+        "--primary-subtitle-text": "#475569",
+        "--secondary-pretitle-text": "#00a859",
+        "--secondary-title-text": "#ffffff",
+        "--secondary-subtitle-text": "#e2e8f0",
+        "--primary-link-bg": "#043365",
+        "--primary-link-color": "#ffffff",
+        "--secondary-link-bg": "#00a859",
+        "--secondary-link-color": "#ffffff",
+        "--text-white": "white",
+        "--blue-bg": "#043365",
+        "--lightcream-bg": "#f4f9fb"
+      },
+      "homeSectionOrder": [
+        "Topbar",
+        "Header",
+        "Banner",
+        "About",
+        "Service",
+        "Stats",
+        "Team",
+        "Testimonial",
+        "FAQ",
+        "Footer"
+      ],
+      "pages": [
+        { "id": "about", "label": "About Us", "sectionType": "AboutPage", "sectionOrder": ["PageBanner", "AboutPage", "Mission", "WhyChooseUs"] },
+        { "id": "services", "label": "Our Services", "sectionType": "ServicePage", "sectionOrder": ["PageBanner", "ServicePage"] },
+        { "id": "team", "label": "Our Team", "sectionType": "TeamPage", "sectionOrder": ["PageBanner", "TeamPage"] },
+        { "id": "faq", "label": "FAQ", "sectionType": "FaqPage", "sectionOrder": ["PageBanner", "FaqPage"] },
+        { "id": "contact", "label": "Contact Us", "sectionType": "ContactPage", "sectionOrder": ["PageBanner", "ContactPage"] },
+        { "id": "book-appointment", "label": "Book Appointment", "sectionType": "AppointmentPage", "sectionOrder": ["PageBanner", "AppointmentPage", "WorkingProcess"] },
+        { "id": "thank-you", "label": "Thank You", "sectionType": "ThankYouPage", "sectionOrder": ["ThankYouPage"] }
+      ]
     }
   ],
   "common": {
@@ -26761,6 +26840,890 @@
                 ]
               },
               "copyright": "copyright @ 2026. All Rights Reserved. Powerd by Lestow."
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "Health & Wellness": {
+    "slug": "health-and-wellness",
+    "description": "Clinic and healthcare website.",
+    "templates": [
+      "template-medicare-1"
+    ],
+    "MediCare": {
+      "templateComponents": {
+        "template-1": {
+          "shared": {
+            "Topbar": "MediCareTopbar1",
+            "Header": "MediCareHeader1",
+            "Footer": "MediCareFooter1"
+          },
+          "pages": {
+            "home": {
+              "components": [
+                {
+                  "key": "Hero",
+                  "component": "MediCareHeroBanner1"
+                },
+                {
+                  "key": "About",
+                  "component": "MediCareAboutUs1"
+                },
+                {
+                  "key": "Services",
+                  "component": "MediCareServices1"
+                },
+                {
+                  "key": "Stats",
+                  "component": "MediCareStats1"
+                },
+                {
+                  "key": "Team",
+                  "component": "MediCareTeam1"
+                },
+                {
+                  "key": "Testimonials",
+                  "component": "MediCareTestimonials1"
+                },
+                {
+                  "key": "Faq",
+                  "component": "MediCareFaq1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "sections": {
+        "Global": {
+          "variants": {
+            "MediCareGlobal1": {
+              "companyName": "MediCare Clinic",
+              "brand": {
+                "name": "MediCare",
+                "suffix": "Clinic",
+                "tagline": "Your Health Our Priority"
+              },
+              "contact": {
+                "address": "123 Medical Street,\nNew Delhi, India",
+                "phone": "+91 1234567890",
+                "email": "info@xyz.com"
+              },
+              "socials": [
+                {
+                  "name": "Facebook",
+                  "url": "https://facebook.com",
+                  "icon": "facebook"
+                },
+                {
+                  "name": "Instagram",
+                  "url": "https://instagram.com",
+                  "icon": "instagram"
+                },
+                {
+                  "name": "LinkedIn",
+                  "url": "https://linkedin.com",
+                  "icon": "linkedin"
+                },
+                {
+                  "name": "YouTube",
+                  "url": "https://youtube.com",
+                  "icon": "youtube"
+                }
+              ]
+            }
+          }
+        },
+        "Topbar": {
+          "variants": {
+            "MediCareTopbar1": {
+              "address": "123 Healthcare Ave, New York, NY 10001, USA",
+              "phone": "+1 00000 00000"
+            }
+          }
+        },
+        "Header": {
+          "variants": {
+            "MediCareHeader1": {
+              "logo": {
+                "src": "/health and wellness/images/logo (1).png",
+                "alt": "MediCare Clinic Logo",
+                "href": "/"
+              },
+              "menu": [
+                {
+                  "label": "Home",
+                  "href": "/",
+                  "isActive": true
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about",
+                  "isActive": false
+                },
+                {
+                  "label": "Our Services",
+                  "href": "/services",
+                  "isActive": false
+                },
+                {
+                  "label": "Our Team",
+                  "href": "/team",
+                  "isActive": false
+                },
+                {
+                  "label": "FAQ",
+                  "href": "/faq",
+                  "isActive": false
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact",
+                  "isActive": false
+                }
+              ],
+              "cta": {
+                "label": "Book Appointment",
+                "href": "/book-appointment"
+              }
+            }
+          }
+        },
+        "HeroBanner": {
+          "variants": {
+            "MediCareHeroBanner1": {
+              "slides": [
+                {
+                  "id": 1,
+                  "badge": "Advanced Care & Modern Facilities",
+                  "heading": {
+                    "main": "Your Health",
+                    "highlight": "Our Priority"
+                  },
+                  "description": "We provide comprehensive medical care with experienced doctors, modern technology and a patient-first approach for you and your family.",
+                  "button": {
+                    "label": "Book An Appointment",
+                    "href": "/appointment"
+                  },
+                  "image": {
+                    "src": "/health and wellness/images/medicare_01.jpg"
+                  }
+                },
+                {
+                  "id": 2,
+                  "badge": "Expert Doctors & Specialists",
+                  "heading": {
+                    "main": "Dedicated Care",
+                    "highlight": "For Every Patient"
+                  },
+                  "description": "Our team of board-certified specialists is committed to providing compassionate, reliable, and world-class healthcare services.",
+                  "button": {
+                    "label": "Consult A Doctor",
+                    "href": "/doctors"
+                  },
+                  "image": {
+                    "src": "/health and wellness/images/medicare_02.jpg"
+                  }
+                },
+                {
+                  "id": 3,
+                  "badge": "24/7 Emergency Support",
+                  "heading": {
+                    "main": "Immediate Help",
+                    "highlight": "When You Need"
+                  },
+                  "description": "Equipped with state-of-the-art diagnostic labs and rapid trauma response units ready around the clock for any emergency.",
+                  "button": {
+                    "label": "Contact Emergency",
+                    "href": "/contact"
+                  },
+                  "image": {
+                    "src": "/health and wellness/images/medicare_03.jpg"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "AboutUs": {
+          "variants": {
+            "MediCareAboutUs1": {
+              "badge": "About Our Program",
+              "heading": {
+                "main": "Take Care Of Your Health",
+                "highlight": "With Our Health Package"
+              },
+              "description": "There are many variations of passages of Lorem Ipsum amets avoilible but majority have suffered alteration in some form, by injected humour or randomise words which don't sure amet consec tetur adicing.",
+              "images": {
+                "main1": "/health and wellness/images/medicare_04.jpg",
+                "main2": "/health and wellness/images/medicare_05.jpg",
+                "doctorBadge": {
+                  "name": "Dr. Kate Winslet",
+                  "specialty": "Radiology",
+                  "avatar": "/health and wellness/images/medicare_06.jpg",
+                  "buttonText": "Select"
+                }
+              },
+              "features": [
+                "Provide More Potential Health",
+                "Operational Research Transformation",
+                "Mental Health Solution",
+                "Preventive Healthcare",
+                "Personalized Treatment Plan"
+              ],
+              "videoCard": {
+                "thumbnail": "/health and wellness/images/medicare_07.jpg",
+                "title": "Watch Our Program"
+              },
+              "quote": {
+                "text": "Think Hard And Focus On The Patient's Well-Being",
+                "author": "Dr. Rajesh Kumar",
+                "role": "Medical Director",
+                "avatar": "/health and wellness/images/medicare_08.jpg"
+              }
+            }
+          }
+        },
+        "Services": {
+          "variants": {
+            "MediCareServices1": {
+              "badge": "Our Services",
+              "heading": {
+                "main": "Our Healthcare",
+                "highlight": "Services"
+              },
+              "description": "We provide a wide range of medical services with modern technology and experienced doctors to ensure complete care for you and your family.",
+              "list": [
+                {
+                  "id": 1,
+                  "title": "General Consultation",
+                  "description": "Expert medical consultation for all age groups with a focus on preventive and primary care.",
+                  "image": "/health and wellness/images/medicare_01.jpg",
+                  "href": "/services/general-consultation",
+                  "slug": "general-consultation"
+                },
+                {
+                  "id": 2,
+                  "title": "Preventive Health Checkup",
+                  "description": "Comprehensive health checkup packages to detect health issues early and keep you healthy.",
+                  "image": "/health and wellness/images/medicare_02.jpg",
+                  "href": "/services/preventive-health-checkup",
+                  "slug": "preventive-health-checkup"
+                },
+                {
+                  "id": 3,
+                  "title": "Diagnostic Services",
+                  "description": "Accurate and advanced diagnostic tests with modern laboratory facilities.",
+                  "image": "/health and wellness/images/medicare_03.jpg",
+                  "href": "/services/diagnostic-services",
+                  "slug": "diagnostic-services"
+                },
+                {
+                  "id": 4,
+                  "title": "Vaccination",
+                  "description": "Safe and effective vaccination for children, adults and travel immunization needs.",
+                  "image": "/health and wellness/images/medicare_04.jpg",
+                  "href": "/services/vaccination",
+                  "slug": "vaccination"
+                },
+                {
+                  "id": 5,
+                  "title": "Pediatric Care",
+                  "description": "Comprehensive healthcare for infants, children, and adolescents.",
+                  "image": "/health and wellness/images/medicare_05.jpg",
+                  "href": "/services/pediatric-care",
+                  "slug": "pediatric-care"
+                },
+                {
+                  "id": 6,
+                  "title": "Dental Care",
+                  "description": "Advanced dental treatments, cleanings, and oral hygiene education.",
+                  "image": "/health and wellness/images/medicare_06.jpg",
+                  "href": "/services/dental-care",
+                  "slug": "dental-care"
+                },
+                {
+                  "id": 7,
+                  "title": "Emergency Services",
+                  "description": "24/7 urgent medical care and rapid response trauma management.",
+                  "image": "/health and wellness/images/medicare_07.jpg",
+                  "href": "/services/emergency-services",
+                  "slug": "emergency-services"
+                },
+                {
+                  "id": 8,
+                  "title": "Physical Therapy",
+                  "description": "Rehabilitation programs and personalized exercises for quick recovery.",
+                  "image": "/health and wellness/images/medicare_08.jpg",
+                  "href": "/services/physical-therapy",
+                  "slug": "physical-therapy"
+                }
+              ]
+            }
+          }
+        },
+        "Stats": {
+          "variants": {
+            "MediCareStats1": {
+              "list": [
+                {
+                  "id": 1,
+                  "icon": "clipboard",
+                  "value": "60 +",
+                  "label": "Project Completed"
+                },
+                {
+                  "id": 2,
+                  "icon": "doctor",
+                  "value": "99 %",
+                  "label": "Patients Satisfied"
+                },
+                {
+                  "id": 3,
+                  "icon": "bed",
+                  "value": "700 +",
+                  "label": "Medical Beds"
+                },
+                {
+                  "id": 4,
+                  "icon": "flask",
+                  "value": "70 +",
+                  "label": "Laboratory Experts"
+                }
+              ],
+              "featureCards": [
+                {
+                  "id": 1,
+                  "icon": "tooth",
+                  "title": "Dentristy Care",
+                  "description": "There are many variations of passages of words are valid."
+                },
+                {
+                  "id": 2,
+                  "icon": "wheelchair",
+                  "title": "Orthopedic Care",
+                  "description": "There are many variations of passages of words are valid."
+                },
+                {
+                  "id": 3,
+                  "icon": "cosmetic",
+                  "title": "Cosmetic Dentist",
+                  "description": "There are many variations of passages of words are valid."
+                }
+              ]
+            }
+          }
+        },
+        "Team": {
+          "variants": {
+            "MediCareTeam1": {
+              "badge": "Our Team",
+              "heading": {
+                "main": "Meet Our Expert",
+                "highlight": "Doctors"
+              },
+              "description": "Our team of experienced and dedicated doctors are committed to providing the highest quality healthcare with personalized care for every patient.",
+              "list": [
+                {
+                  "id": 1,
+                  "name": "Dr. Rajesh Kumar",
+                  "specialty": "Cardiology",
+                  "image": "/health and wellness/images/medicare_09.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 2,
+                  "name": "Dr. Amit Verma",
+                  "specialty": "Pediatrician",
+                  "image": "/health and wellness/images/medicare_10.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 3,
+                  "name": "Dr.Priya Sharma",
+                  "specialty": "Orthopedic Surgeon",
+                  "image": "/health and wellness/images/medicare_11.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 4,
+                  "name": "Dr. Neha Gupta",
+                  "specialty": "Gynecology",
+                  "image": "/health and wellness/images/medicare_12.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 5,
+                  "name": "Dr. Suresh Patil",
+                  "specialty": "Neurology",
+                  "image": "/health and wellness/images/medicare_13.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 6,
+                  "name": "Dr. Ananya Reddy",
+                  "specialty": "Dermatology",
+                  "image": "/health and wellness/images/medicare_14.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 7,
+                  "name": "Dr. Vikram Singh",
+                  "specialty": "Oncology",
+                  "image": "/health and wellness/images/medicare_01.jpg",
+                  "appointmentLink": "/book-appointment"
+                },
+                {
+                  "id": 8,
+                  "name": "Dr. Kavita Joshi",
+                  "specialty": "Psychiatry",
+                  "image": "/health and wellness/images/medicare_02.jpg",
+                  "appointmentLink": "/book-appointment"
+                }
+              ]
+            }
+          }
+        },
+        "Testimonials": {
+          "variants": {
+            "MediCareTestimonials1": {
+              "badge": "Testimonial",
+              "heading": {
+                "main": "What Our Patients Say",
+                "highlight": "About Our Service"
+              },
+              "list": [
+                {
+                  "id": 1,
+                  "rating": 5,
+                  "review": "The doctors and staff are very professional and caring. I received the best treatment and guidance. The facilities are clean and well organized. Highly recommended!",
+                  "name": "Priya Sharma",
+                  "location": "New Delhi, India",
+                  "avatar": "/health and wellness/images/medicare_03.jpg"
+                },
+                {
+                  "id": 2,
+                  "rating": 5,
+                  "review": "Excellent experience! The consultation was smooth, and the doctor explained everything in detail. I felt comfortable and well taken care of throughout my treatment.",
+                  "name": "Rahul Mehta",
+                  "location": "Gurgaon, India",
+                  "avatar": "/health and wellness/images/medicare_04.jpg"
+                },
+                {
+                  "id": 3,
+                  "rating": 5,
+                  "review": "Very supportive staff and experienced doctors. The clinic maintains high standards of hygiene and patient care. I am really happy with the service and treatment.",
+                  "name": "Sneha Verma",
+                  "location": "Noida, India",
+                  "avatar": "/health and wellness/images/medicare_05.jpg"
+                },
+                {
+                  "id": 4,
+                  "rating": 5,
+                  "review": "The diagnostic reports were prompt, and the doctor provided a very structured recovery plan. Highly appreciate the patience and attention given to every patient.",
+                  "name": "Amit Saxena",
+                  "location": "Faridabad, India",
+                  "avatar": "/health and wellness/images/medicare_06.jpg"
+                }
+              ]
+            }
+          }
+        },
+        "Faq": {
+          "variants": {
+            "MediCareFaq1": {
+              "badge": "FAQ",
+              "heading": {
+                "main": "Frequently Asked",
+                "highlight": "Questions"
+              },
+              "description": "Find answers to common questions about our services, appointments, treatments and patient care. If you have any other questions, feel free to contact us.",
+              "contactBox": {
+                "label": "Contact Us",
+                "phone": "+1 00000 00000",
+                "btnText": "Book Appointment",
+                "btnLink": "/appointment"
+              },
+              "image": "/health and wellness/images/medicare_07.jpg",
+              "list": [
+                {
+                  "id": "01",
+                  "question": "How do I book an appointment ?",
+                  "answer": "You can book an appointment through our website, by calling our helpline, or by visiting the clinic directly. Our team will help you choose the right doctor and convenient time slot for your visit."
+                },
+                {
+                  "id": "02",
+                  "question": "What types of treatments do you offer ?",
+                  "answer": "We offer general medicine, pediatrics, cardiology, orthopedic care, diagnostics, preventive health checkups, and specialized surgical consultations."
+                },
+                {
+                  "id": "03",
+                  "question": "Do you accept health insurance ?",
+                  "answer": "Yes, we accept major health insurance providers and cashless mediclaim policies. Contact our help desk for the complete list of empanelled TPAs."
+                },
+                {
+                  "id": "04",
+                  "question": "How can I reschedule or cancel my appointment ?",
+                  "answer": "You can easily reschedule or cancel your appointment at least 4 hours in advance via our website portal or by calling our customer care number."
+                },
+                {
+                  "id": "05",
+                  "question": "Are online consultations available ?",
+                  "answer": "Yes, we provide high-definition video consultations with top specialists for follow-ups and routine inquiries from the comfort of your home."
+                }
+              ]
+            }
+          }
+        },
+        "MissionAndVision": {
+          "variants": {
+            "MediCareMissionAndVision1": {
+              "badge": "Our Mission & Vision",
+              "heading": {
+                "main": "Committed To A Healthier",
+                "highlight": "Tomorrow"
+              },
+              "description": "To enhance the health and well-being of our community by providing compassionate, high-quality healthcare services through dedicated professionals and advanced medical practices.",
+              "list": [
+                {
+                  "id": 1,
+                  "title": "Mission",
+                  "description": "Our mission is to deliver accessible, affordable and high-quality healthcare services with compassion, integrity and excellence, ensuring a healthier community for all.",
+                  "icon": "target"
+                },
+                {
+                  "id": 2,
+                  "title": "Vision",
+                  "description": "Our vision is to be a trusted healthcare provider, recognized for clinical excellence, patient-centered care and innovation in medical services.",
+                  "icon": "eye"
+                },
+                {
+                  "id": 3,
+                  "title": "Values",
+                  "description": "We value compassion, integrity, respect and teamwork. Our focus is always on patient well-being, continuous improvement and creating a healthier future for our community.",
+                  "icon": "diamond"
+                }
+              ],
+              "image": "/health and wellness/images/medicare_08.jpg"
+            }
+          }
+        },
+        "WhyChooseUs": {
+          "variants": {
+            "MediCareWhyChooseUs1": {
+              "badge": "Why Choose Us",
+              "heading": {
+                "main": "Your Health,",
+                "highlight": "Our Priority"
+              },
+              "description": "We are committed to providing high-quality healthcare with experienced doctors, modern facilities and compassionate care for you and your family.",
+              "image": "/health and wellness/images/medicare_09.jpg",
+              "list": [
+                {
+                  "id": 1,
+                  "icon": "users",
+                  "iconColor": "blue",
+                  "title": "Experienced Doctors",
+                  "description": "Our team of qualified and experienced doctors provides personalized and effective treatment."
+                },
+                {
+                  "id": 2,
+                  "icon": "cross-hand",
+                  "iconColor": "green",
+                  "title": "Comprehensive Care",
+                  "description": "From consultation to diagnosis and treatment, we offer complete healthcare under one roof."
+                },
+                {
+                  "id": 3,
+                  "icon": "hospital",
+                  "iconColor": "blue",
+                  "title": "Modern Facilities",
+                  "description": "We use advanced medical equipment and technology for accurate diagnosis and better treatment."
+                },
+                {
+                  "id": 4,
+                  "icon": "heart",
+                  "iconColor": "green",
+                  "title": "Patient-Centered Approach",
+                  "description": "Your comfort and well-being are our top priority. We listen, understand and care."
+                },
+                {
+                  "id": 5,
+                  "icon": "shield",
+                  "iconColor": "blue",
+                  "title": "Affordable & Transparent Care",
+                  "description": "High-quality treatment with clear guidance and transparent processes."
+                },
+                {
+                  "id": 6,
+                  "icon": "hand-heart",
+                  "iconColor": "green",
+                  "title": "Supportive Staff",
+                  "description": "Our friendly and professional staff is always here to assist you at every step of your healthcare journey."
+                }
+              ]
+            }
+          }
+        },
+        "BookAppointment": {
+          "variants": {
+            "MediCareBookAppointment1": {
+              "badge": "Book An Appointment",
+              "heading": {
+                "main": "Your Health,",
+                "highlight": "Our Priority"
+              },
+              "description": "Get expert consultation from our experienced doctors. Fill in the details below and we will get back to you to confirm your appointment.",
+              "formTitle": "Book Your Appointment",
+              "submitLabel": "Book Appointment",
+              "image": "/health and wellness/images/medicare_10.jpg",
+              "departments": [
+                "Cardiology",
+                "Orthopedic",
+                "Pediatrics",
+                "General Consultation",
+                "Diagnostic & Lab"
+              ],
+              "timeSlots": [
+                "09:00 AM - 11:00 AM",
+                "11:00 AM - 01:00 PM",
+                "02:00 PM - 05:00 PM",
+                "05:00 PM - 07:00 PM"
+              ],
+              "list": [
+                {
+                  "id": 1,
+                  "title": "Easy Appointment",
+                  "description": "Quick and simple booking process",
+                  "icon": "calendar"
+                },
+                {
+                  "id": 2,
+                  "title": "Expert Doctors",
+                  "description": "Consult with experienced specialists",
+                  "icon": "doctor"
+                },
+                {
+                  "id": 3,
+                  "title": "Trusted Care",
+                  "description": "Your health and safety is our priority",
+                  "icon": "shield"
+                }
+              ]
+            }
+          }
+        },
+        "ContactPage": {
+          "variants": {
+            "MediCareContactPage1": {
+              "badge": "Contact Us",
+              "heading": {
+                "main": "Connect With Us For",
+                "highlight": "Your Healthcare Needs"
+              },
+              "description": "Reach out for support, feedback, or to schedule an appointment. Fill out the form, and we'll promptly assist you and confirm your visit with our healthcare professionals.",
+              "infoCards": [
+                {
+                  "id": 1,
+                  "title": "Visit Us Anytime",
+                  "description": "123 Healthcare Ave\nNew York, NY 10001\nUSA",
+                  "icon": "map-pin",
+                  "color": "green"
+                },
+                {
+                  "id": 2,
+                  "title": "Send An Email",
+                  "description": "info@xyz.com",
+                  "icon": "mail",
+                  "color": "red"
+                },
+                {
+                  "id": 3,
+                  "title": "Call Center",
+                  "description": "+1 00000 00000\n+1 00000 00000",
+                  "icon": "phone",
+                  "color": "blue"
+                },
+                {
+                  "id": 4,
+                  "title": "Opening Time",
+                  "description": "Mon - Thu: 8:00 AM - 5:00 PM\nFri: 8:00 AM - 1:00 PM",
+                  "icon": "clock",
+                  "color": "green"
+                }
+              ],
+              "form": {
+                "heading": {
+                  "main": "Send Us A",
+                  "highlight": "Message"
+                },
+                "description": "Have a question or need assistance? Fill out the form below and our team will get back to you as soon as possible.",
+                "submitLabel": "Send Message"
+              },
+              "map": {
+                "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224345.83923192776!2d77.0688975472061!3d28.52758200617607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+                "mapsUrl": "https://maps.google.com/?q=New+Delhi",
+                "image": "/health and wellness/images/medicare_11.jpg",
+                "locationTitle": "Our Location",
+                "locationAddress": "123 Healthcare Ave\nNew York, NY 10001 USA"
+              }
+            }
+          }
+        },
+        "WorkingProcess": {
+          "variants": {
+            "MediCareWorkingProcess1": {
+              "badge": "How It Works",
+              "heading": {
+                "main": "Simple Steps To Book",
+                "highlight": "Your Appointment"
+              },
+              "list": [
+                {
+                  "stepNumber": 1,
+                  "icon": "document",
+                  "title": "Fill the Form",
+                  "description": "Provide your basic details and preferred time"
+                },
+                {
+                  "stepNumber": 2,
+                  "icon": "calendar",
+                  "title": "Get Confirmation",
+                  "description": "We will contact you to confirm your slot"
+                },
+                {
+                  "stepNumber": 3,
+                  "icon": "doctor",
+                  "title": "Visit Our Clinic",
+                  "description": "Meet our specialist at the scheduled time"
+                }
+              ]
+            }
+          }
+        },
+        "PageBanner": {
+          "variants": {
+            "MediCarePageBanner1": {
+              "image": "/health and wellness/images/medicare_01.jpg",
+              "phone": "+1 00000 00000",
+              "pages": {
+                "about": { "title": "About Us" },
+                "services": { "title": "Services" },
+                "team": { "title": "Team" },
+                "teams": { "title": "Team" },
+                "faq": { "title": "FAQ" },
+                "contact": { "title": "Contact Us" },
+                "book-appointment": { "title": "Book Appointment" }
+              }
+            }
+          }
+        },
+        "ThankYou": {
+          "variants": {
+            "MediCareThankYouPage1": {
+              "titleMain": "Thank",
+              "titleHighlight": "You!",
+              "subtitle": "Your Message Has Been Sent Successfully",
+              "description": "We appreciate you reaching out to us. Our team will get back to you as soon as possible. Your health and queries are important to us.",
+              "buttonLabel": "Back to Home"
+            }
+          }
+        },
+        "Footer": {
+          "variants": {
+            "MediCareFooter1": {
+              "logo": {
+                "src": "/health and wellness/images/white-logo.png",
+                "alt": "MediCare Clinic",
+                "href": "/"
+              },
+              "description": "We are committed to providing high-quality healthcare services with experienced doctors, modern facilities and compassionate care for you and your family.",
+              "socials": [
+                {
+                  "platform": "facebook",
+                  "url": "https://facebook.com"
+                },
+                {
+                  "platform": "instagram",
+                  "url": "https://instagram.com"
+                },
+                {
+                  "platform": "linkedin",
+                  "url": "https://linkedin.com"
+                },
+                {
+                  "platform": "youtube",
+                  "url": "https://youtube.com"
+                }
+              ],
+              "quickLinks": [
+                {
+                  "label": "Home",
+                  "href": "/"
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about"
+                },
+                {
+                  "label": "Our Team",
+                  "href": "/team"
+                },
+                {
+                  "label": "Our Services",
+                  "href": "/services"
+                },
+                {
+                  "label": "Appointments",
+                  "href": "/book-appointment"
+                },
+                {
+                  "label": "Thank You",
+                  "href": "/thank-you"
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact"
+                }
+              ],
+              "services": [
+                {
+                  "label": "General Consultation",
+                  "href": "/services/general-consultation"
+                },
+                {
+                  "label": "Preventive Health Checkup",
+                  "href": "/services/preventive-health-checkup"
+                },
+                {
+                  "label": "Diagnostic Services",
+                  "href": "/services/diagnostic-services"
+                },
+                {
+                  "label": "Vaccination",
+                  "href": "/services/vaccination"
+                }
+              ],
+              "contactInfo": {
+                "address": {
+                  "title": "Address",
+                  "value": "123 Healthcare Ave, New York, NY 10001, USA"
+                },
+                "phone": {
+                  "title": "Phone",
+                  "value": "+1 00000 00000",
+                  "timing": "Mon - Sat : 9:00 AM - 7:00 PM"
+                },
+                "email": {
+                  "title": "Email",
+                  "value": "info@xyz.com",
+                  "note": "We reply within 24 hours"
+                }
+              },
+              "copyright": "Copyright © 2026. All Rights Reserved. Powered By Lestow."
             }
           }
         }

@@ -41,7 +41,7 @@ export function resolveThemeColor(
 }
 
 export const GOOGLE_FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap";
+  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap";
 
 export function ensureThemeGoogleFontsLoaded() {
   if (typeof document === "undefined") return;
@@ -55,6 +55,35 @@ export function ensureThemeGoogleFontsLoaded() {
 }
 
 /** Global stylesheet applied on editor + published site roots. */
+/** Theme Color and Theme Font are live previews. Refresh reloads both from the template. */
+export function withOriginalThemeColors(
+  saved: Record<string, string> | undefined,
+  original: Record<string, string> | undefined,
+) {
+  const next = { ...(saved || {}) };
+  const source = original || {};
+  for (const [key, value] of Object.entries(source)) {
+    if (
+      key.startsWith("--") &&
+      !key.startsWith("--font") &&
+      typeof value === "string" &&
+      value
+    ) {
+      next[key] = value;
+    }
+  }
+  const heading = source["--font-heading"];
+  const body = source["--font-body"];
+  const button = source["--font-button"] || body;
+  if (typeof heading === "string" && heading) next["--font-heading"] = heading;
+  if (typeof body === "string" && body) {
+    next["--font-body"] = body;
+    next.fontFamily = body;
+  }
+  if (typeof button === "string" && button) next["--font-button"] = button;
+  return next;
+}
+
 export const SITE_THEME_GLOBAL_CSS = `
 [data-site-theme-root] {
   font-family: var(--font-body);
@@ -449,5 +478,77 @@ export const SITE_THEME_GLOBAL_CSS = `
 }
 [data-site-theme-root]:has([data-section-type="Breadcrumb"]) [data-section-type]:not([data-section-type="Breadcrumb"]) [data-embedded-page-banner] {
   display: none !important;
+}
+/* MediCare: green brand follows Primary, navy follows Accent (--blue-bg). */
+.medicare-theme [class~="text-[#00a859]"],
+.medicare-theme [class~="text-[#00c9c9]"],
+.medicare-theme [class~="text-[#00c5c5]"],
+.medicare-theme [class~="text-[#0070ba]"] {
+  color: var(--primary-bg, #00a859) !important;
+}
+.medicare-theme [class~="bg-[#00a859]"],
+.medicare-theme [class~="bg-[#00c9c9]"],
+.medicare-theme [class~="bg-[#00c5c5]"],
+.medicare-theme [class~="bg-[#008d75]"] {
+  background-color: var(--primary-bg, #00a859) !important;
+}
+.medicare-theme [class~="border-[#00a859]"],
+.medicare-theme [class~="hover:border-[#00a859]"]:hover {
+  border-color: var(--primary-bg, #00a859) !important;
+}
+.medicare-theme [class~="hover:bg-[#00a859]"]:hover,
+.medicare-theme [class~="hover:bg-[#008f4c]"]:hover,
+.medicare-theme [class~="hover:bg-[#00b0b0]"]:hover,
+.medicare-theme .group\/card:hover [class~="group-hover/card:bg-[#00a859]"] {
+  background-color: var(--primary-bg, #00a859) !important;
+}
+.medicare-theme .group\/card:hover [class~="group-hover/card:text-white"],
+.medicare-theme .group\/card:hover [class~="group-hover/card:bg-[#00a859]"] {
+  color: #ffffff !important;
+}
+.medicare-theme .group\/card:hover [class~="group-hover/card:bg-[#00a859]"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+.medicare-theme [class~="hover:text-[#00a859]"]:hover,
+.medicare-theme .group\/card:hover [class~="group-hover/card:text-[#00a859]"] {
+  color: var(--primary-bg, #00a859) !important;
+}
+.medicare-theme [class~="bg-[#e6f7ef]"],
+.medicare-theme [class~="bg-[#00a859]/10"] {
+  background-color: color-mix(in srgb, var(--primary-bg, #00a859) 14%, white) !important;
+}
+.medicare-theme [class~="text-[#073260]"],
+.medicare-theme [class~="text-[#043365]"],
+.medicare-theme [class~="text-[#042a4d]"] {
+  color: var(--blue-bg, #043365) !important;
+}
+.medicare-theme [class~="bg-[#073260]"],
+.medicare-theme [class~="bg-[#043365]"],
+.medicare-theme [class~="bg-[#042a4d]"],
+.medicare-theme [class~="bg-[#032549]"],
+.medicare-theme [class~="bg-[#032347]"] {
+  background-color: var(--blue-bg, #043365) !important;
+}
+.medicare-theme [class~="bg-[#073260]/85"] {
+  background-color: color-mix(in srgb, var(--blue-bg, #043365) 85%, transparent) !important;
+}
+.medicare-theme [class~="hover:bg-[#032347]"]:hover,
+.medicare-theme [class~="hover:bg-[#042a4d]"]:hover {
+  background-color: color-mix(in srgb, var(--blue-bg, #043365) 82%, black) !important;
+}
+.medicare-theme svg [stroke="#00a859"] { stroke: var(--primary-bg, #00a859); }
+.medicare-theme svg [fill="#00a859"] { fill: var(--primary-bg, #00a859); }
+/* MediCare: Theme Fonts override Tailwind font-sans. Original is Plus Jakarta Sans. */
+.medicare-theme,
+.medicare-theme .font-sans {
+  font-family: var(--font-body, "Plus Jakarta Sans", Arial, Helvetica, sans-serif) !important;
+}
+.medicare-theme :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading, "Plus Jakarta Sans", Arial, Helvetica, sans-serif) !important;
+}
+.medicare-theme button,
+.medicare-theme a {
+  font-family: var(--font-button, var(--font-body, "Plus Jakarta Sans", Arial, Helvetica, sans-serif)) !important;
 }
 `.trim();

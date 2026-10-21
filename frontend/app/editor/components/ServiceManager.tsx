@@ -136,8 +136,10 @@ const isServicesPageLink = (link: {
     href === "/services" ||
     href.endsWith("/service") ||
     href.endsWith("/services") ||
+    href === "#page-our-services" ||
     label === "service" ||
-    label === "services"
+    label === "services" ||
+    label === "our services"
   );
 };
 

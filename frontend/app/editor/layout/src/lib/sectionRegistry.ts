@@ -239,6 +239,24 @@ import HairAtelierContactMap1 from "../components/sections/contact/BeautyAndPers
 import HairAtelierQuotePage1 from "../components/sections/quote/BeautyAndPersonalCareQuotePage1";
 import HairAtelierThankYouPage1 from "../components/sections/thank-you/BeautyAndPersonalCareThankYouPage1";
 
+import MediCareTopbar1 from "../components/sections/topbar/HealthAndWellnessTopbar1";
+import MediCareHeader1 from "../components/sections/header/HealthAndWellnessHeader1";
+import MediCareFooter1 from "../components/sections/footer/HealthAndWellnessFooter1";
+import MediCarePageBanner1 from "../components/sections/breadcrumb/HealthAndWellnessPageBanner1";
+import MediCareHeroBanner1 from "../components/sections/banner/HealthAndWellnessHeroBanner1";
+import MediCareAboutUs1 from "../components/sections/about/HealthAndWellnessAboutUs1";
+import MediCareMissionAndVision1 from "../components/sections/about/HealthAndWellnessMissionAndVision1";
+import MediCareServices1 from "../components/sections/service/HealthAndWellnessServices1";
+import MediCareStats1 from "../components/sections/stats/HealthAndWellnessStats1";
+import MediCareTeam1 from "../components/sections/team/HealthAndWellnessTeam1";
+import MediCareTestimonials1 from "../components/sections/testimonial/HealthAndWellnessTestimonials1";
+import MediCareFaq1 from "../components/sections/faq/HealthAndWellnessFaq1";
+import MediCareWhyChooseUs1 from "../components/sections/whychooseus/HealthAndWellnessWhyChooseUs1";
+import MediCareBookAppointment1 from "../components/sections/form/HealthAndWellnessBookAppointment1";
+import MediCareWorkingProcess1 from "../components/sections/process/HealthAndWellnessWorkingProcess1";
+import MediCareContactPage1 from "../components/sections/contact/HealthAndWellnessContactPage1";
+import MediCareThankYouPage1 from "../components/sections/thank-you/HealthAndWellnessThankYouPage1";
+
 import { SectionProps } from "../types/section";
 
 /**
@@ -650,6 +668,24 @@ export const sectionRegistry: Record<string, ComponentType<SectionProps>> = {
   HairAtelierContactMap1,
   HairAtelierQuotePage1,
   HairAtelierThankYouPage1,
+
+  MediCareTopbar1,
+  MediCareHeader1,
+  MediCareFooter1,
+  MediCarePageBanner1,
+  MediCareHeroBanner1,
+  MediCareAboutUs1,
+  MediCareMissionAndVision1,
+  MediCareServices1,
+  MediCareStats1,
+  MediCareTeam1,
+  MediCareTestimonials1,
+  MediCareFaq1,
+  MediCareWhyChooseUs1,
+  MediCareBookAppointment1,
+  MediCareWorkingProcess1,
+  MediCareContactPage1,
+  MediCareThankYouPage1,
 };
 
 export function resolveSectionComponent(

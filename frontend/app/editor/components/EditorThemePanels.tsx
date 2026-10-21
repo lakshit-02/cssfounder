@@ -17,7 +17,7 @@ import {
 import { getPublishedSiteUrl } from "@/lib/migrateGuestSite";
 import { useSearchParams } from "next/navigation";
 import { getBuilderTemplate } from "../layout/src/data/templateFlow";
-import { ensureThemeGoogleFontsLoaded } from "../layout/src/lib/themeTokens";
+import { ensureThemeGoogleFontsLoaded, withOriginalThemeColors } from "../layout/src/lib/themeTokens";
 
 const COLOR_FIELDS: { key: string; label: string }[] = [
   { key: "--primary-bg", label: "Primary" },
@@ -232,6 +232,11 @@ const FONT_FAMILIES = [
     id: "inter",
     label: "Inter",
     value: '"Inter", "Segoe UI", sans-serif',
+  },
+  {
+    id: "plus-jakarta",
+    label: "Plus Jakarta Sans",
+    value: '"Plus Jakarta Sans", Arial, Helvetica, sans-serif',
   },
   {
     id: "system",
@@ -526,6 +531,16 @@ export default function EditorThemePanels() {
     };
   }, [searchParams]);
 
+  const resetThemeColors = () => {
+    const template = getBuilderTemplate(
+      searchParams.get("templateId"),
+      searchParams.get("category"),
+    );
+    setThemeVariables(
+      withOriginalThemeColors(themeVariables, template.variables),
+    );
+  };
+
   const resetThemeFonts = () => {
     setThemeVariables({
       ...themeVariables,
@@ -668,12 +683,7 @@ export default function EditorThemePanels() {
                   </div>
                   <button
                     type="button"
-                    onClick={() =>
-                      setThemeVariables({
-                        ...themeVariables,
-                        ...baselineColorsRef.current,
-                      })
-                    }
+                    onClick={resetThemeColors}
                     className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
                   >
                     <RotateCcw size={12} />

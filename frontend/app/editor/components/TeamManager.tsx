@@ -85,6 +85,7 @@ export type TeamPageState = {
 type TeamManagerProps = {
   onClose: () => void;
   siteId?: string;
+  cardOnly?: boolean;
 };
 
 const createTeamSlug = (label: string) =>
@@ -160,8 +161,10 @@ const isTeamPageLink = (link: {
   return (
     href === "#page-teams" ||
     href === "#page-team" ||
+    href === "#page-our-team" ||
     label === "teams" ||
-    label === "team"
+    label === "team" ||
+    label === "our team"
   );
 };
 
@@ -285,6 +288,7 @@ const LayoutPreviewMock = ({ layout }: { layout: TeamLayoutOption }) => {
 export default function TeamManager({
   onClose,
   siteId = "draft",
+  cardOnly = false,
 }: TeamManagerProps) {
   const { siteSeoConfig, setSiteSeoConfig, pageLinks, setPageLinks } =
     usePreview();
@@ -664,7 +668,34 @@ export default function TeamManager({
     setEditingId(null);
     setShowContentEditor(false);
     setDraft(emptyTeamItem());
+    if (cardOnly) onClose();
   }
+
+  useEffect(() => {
+    if (!ready) return;
+    if (typeof window === "undefined") return;
+    const storageKey = "ai-builder-open-manager-item:Teams";
+    const raw = window.sessionStorage.getItem(storageKey);
+    if (!raw) return;
+    window.sessionStorage.removeItem(storageKey);
+    try {
+      const payload = JSON.parse(raw) as {
+        id?: string;
+        slug?: string;
+        title?: string;
+      };
+      const found = pageState.teamMembers.find((item) => {
+        if (payload.id && item.id === payload.id) return true;
+        if (payload.slug && item.slug === payload.slug) return true;
+        if (payload.title && item.title === payload.title) return true;
+        return false;
+      });
+      if (found) openEdit(found);
+    } catch {
+      /* ignore malformed storage payload */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, pageState.teamMembers]);
 
   const addCategory = () => {
     const value = categoryName.trim();
@@ -769,7 +800,7 @@ export default function TeamManager({
 
   const content = (
     <div
-      className="fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800"
+      className={`fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800 ${cardOnly ? "hidden" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="team-manager-title"

@@ -85,6 +85,36 @@ const jsonBuilderTemplates = (
   structuredClone(categoryContentJson) as unknown as CategoryContentRecord
 ).templates;
 
+const jsonBuilderCategories = (
+  structuredClone(categoryContentJson) as unknown as CategoryContentRecord
+).categories;
+
+const mergeRemoteCategories = (
+  remote: CategoryContentRecord["categories"],
+) => {
+  const merged = { ...remote };
+  for (const [name, pack] of Object.entries(jsonBuilderCategories)) {
+    const current = merged[name];
+    if (!current) {
+      merged[name] = pack;
+      continue;
+    }
+    const remoteIds = Array.isArray(current.templates) ? current.templates : [];
+    const localIds = Array.isArray(pack.templates) ? pack.templates : [];
+    const templates = [...remoteIds];
+    for (const id of localIds) {
+      if (!templates.includes(id)) templates.push(id);
+    }
+    merged[name] = {
+      ...current,
+      slug: current.slug || pack.slug,
+      description: current.description ?? pack.description,
+      templates,
+    };
+  }
+  return merged;
+};
+
 const mergeRemoteTemplates = (remote: BuilderTemplate[]) => {
   const jsonById = new Map(jsonBuilderTemplates.map((item) => [item.id, item]));
   const remoteIds = new Set(remote.map((item) => item.id));
@@ -95,16 +125,22 @@ const mergeRemoteTemplates = (remote: BuilderTemplate[]) => {
       ? item.homeSectionOrder.filter((type) => typeof type === "string" && type.trim())
       : [];
     const remotePages = Array.isArray(item.pages) ? item.pages : [];
+    const remoteVariants =
+      item.sectionVariants && typeof item.sectionVariants === "object"
+        ? item.sectionVariants
+        : {};
+    // Admin save stores the full variant map. Layering JSON back on top
+    // restored layouts the admin had removed, such as MediCare ContactPage.
+    const sectionVariants = Object.keys(remoteVariants).length
+      ? remoteVariants
+      : local.sectionVariants;
     return {
       ...item,
       title: item.title || local.title,
       type: item.type || local.type,
       pages: remotePages.length ? remotePages : local.pages,
       homeSectionOrder: remoteOrder.length ? remoteOrder : local.homeSectionOrder,
-      sectionVariants: {
-        ...local.sectionVariants,
-        ...(item.sectionVariants || {}),
-      },
+      sectionVariants,
       variables: {
         ...(local.variables || {}),
         ...(item.variables || {}),
@@ -135,7 +171,9 @@ export const applyContentBundle = (
         : categoryContent.common,
     categories:
       bundle.categories && typeof bundle.categories === "object"
-        ? (bundle.categories as CategoryContentRecord["categories"])
+        ? mergeRemoteCategories(
+            bundle.categories as CategoryContentRecord["categories"],
+          )
         : categoryContent.categories,
   };
 };
@@ -375,6 +413,43 @@ const localBeautyTemplateIds: string[] = (
   ).categories?.["Beauty & Personal Care"]?.templates ?? []
 ).filter((id): id is string => typeof id === "string" && id.length > 0);
 
+const medicareVariants = new Map<string, Record<string, unknown>>();
+const medicareSections =
+  (
+    categoryContentJson as {
+      categories?: {
+        "Health & Wellness"?: {
+          MediCare?: {
+            sections?: Record<string, { variants?: Record<string, unknown> }>;
+          };
+        };
+      };
+    }
+  ).categories?.["Health & Wellness"]?.MediCare?.sections || {};
+for (const pack of Object.values(medicareSections)) {
+  const variants = pack?.variants;
+  if (!variants) continue;
+  for (const [key, value] of Object.entries(variants)) {
+    if (
+      key.startsWith("MediCare") &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      medicareVariants.set(key, value as Record<string, unknown>);
+    }
+  }
+}
+
+/** Local MediCare theme. The API bundle category may not list it yet. */
+const localHealthTemplateIds: string[] = (
+  (
+    categoryContentJson as {
+      categories?: { "Health & Wellness"?: { templates?: string[] } };
+    }
+  ).categories?.["Health & Wellness"]?.templates ?? []
+).filter((id): id is string => typeof id === "string" && id.length > 0);
+
 export const PLUMBING_TEMPLATE_ID = "template-plumbing-1";
 const isEmptyCoolFixValue = (value: unknown) => {
   if (value == null || value === "") return true;
@@ -524,6 +599,35 @@ export const withHairAtelierContent = (
     );
   if (!overlap) return { ...base };
   return mergeCoolFixContent(base, stored);
+};
+
+/** MediCare canvas content lives in categoryContent.json. Empty drafts fall back to it. */
+export const withMediCareContent = (
+  variant: string,
+  stored: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined => {
+  if (!variant.startsWith("MediCare")) return stored;
+  const base = medicareVariants.get(variant);
+  if (!base) return stored;
+  const overlap =
+    stored &&
+    Object.keys(base).some(
+      (key) => key in stored && !isEmptyCoolFixValue(stored[key]),
+    );
+  const merged = !overlap ? { ...base } : mergeCoolFixContent(base, stored);
+  const fieldAllowlist: Record<string, string[]> = {
+    MediCarePageBanner1: ["image", "bgImage", "phone", "title", "breadcrumbs", "pages"],
+    MediCareFaq1: ["badge", "heading", "description", "image", "contactBox", "list"],
+    MediCareContactPage1: ["badge", "heading", "description", "infoCards", "form", "map"],
+    MediCareBookAppointment1: ["badge", "heading", "description", "formTitle", "submitLabel", "image", "departments", "timeSlots", "list"],
+  };
+  const allowed = fieldAllowlist[variant];
+  if (!allowed) return merged;
+  const next: Record<string, unknown> = {};
+  for (const key of allowed) {
+    if (key in merged && !isEmptyCoolFixValue(merged[key])) next[key] = merged[key];
+  }
+  return next;
 };
 
 export const COOLFIX_TEMPLATE_ID = "template-coolfix-1";
@@ -767,6 +871,14 @@ export const getTemplatesForCategory = (
     categoryName === "beauty and personal care"
   ) {
     for (const id of localBeautyTemplateIds) {
+      if (!templateIds.includes(id)) templateIds.push(id);
+    }
+  }
+  if (
+    categoryName === "health & wellness" ||
+    categoryName === "health and wellness"
+  ) {
+    for (const id of localHealthTemplateIds) {
       if (!templateIds.includes(id)) templateIds.push(id);
     }
   }
@@ -1165,6 +1277,10 @@ const mergeCategoryData = (
         ? hairAtelierVariants.get(variant)
         : undefined;
       if (hairAtelier) return [variant, hairAtelier as SectionData];
+      const medicare = variant.startsWith("MediCare")
+        ? medicareVariants.get(variant)
+        : undefined;
+      if (medicare) return [variant, medicare as SectionData];
 
       const merged = sanitizeSectionListFields(
         {
@@ -2265,7 +2381,8 @@ const isDedicatedThemeVariant = (variant: string) =>
   variant.startsWith("Pet") ||
   variant.startsWith("CoolFix") ||
   variant.startsWith("Plumbing") ||
-  variant.startsWith("HairAtelier");
+  variant.startsWith("HairAtelier") ||
+  variant.startsWith("MediCare");
 
 /** Honor editor layout picks. Dedicated theme skins (Pet, CoolFix, Plumbing) stay locked. */
 export const resolveTemplateSectionVariant = (
@@ -2591,6 +2708,14 @@ const PAGE_BODIES_WITH_OWN_BREADCRUMB = new Set<string>([
   "HairAtelierQuotePage1",
   "HairAtelierThankYouPage1",
   "HairAtelierPageBanners1",
+  "MediCareAboutUs1",
+  "MediCareServices1",
+  "MediCareTeam1",
+  "MediCareFaq1",
+  "MediCareContactPage1",
+  "MediCareBookAppointment1",
+  "MediCareThankYouPage1",
+  "MediCarePageBanner1",
 ]);
 
 export function pageBodyHasOwnBreadcrumb(pageBodyKey?: string) {
@@ -2848,6 +2973,10 @@ export const scopeTemplatePageBodies = (
 };
 
 function variantsToCsv(variants: Record<string, string>) {
+  const values = Object.values(variants);
+  if (values.length && values.every((key) => key.startsWith("MediCare"))) {
+    return values.join(",");
+  }
   const ordered = SECTION_ORDER_PREVIEW.map((s) => variants[s]).filter(
     Boolean,
   ) as string[];
@@ -2869,6 +2998,13 @@ function pageVariantsFor(
   if (pageBodyType && pageBodyKey) {
     if (source.Topbar) next.Topbar = source.Topbar;
     if (source.Header) next.Header = source.Header;
+    if (
+      String(pageBodyKey || "").startsWith("MediCare") &&
+      source.PageBanner &&
+      pageBodyType !== "ThankYouPage"
+    ) {
+      next.PageBanner = source.PageBanner;
+    }
     if (!pageBodyHasOwnBreadcrumb(pageBodyKey)) {
       next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
     }
@@ -2916,6 +3052,15 @@ function pageVariantsFor(
     }
     if (pageBodyKey === "HairAtelierQuotePage1") {
       next.PageBanner = "HairAtelierPageBanners1";
+    }
+    if (String(pageBodyKey || "").startsWith("MediCare")) {
+      if (pageBodyType === "AboutPage") {
+        if (source.Mission) next.Mission = source.Mission;
+        if (source.WhyChooseUs) next.WhyChooseUs = source.WhyChooseUs;
+      }
+      if (pageBodyType === "AppointmentPage" && source.WorkingProcess) {
+        next.WorkingProcess = source.WorkingProcess;
+      }
     }
     if (pageBodyKey === "CoolFixServicePage1") {
       next.CTA = source.CTA || "CoolFixCTA1";
@@ -3103,6 +3248,15 @@ export const resolveLayoutPreview = (
       return {
         sectionType: variantKey.replace(/\d+$/, "") || variantKey,
         data: hairAtelier as SectionData,
+      };
+    }
+  }
+  if (variantKey.startsWith("MediCare")) {
+    const medicare = withMediCareContent(variantKey, undefined);
+    if (medicare) {
+      return {
+        sectionType: variantKey.replace(/\d+$/, "") || variantKey,
+        data: medicare as SectionData,
       };
     }
   }

@@ -17,7 +17,9 @@ import {
   isHiddenBlogsPage,
   isHiddenGalleryPage,
   isHiddenServicesPage,
+  isHiddenTeamsPage,
   isServiceOwnedSection,
+  isTeamOwnedSection,
 } from "./src/lib/navVisibility";
 import {
   buildSelectedConfig,
@@ -53,6 +55,7 @@ import {
   applyTopbarLayoutSkins,
   withCoolFixContent,
   withHairAtelierContent,
+  withMediCareContent,
   withCoolFixBreadcrumbBackground,
   isCoolFixTemplate,
   isStockBreadcrumbImage,
@@ -114,7 +117,7 @@ import {
   parsePropertyAmenities,
   serializePropertyAmenities,
 } from "./src/lib/propertyAmenities";
-import { SITE_THEME_GLOBAL_CSS, ensureThemeGoogleFontsLoaded } from "./src/lib/themeTokens";
+import { SITE_THEME_GLOBAL_CSS, ensureThemeGoogleFontsLoaded, withOriginalThemeColors } from "./src/lib/themeTokens";
 import {
   overlayManagerHomeFeed,
   syncHomeCardsIntoManagers,
@@ -333,11 +336,11 @@ const createPageSlug = (label: string) =>
 
 const normalizePageSlug = (value: string) => {
   const slug = createPageSlug(value);
-  if (slug === "service") return "services";
+  if (slug === "service" || slug === "our-services") return "services";
   if (slug === "event") return "events";
   if (slug === "property") return "properties";
   if (slug === "portfolios") return "portfolio";
-  if (slug === "team") return "teams";
+  if (slug === "team" || slug === "our-team") return "teams";
   if (slug === "about-us") return "about";
   if (slug === "contact-us") return "contact";
   return slug;
@@ -3239,11 +3242,24 @@ const stripHomeSectionsMissingFromTheme = (
     : [];
   if (!homeOrder.length) return sections;
   const allowed = new Set(homeOrder);
-  // Only strip known duplicate home teasers â€” never page-scoped sections.
+  const medicareHome = String(template.sectionVariants.Header || "").startsWith(
+    "MediCare",
+  );
+  // Only strip known duplicate home teasers — never page-scoped sections.
+  // MediCare home follows the saved template: a section removed in admin
+  // stays in the editor draft until its type or layout key is gone.
   const strippable = new Set(["LatestProject"]);
   let changed = false;
   const next = sections.filter((section) => {
-    if (section.page) return true;
+    const slug = normalizePageSlug(section.page || "");
+    if (slug && slug !== "home") return true;
+    if (medicareHome) {
+      if (!allowed.has(section.type) || !template.sectionVariants[section.type]) {
+        changed = true;
+        return false;
+      }
+      return true;
+    }
     if (!strippable.has(section.type)) return true;
     if (allowed.has(section.type)) return true;
     changed = true;
@@ -4130,7 +4146,12 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
             (typeof record.description === "string" && record.description) ||
             (typeof record.desc === "string" && record.desc) ||
             "",
-          content: typeof record.price === "string" ? record.price : "",
+          content:
+          typeof record.content === "string"
+            ? record.content
+            : typeof record.price === "string"
+              ? record.price
+              : "",
           image: image || "/bg1.jpg",
           alt: title,
           slug:
@@ -4141,9 +4162,11 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
           order: typeof record.order === "number" ? record.order : index + 1,
           active: record.active !== false,
           layout: "",
-          seoTitle: "",
-          seoDescription: "",
-          seoKeywords: "",
+          seoTitle: typeof record.seoTitle === "string" ? record.seoTitle : "",
+          seoDescription:
+            typeof record.seoDescription === "string" ? record.seoDescription : "",
+          seoKeywords:
+            typeof record.seoKeywords === "string" ? record.seoKeywords : "",
         };
       })
       .filter((item): item is ServiceItem => item !== null);
@@ -5426,7 +5449,70 @@ const addTeamPageSection = (sections: SectionItem[], category: string) => {
 };
 
 const readTeamItemsFromData = (data: SectionData): TeamItem[] => {
-  if (Array.isArray(data.productItems)) {
+  const listPeople = Array.isArray(data.list) ? data.list : [];
+  const fromList = listPeople
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null;
+      const record = item as Record<string, unknown>;
+      const title =
+        (typeof record.name === "string" && record.name) ||
+        (typeof record.title === "string" && record.title) ||
+        "";
+      if (!title.trim()) return null;
+      const rawImage = record.image;
+      const image =
+        typeof rawImage === "string"
+          ? rawImage
+          : rawImage &&
+              typeof rawImage === "object" &&
+              typeof (rawImage as { src?: unknown }).src === "string"
+            ? (rawImage as { src: string }).src
+            : "";
+      const href =
+        (typeof record.appointmentLink === "string" && record.appointmentLink) ||
+        (typeof record.href === "string" && record.href) ||
+        (typeof record.link === "string" && record.link) ||
+        "";
+      return {
+        id:
+          (typeof record.id === "string" && record.id) ||
+          (typeof record.id === "number" ? String(record.id) : "") ||
+          `team-${index + 1}`,
+        title,
+        category:
+          (typeof record.category === "string" && record.category.trim()) ||
+          "Team",
+        desc:
+          (typeof record.specialty === "string" && record.specialty) ||
+          (typeof record.role === "string" && record.role) ||
+          (typeof record.description === "string" && record.description) ||
+          (typeof record.desc === "string" && record.desc) ||
+          "",
+        content:
+          typeof record.content === "string" &&
+          record.content.trim() &&
+          !/^(\/|https?:|#)/.test(record.content.trim())
+            ? record.content
+            : "",
+        image: image || "/bg1.jpg",
+        alt: title,
+        slug:
+          (typeof record.slug === "string" && record.slug.trim()) ||
+          createPageSlug(title) ||
+          `team-${index + 1}`,
+        order: typeof record.order === "number" ? record.order : index + 1,
+        active: record.active !== false,
+        layout: "",
+        seoTitle: typeof record.seoTitle === "string" ? record.seoTitle : "",
+        seoDescription:
+          typeof record.seoDescription === "string" ? record.seoDescription : "",
+        seoKeywords:
+          typeof record.seoKeywords === "string" ? record.seoKeywords : "",
+      };
+    })
+    .filter((item): item is TeamItem => item !== null);
+
+  if (Array.isArray(data.productItems) && data.productItems.length > 0) {
     return data.productItems
       .map((item, index) => ({
         id:
@@ -5452,6 +5538,12 @@ const readTeamItemsFromData = (data: SectionData): TeamItem[] => {
           typeof item.seoKeywords === "string" ? item.seoKeywords : "",
       }))
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  if (fromList.length > 0) return fromList;
+
+  if (Array.isArray(data.productItems)) {
+    return [];
   }
 
   const members = Array.isArray(data.members) ? data.members : [];
@@ -5994,14 +6086,16 @@ const addCustomPageSectionsForLinks = (
 
     const template = getBuilderTemplate(templateId, category);
     const templatePage = getTemplatePages(template).find(
-      (page) => normalizePageSlug(page.id) === normalizedSlug,
+      (page) =>
+        normalizePageSlug(page.id) === normalizedSlug ||
+        normalizePageSlug(page.label) === normalizedSlug,
     );
     const dedicatedVariant = templatePage
       ? template.sectionVariants[templatePage.sectionType]
       : "";
     if (
       dedicatedVariant &&
-      /^(CoolFix|Pet|Plumbing)/.test(dedicatedVariant)
+      /^(CoolFix|Pet|Plumbing|HairAtelier|MediCare)/.test(dedicatedVariant)
     ) {
       return nextSections;
     }
@@ -8943,13 +9037,14 @@ function EditorLayoutPage() {
       initialSections={restoredSections || initialConfig!.sections}
       restoreFromDraft={restoreFromDraft}
       useRedesignPrefill={useRedesignPrefill}
-      templateVariables={
+      templateVariables={withOriginalThemeColors(
         siteId && hydratedSite?.templateVariables
           ? hydratedSite.templateVariables
           : draft?.templateVariables && Object.keys(draft.templateVariables).length
             ? draft.templateVariables
-            : templateVariables
-      }
+            : templateVariables,
+        getBuilderTemplate(templateId, category).variables,
+      )}
       initialSeo={siteId ? hydratedSite?.seo : draft?.seo}
       activeSiteId={siteId}
       category={category}
@@ -9828,6 +9923,24 @@ function EditorPage({
       return readServiceItemsFromData(data);
     };
 
+    const readHomeMediCareServices = (items: SectionItem[]) => {
+      const home = items.find(
+        (section) =>
+          section.variant === "MediCareServices1" ||
+          Boolean(section.data?.MediCareServices1),
+      );
+      if (!home) return [] as ServiceItem[];
+      const stored =
+        (home.data?.[home.variant] as SectionData | undefined) ??
+        (home.data?.MediCareServices1 as SectionData | undefined);
+      if (!stored) return [] as ServiceItem[];
+      const data = (withMediCareContent(
+        "MediCareServices1",
+        stored as Record<string, unknown>,
+      ) ?? stored) as SectionData;
+      return readServiceItemsFromData(data);
+    };
+
     const readHomePetServices = (items: SectionItem[]) => {
       const home = items.find(
         (section) =>
@@ -9862,16 +9975,24 @@ function EditorPage({
             section.variant,
             stored as Record<string, unknown>,
           ) ?? stored) as SectionData)
+        : variantName.startsWith("MediCare")
+        ? ((withMediCareContent(
+            section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
         : stored;
       const state = buildServicePageState(data);
       const homeServices = readHomePetServices(items);
       const hairServices = readHomeHairServices(items);
+      const medicareServices = readHomeMediCareServices(items);
       const services =
         state.services.length > 0
           ? state.services
           : hairServices.length > 0
             ? hairServices
-            : homeServices;
+            : medicareServices.length > 0
+              ? medicareServices
+              : homeServices;
       const listingLayout = section.variant?.startsWith("ServicePage-")
         ? section.variant
         : typeof data.layout === "string" &&
@@ -10060,6 +10181,77 @@ function EditorPage({
                   ...currentData,
                   list,
                   ...(nestedServices ? { services: nestedServices } : {}),
+                },
+              },
+            };
+          }
+          if (section.variant === "MediCareServices1") {
+            const variant = section.variant;
+            const storedData =
+              (section.data?.[variant] as SectionData | undefined) ??
+              ({} as SectionData);
+            const currentData = (withMediCareContent(
+              variant,
+              storedData as Record<string, unknown>,
+            ) ?? storedData) as SectionData;
+            const existing = Array.isArray(
+              (currentData as { list?: unknown }).list,
+            )
+              ? ((currentData as { list: unknown[] }).list)
+              : [];
+            const list = [...detail.services]
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((service, index) => {
+                const previous =
+                  existing.find(
+                    (item) =>
+                      item &&
+                      typeof item === "object" &&
+                      (String((item as { id?: unknown }).id ?? "") ===
+                        String(service.id) ||
+                        (item as { slug?: unknown }).slug === service.slug),
+                  ) || existing[index];
+                const previousRecord =
+                  previous && typeof previous === "object"
+                    ? (previous as Record<string, unknown>)
+                    : {};
+                const slug =
+                  service.slug?.trim() ||
+                  (typeof previousRecord.slug === "string" &&
+                    previousRecord.slug) ||
+                  createPageSlug(service.title) ||
+                  service.id;
+                const image =
+                  service.image && service.image !== "/bg1.jpg"
+                    ? service.image
+                    : typeof previousRecord.image === "string"
+                      ? previousRecord.image
+                      : "";
+                return {
+                  ...previousRecord,
+                  id: service.id,
+                  title: service.title,
+                  description: service.desc,
+                  category: service.category || "Service",
+                  slug,
+                  href: `/services/${slug}`,
+                  content: service.content || "",
+                  order: service.order ?? index + 1,
+                  active: service.active !== false,
+                  seoTitle: service.seoTitle || "",
+                  seoDescription: service.seoDescription || "",
+                  seoKeywords: service.seoKeywords || "",
+                  ...(image ? { image } : {}),
+                };
+              });
+            return {
+              ...section,
+              variant,
+              data: {
+                ...section.data,
+                [variant]: {
+                  ...currentData,
+                  list,
                 },
               },
             };
@@ -10498,14 +10690,41 @@ function EditorPage({
     const emitTeamState = (items: SectionItem[]) => {
       const section = findTeamSection(items);
       if (!section) return;
-      const data =
+      const stored =
         (section.data[section.variant] as SectionData | undefined) ??
         (section.data["TeamPage-1"] as SectionData | undefined) ??
         ({} as SectionData);
+      const variantName = String(section.variant || "");
+      const data = (
+        variantName.startsWith("MediCare")
+          ? withMediCareContent(section.variant, stored as Record<string, unknown>) ??
+            stored
+          : stored
+      ) as SectionData;
       const state = buildTeamPageState(data);
       const homeTeam = readHomePetTeam(items);
+      const medicareTeam = (() => {
+        const home = items.find(
+          (item) =>
+            item.variant === "MediCareTeam1" || Boolean(item.data?.MediCareTeam1),
+        );
+        if (!home) return [] as TeamItem[];
+        const homeStored =
+          (home.data?.[home.variant] as SectionData | undefined) ??
+          (home.data?.MediCareTeam1 as SectionData | undefined);
+        if (!homeStored) return [] as TeamItem[];
+        const filled = (withMediCareContent(
+          "MediCareTeam1",
+          homeStored as Record<string, unknown>,
+        ) ?? homeStored) as SectionData;
+        return readTeamItemsFromData(filled);
+      })();
       const teamMembers =
-        state.teamMembers.length > 0 ? state.teamMembers : homeTeam;
+        state.teamMembers.length > 0
+          ? state.teamMembers
+          : medicareTeam.length > 0
+            ? medicareTeam
+            : homeTeam;
       const listingLayout = section.variant?.startsWith("TeamPage-")
         ? section.variant
         : typeof data.layout === "string" && data.layout.startsWith("TeamPage-")
@@ -10562,6 +10781,76 @@ function EditorPage({
         const withSection = addTeamPageSection(current, category);
         const next = withSection.map((section) => {
           const teamPageSlug = normalizePageSlug(section.page || "");
+          if (section.variant === "MediCareTeam1") {
+            const variant = section.variant;
+            const storedData =
+              (section.data?.[variant] as SectionData | undefined) ??
+              ({} as SectionData);
+            const currentData = (withMediCareContent(
+              variant,
+              storedData as Record<string, unknown>,
+            ) ?? storedData) as SectionData;
+            const existing = Array.isArray(currentData.list) ? currentData.list : [];
+            const list = [...detail.teamMembers]
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((member, index) => {
+                const previous =
+                  existing.find(
+                    (item) =>
+                      item &&
+                      typeof item === "object" &&
+                      String((item as { id?: unknown }).id ?? "") === String(member.id),
+                  ) || existing[index];
+                const previousRecord =
+                  previous && typeof previous === "object"
+                    ? (previous as Record<string, unknown>)
+                    : {};
+                const image =
+                  member.image && member.image !== "/bg1.jpg"
+                    ? member.image
+                    : typeof previousRecord.image === "string"
+                      ? previousRecord.image
+                      : "";
+                const contentText =
+                  typeof member.content === "string" ? member.content.trim() : "";
+                const contentIsLink =
+                  /^(\/|https?:|#)/.test(contentText) && !contentText.includes("<");
+                return {
+                  ...previousRecord,
+                  id: member.id,
+                  name: member.title,
+                  specialty: member.desc || member.category,
+                  category: member.category || "Team",
+                  slug:
+                    member.slug ||
+                    (typeof previousRecord.slug === "string" && previousRecord.slug) ||
+                    createPageSlug(member.title),
+                  order: member.order ?? index + 1,
+                  active: member.active !== false,
+                  seoTitle: member.seoTitle || "",
+                  seoDescription: member.seoDescription || "",
+                  seoKeywords: member.seoKeywords || "",
+                  ...(contentText && !contentIsLink ? { content: contentText } : { content: "" }),
+                  appointmentLink: contentIsLink
+                    ? contentText
+                    : (typeof previousRecord.appointmentLink === "string" &&
+                        previousRecord.appointmentLink) ||
+                      "/book-appointment",
+                  ...(image ? { image } : {}),
+                };
+              });
+            return {
+              ...section,
+              variant,
+              data: {
+                ...section.data,
+                [variant]: {
+                  ...currentData,
+                  list,
+                },
+              },
+            };
+          }
           const isPetTeam = section.variant?.startsWith("Pet") === true;
           if (isPetTeam && section.variant) {
             const variant = section.variant;
@@ -12068,7 +12357,8 @@ function EditorPage({
     const servicesOff = isHiddenServicesPage(pageLinks);
     const blogsOff = isHiddenBlogsPage(pageLinks);
     const galleryOff = isHiddenGalleryPage(pageLinks);
-    if (!servicesOff && !blogsOff && !galleryOff) return;
+    const teamsOff = isHiddenTeamsPage(pageLinks);
+    if (!servicesOff && !blogsOff && !galleryOff && !teamsOff) return;
     const current = flattenPageLinks(pageLinks).find(
       (link) => normalizePageSlug(link.label) === normalizePageSlug(page),
     );
@@ -12094,10 +12384,18 @@ function EditorPage({
     const onGalleryPage =
       galleryOff &&
       (slug === "gallery" || isGalleryPageLink(current || { label: page }));
+    const onTeamPage =
+      teamsOff &&
+      (slug === "teams" ||
+        slug === "team" ||
+        slug === "our-team" ||
+        isTeamPageLink(current || { label: page }));
     if (servicesOff && masterDetailView?.master === "service") {
       setMasterDetailView(null);
     }
-    if (onServicePage || onBlogPage || onGalleryPage) setCurrentPage("Home");
+    if (onServicePage || onBlogPage || onGalleryPage || onTeamPage) {
+      setCurrentPage("Home");
+    }
   }, [masterDetailView, page, pageLinks, setCurrentPage]);
 
   const commitSections = (
@@ -18402,6 +18700,7 @@ function EditorPage({
   const servicesWebsiteOff = isHiddenServicesPage(pageLinks);
   const blogsWebsiteOff = isHiddenBlogsPage(pageLinks);
   const galleryWebsiteOff = isHiddenGalleryPage(pageLinks);
+  const teamsWebsiteOff = isHiddenTeamsPage(pageLinks);
   const viewingHiddenServicePage =
     servicesWebsiteOff &&
     (currentPageSlug === "services" ||
@@ -18421,12 +18720,29 @@ function EditorPage({
       currentPageLink?.kind === "blogIndex");
   const viewingHiddenGalleryPage =
     galleryWebsiteOff && currentPageSlug === "gallery";
+  const viewingHiddenTeamPage =
+    teamsWebsiteOff &&
+    (currentPageSlug === "teams" ||
+      currentPageSlug === "team" ||
+      currentPageSlug === "our-team");
   const canvasPageSlug =
-    viewingHiddenServicePage || viewingHiddenBlogPage || viewingHiddenGalleryPage
+    viewingHiddenServicePage ||
+    viewingHiddenBlogPage ||
+    viewingHiddenGalleryPage ||
+    viewingHiddenTeamPage
       ? "home"
       : currentPageSlug;
+  const themePageForCanvas = getTemplatePages(editorTemplate).find(
+    (item) => normalizePageSlug(item.id) === canvasPageSlug,
+  );
+  const dedicatedCanvasVariant = themePageForCanvas
+    ? editorTemplate.sectionVariants?.[themePageForCanvas.sectionType] || ""
+    : "";
+  const hideGeneratedPageScaffold =
+    /^(MediCare|HairAtelier|CoolFix|Pet|Plumbing)/.test(dedicatedCanvasVariant);
   const petTheme = editorTemplate?.sectionVariants?.Header === "PetHeader1";
   const coolFixTheme = editorTemplate?.sectionVariants?.Header === "CoolFixHeader1";
+  const mediCareTheme = editorTemplate?.sectionVariants?.Header === "MediCareHeader1";
   const countriesServeSection = petTheme
     ? null
     : findEnabledCountriesServeSection(syncedSections);
@@ -18456,6 +18772,23 @@ function EditorPage({
       if (servicesWebsiteOff && isServiceOwnedSection(section)) return false;
       if (blogsWebsiteOff && isBlogOwnedSection(section)) return false;
       if (galleryWebsiteOff && isGalleryOwnedSection(section)) return false;
+      if (teamsWebsiteOff && isTeamOwnedSection(section)) return false;
+      if (hideGeneratedPageScaffold) {
+        const sectionId = section.id || "";
+        if (/^CustomPage/i.test(sectionId)) return false;
+        if (
+          section.type === "Breadcrumb" &&
+          !/^(MediCare|HairAtelier|CoolFix|Pet|Plumbing)/.test(section.variant || "")
+        ) {
+          return false;
+        }
+        if (
+          section.type === "About" &&
+          /^AboutPage-\d/.test(section.variant || "")
+        ) {
+          return false;
+        }
+      }
       return true;
     }),
     editorTemplate,
@@ -19006,7 +19339,7 @@ function EditorPage({
     <main
       data-editor-live-surface
       data-site-theme-root
-      className={`editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere] ${coolFixTheme ? "coolfix-theme" : ""}`}
+      className={`editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere] ${coolFixTheme ? "coolfix-theme" : ""} ${mediCareTheme ? "medicare-theme" : ""}`}
       style={
         {
           ...templateVariables,
@@ -19095,9 +19428,12 @@ function EditorPage({
           section.data?.[defaultVariant];
 
         const storedVariantData = isRecord(variantData) ? variantData : undefined;
-        const filledVariantData = withHairAtelierContent(
+        const filledVariantData = withMediCareContent(
           renderVariant,
-          withCoolFixContent(renderVariant, storedVariantData),
+          withHairAtelierContent(
+            renderVariant,
+            withCoolFixContent(renderVariant, storedVariantData),
+          ),
         );
         const rawVariantData = isRecord(filledVariantData)
           ? filledVariantData

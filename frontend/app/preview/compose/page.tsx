@@ -1159,7 +1159,20 @@ function ComposeInner() {
     </main>
   );
 
-  if (!showNav) return body;
+  if (!showNav) {
+    const embeddedLabel = searchParams.get("title")?.trim() || "";
+    const embeddedPageId = searchParams.get("page")?.trim() || "";
+    const embeddedCurrentPage =
+      embeddedLabel ||
+      (embeddedPageId && embeddedPageId.toLowerCase() !== "home"
+        ? embeddedPageId
+        : "Home");
+    return (
+      <PreviewProvider initialCurrentPage={embeddedCurrentPage}>
+        {body}
+      </PreviewProvider>
+    );
+  }
 
   return (
     <PreviewProvider
