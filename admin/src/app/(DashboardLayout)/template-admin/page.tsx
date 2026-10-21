@@ -489,14 +489,37 @@ function fallbackPageLayouts(sectionType: string): LayoutRow[] {
   });
 }
 
+/** Home components reused as the inner-page body. Layout.key stays the registry key. */
+const SHARED_PAGE_LAYOUTS: Record<string, { sectionType: string; name: string }> = {
+  MediCareAboutUs1: { sectionType: "AboutPage", name: "Health About Page" },
+  MediCareServices1: { sectionType: "ServicePage", name: "Health Services Page" },
+  MediCareTeam1: { sectionType: "TeamPage", name: "Health Team Page" },
+  MediCareFaq1: { sectionType: "FaqPage", name: "Health FAQ Page" },
+};
+
+function sharedPageLayoutKeys(sectionType: string) {
+  return new Set(
+    Object.entries(SHARED_PAGE_LAYOUTS)
+      .filter(([, row]) => row.sectionType === sectionType)
+      .map(([key]) => key),
+  );
+}
+
 function uniqueSectionLayouts(
   sectionType: string,
   rows: LayoutRow[],
 ): LayoutRow[] {
   const prefix = `${sectionType}-`;
+  const sharedKeys = sharedPageLayoutKeys(sectionType);
   const byKey = new Map<string, LayoutRow>();
   for (const row of rows) {
-    if (row.sectionType !== sectionType && !row.key.startsWith(prefix)) continue;
+    if (
+      row.sectionType !== sectionType &&
+      !row.key.startsWith(prefix) &&
+      !sharedKeys.has(row.key)
+    ) {
+      continue;
+    }
     if (!byKey.has(row.key)) {
       byKey.set(row.key, {
         ...row,
@@ -519,7 +542,14 @@ function preferredLayoutKey(
   options: LayoutRow[],
   coolFix = false,
   hair = false,
+  medicare = false,
 ) {
+  if (medicare) {
+    const medicareRow = options.find((row) =>
+      String(row.key || "").startsWith("MediCare"),
+    );
+    if (medicareRow) return medicareRow.key;
+  }
   if (hair) {
     const hairRow = options.find((row) =>
       String(row.key || "").startsWith("HairAtelier"),
@@ -553,6 +583,16 @@ function isCoolFixBuilder(data: {
   return (
     data.key === "template-coolfix-1" ||
     String(data.sectionVariants?.Header || "").startsWith("CoolFix")
+  );
+}
+
+function isMediCareBuilder(data: {
+  key?: string;
+  sectionVariants?: Record<string, string>;
+}) {
+  return (
+    data.key === "template-medicare-1" ||
+    String(data.sectionVariants?.Header || "").startsWith("MediCare")
   );
 }
 
@@ -668,10 +708,18 @@ const TemplatesPage = () => {
   const [builderDirty, setBuilderDirty] = useState(false);
   const builderSnapshotRef = useRef("");
 
-  const categoriesForTemplate = (templateKey: string) =>
-    categoryContents
-      .filter((c) => (c.templateKeys || []).includes(templateKey))
-      .map((c) => c.categoryName);
+  const categoriesForTemplate = (templateKey: string) => {
+    const seen = new Set<string>();
+    const names: string[] = [];
+    for (const row of categoryContents) {
+      if (!(row.templateKeys || []).includes(templateKey)) continue;
+      const name = String(row.categoryName || "").trim();
+      if (!name || seen.has(name)) continue;
+      seen.add(name);
+      names.push(name);
+    }
+    return names;
+  };
 
   const fetchAllData = async () => {
     setIsLoading(true);
@@ -734,6 +782,10 @@ const TemplatesPage = () => {
       add(layout.sectionType, layout);
       const fromKey = layout.key.replace(/-\d+$/, "");
       if (fromKey && fromKey !== layout.sectionType) add(fromKey, layout);
+      const shared = SHARED_PAGE_LAYOUTS[layout.key];
+      if (shared) {
+        add(shared.sectionType, { ...layout, name: shared.name });
+      }
     }
     for (const key of Object.keys(groups)) {
       groups[key].sort((a, b) => a.key.localeCompare(b.key));
@@ -791,19 +843,32 @@ const TemplatesPage = () => {
 
   const categoryAddChoices = useMemo(() => {
     const categoryName = (builderData.categories[0] || "").trim().toLowerCase();
-    const contentRow = categoryContents.find(
-      (row) => row.categoryName.trim().toLowerCase() === categoryName,
+    const contentSlugs = categoryContents
+      .filter((row) => row.categoryName.trim().toLowerCase() === categoryName)
+      .map((row) => row.categorySlug.trim().toLowerCase())
+      .filter(Boolean);
+    const adminSlugs = adminCategories
+      .map((row) => ({
+        name: String(row.name || "").trim().toLowerCase(),
+        slug: String(row.slug || "").trim().toLowerCase(),
+      }))
+      .filter((row) => row.name === categoryName && row.slug)
+      .map((row) => row.slug);
+    const fallbackSlug = categoryName
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const candidateSlugs = Array.from(
+      new Set([...contentSlugs, ...adminSlugs, fallbackSlug].filter(Boolean)),
     );
-    const adminRow = adminCategories.find(
-      (row) => String(row.name || "").trim().toLowerCase() === categoryName,
-    );
-    const categorySlug = (
-      contentRow?.categorySlug ||
-      adminRow?.slug ||
-      categoryName.replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
-    )
-      .trim()
-      .toLowerCase();
+    const layoutsForSlug = (slug: string) =>
+      layouts.filter(
+        (layout) => (layout.categorySlug || "").trim().toLowerCase() === slug,
+      );
+    const categorySlug =
+      candidateSlugs.find((slug) => layoutsForSlug(slug).length > 0) ||
+      candidateSlugs[0] ||
+      "";
     if (!categorySlug) return [];
 
     const byKey = new Map<
@@ -1088,6 +1153,21 @@ const TemplatesPage = () => {
         ) {
           variants.Breadcrumb = "Breadcrumb-1";
         }
+        if (
+          template.key === "template-medicare-1" ||
+          String(variants.Header || "").startsWith("MediCare")
+        ) {
+          for (const [layoutKey, shared] of Object.entries(SHARED_PAGE_LAYOUTS)) {
+            const current = variants[shared.sectionType];
+            if (
+              !current ||
+              current === `${shared.sectionType}-5` ||
+              current === `${shared.sectionType}-6`
+            ) {
+              variants[shared.sectionType] = layoutKey;
+            }
+          }
+        }
         return variants;
       })(),
       homeSectionOrder: mergeHomeSectionOrder(
@@ -1306,6 +1386,7 @@ const TemplatesPage = () => {
         options,
         isCoolFixBuilder(builderData),
         hairPage,
+        isMediCareBuilder(builderData),
       );
       if (next) patch[sectionType] = next;
     }
@@ -1507,7 +1588,13 @@ const TemplatesPage = () => {
     setBuilderData((prev) => {
       const next = { ...prev.sectionVariants };
       delete next[sectionType];
-      return { ...prev, sectionVariants: next };
+      return {
+        ...prev,
+        sectionVariants: next,
+        homeSectionOrder: (prev.homeSectionOrder || []).filter(
+          (type) => type !== sectionType,
+        ),
+      };
     });
     setPinnedSectionTypes((prev) => prev.filter((type) => type !== sectionType));
     setBuilderFocusKey(null);
@@ -1763,6 +1850,7 @@ const TemplatesPage = () => {
               String(builderData.sectionVariants.Header || "").startsWith(
                 "HairAtelier",
               ),
+            isMediCareBuilder(builderData),
           ));
     if (!pageLayout) return null;
 
@@ -1778,7 +1866,8 @@ const TemplatesPage = () => {
     );
     if (!url) return null;
     const title = encodeURIComponent(page.label || page.id);
-    return `${url}&title=${title}&${tick}`;
+    const pageId = encodeURIComponent(page.id || "");
+    return `${url}&page=${pageId}&title=${title}&${tick}`;
   })();
 
   const fullPagePreviewUrl = fullPageTemplate
