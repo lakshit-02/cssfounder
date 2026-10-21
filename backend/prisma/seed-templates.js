@@ -114,20 +114,41 @@ async function main() {
   console.log('✓ SharedContent (common)');
 
   for (const [categoryName, pack] of Object.entries(categories)) {
-    const categorySlug = slugifyName(categoryName);
+    const legacySlug = slugifyName(categoryName);
+    const categorySlug = String(pack.slug || '').trim() || legacySlug;
+    const templateKeys = Array.isArray(pack.templates) ? pack.templates : [];
+    const sections =
+      pack.sections && Object.keys(pack.sections).length ? pack.sections : null;
+
+    if (categorySlug !== legacySlug) {
+      const legacy = await prisma.categoryContent.findUnique({
+        where: { categorySlug: legacySlug },
+      });
+      const legacyKeys = Array.isArray(legacy?.templateKeys) ? legacy.templateKeys : [];
+      const owned = new Set(templateKeys);
+      const kept = legacyKeys.filter((key) => !owned.has(key));
+      if (legacy && kept.length !== legacyKeys.length) {
+        await prisma.categoryContent.update({
+          where: { categorySlug: legacySlug },
+          data: { templateKeys: kept },
+        });
+        console.log(`✓ Moved template links off legacy slug ${legacySlug}`);
+      }
+    }
+
     const row = await prisma.categoryContent.upsert({
       where: { categorySlug },
       create: {
         categorySlug,
         categoryName,
-        templateKeys: pack.templates || [],
-        sections: pack.sections || {},
+        templateKeys,
+        sections: sections || {},
         status: 'Active',
       },
       update: {
         categoryName,
-        templateKeys: pack.templates || [],
-        sections: pack.sections || {},
+        templateKeys,
+        ...(sections ? { sections } : {}),
         status: 'Active',
       },
     });

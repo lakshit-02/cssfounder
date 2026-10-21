@@ -24,6 +24,8 @@
     "db:seed:industry-layouts": "node prisma/seed-industry-layouts.js",
     "db:seed:beauty-layouts": "node prisma/seed-beauty-layouts.js",
     "db:seed:beauty-template": "node prisma/seed-beauty-template.js",
+    "db:seed:health-layouts": "node prisma/seed-health-layouts.js",
+    "db:seed:health-template": "node prisma/seed-health-template.js",
     "db:seed:templates": "node prisma/seed-templates.js",
     "db:seed:home-templates": "node prisma/seed-home-templates-for-categories.js"
   },

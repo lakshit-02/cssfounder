@@ -47,6 +47,14 @@ const categories = [
     description: 'Salon and beauty websites',
     status: 'Active',
   },
+  {
+    order: 6,
+    name: 'Health & Wellness',
+    slug: 'health-and-wellness',
+    icon: 'lucide-heart-pulse',
+    description: 'Clinic and healthcare websites',
+    status: 'Active',
+  },
 ];
 
 async function main() {
