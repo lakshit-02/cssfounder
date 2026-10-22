@@ -55,6 +55,14 @@ const categories = [
     description: 'Clinic and healthcare websites',
     status: 'Active',
   },
+  {
+    order: 7,
+    name: 'Automotive',
+    slug: 'automotive',
+    icon: 'lucide-car',
+    description: 'Luxury car rental websites',
+    status: 'Active',
+  },
 ];
 
 async function main() {
