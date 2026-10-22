@@ -95,6 +95,7 @@ type PortfolioManagerProps = {
   onClose: () => void;
   siteId?: string;
   preserveNavigation?: boolean;
+  cardOnly?: boolean;
 };
 
 const createPortfolioSlug = (label: string) =>
@@ -344,6 +345,7 @@ export default function PortfolioManager({
   onClose,
   siteId = "draft",
   preserveNavigation = false,
+  cardOnly = false,
 }: PortfolioManagerProps) {
   const { siteSeoConfig, setSiteSeoConfig, pageLinks, setPageLinks } =
     usePreview();
@@ -717,7 +719,35 @@ export default function PortfolioManager({
     setEditingId(null);
     setShowContentEditor(false);
     setDraft(emptyPortfolioItem());
+    if (cardOnly) onClose();
   }
+
+  useEffect(() => {
+    if (!ready || typeof window === "undefined") return;
+    const storageKey = "ai-builder-open-manager-item:Portfolio";
+    const raw = window.sessionStorage.getItem(storageKey);
+    if (!raw) return;
+    if (pageState.portfolioItems.length === 0) return;
+    window.sessionStorage.removeItem(storageKey);
+    try {
+      const payload = JSON.parse(raw) as {
+        slug?: string;
+        id?: string;
+        title?: string;
+      };
+      const found = pageState.portfolioItems.find((item) => {
+        if (payload.id && item.id === payload.id) return true;
+        if (payload.slug && item.slug === payload.slug) return true;
+        if (payload.title && item.title === payload.title) return true;
+        return false;
+      });
+      if (found) openEdit(found);
+      else if (cardOnly) onClose();
+    } catch {
+      if (cardOnly) onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, pageState.portfolioItems, cardOnly]);
 
   const addCategory = () => {
     const value = categoryName.trim();
@@ -787,11 +817,18 @@ export default function PortfolioManager({
       location: draft.location?.trim() || "",
     };
 
-    const portfolioItems = editingId
-      ? pageState.portfolioItems.map((item) =>
-          item.id === editingId ? nextItem : item,
-        )
-      : [...pageState.portfolioItems, nextItem];
+    const withoutEdited = pageState.portfolioItems.filter(
+      (item) => item.id !== nextItem.id,
+    );
+    const ranked = [...withoutEdited].sort(
+      (left, right) => (left.order ?? 0) - (right.order ?? 0),
+    );
+    const insertAt = Math.min(ranked.length, Math.max(0, nextItem.order - 1));
+    ranked.splice(insertAt, 0, nextItem);
+    const portfolioItems = ranked.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
 
     persist({ ...pageState, portfolioItems });
     closeComposer();
@@ -825,7 +862,7 @@ export default function PortfolioManager({
 
   const content = (
     <div
-      className="fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800"
+      className={`fixed inset-0 z-[10050] flex min-h-0 flex-col bg-white text-slate-800 ${cardOnly ? "hidden" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="portfolio-manager-title"

@@ -16,8 +16,10 @@ import {
   isGalleryOwnedSection,
   isHiddenBlogsPage,
   isHiddenGalleryPage,
+  isHiddenPortfolioPage,
   isHiddenServicesPage,
   isHiddenTeamsPage,
+  isPortfolioOwnedSection,
   isServiceOwnedSection,
   isTeamOwnedSection,
 } from "./src/lib/navVisibility";
@@ -56,6 +58,7 @@ import {
   withCoolFixContent,
   withHairAtelierContent,
   withMediCareContent,
+  withRydoraContent,
   withCoolFixBreadcrumbBackground,
   isCoolFixTemplate,
   isStockBreadcrumbImage,
@@ -80,6 +83,8 @@ import EditableSection from "./src/components/builder/EditableSection";
 import EditSectionModal from "./src/components/builder/EditSectionModal";
 import { usePreview } from "./src/components/context/PreviewContext";
 import BlogIndexList from "./src/components/sections/blog/BlogIndexList";
+import BlogDetailArticle from "./src/components/sections/blog/BlogDetailArticle";
+import { blogs as rydoraDefaultBlogs } from "./src/components/sections/blog/rydoraBlogs";
 import { normalizeBlogIndexLayout } from "./src/lib/blogLayouts";
 import ServiceDetailArticle from "./src/components/sections/service/ServiceDetailArticle";
 import RelatedCountryListingsSlider from "./src/components/sections/countriesserve/RelatedCountryListingsSlider";
@@ -271,6 +276,7 @@ const getEditorSectionDisplayLabel = (section: {
   variant?: string;
   data?: SectionItem["data"];
 }) => {
+  if (section.variant === "RydoraFleet1") return "Portfolio";
   if (section.variant === "PetAboutPage1") return "About";
   if (section.variant === "HairAtelierAboutPage1") return "About";
   if (section.variant === "HairAtelierServicePage1") return "Services";
@@ -822,6 +828,60 @@ const hairBlogLinksFromPosts = (posts: unknown[]): EditorPageLink[] =>
     ];
   });
 
+const findRydoraBlogSection = (sections: SectionItem[]) =>
+  sections.find(
+    (section) =>
+      section.variant === "RydoraBlogNews1" ||
+      Boolean(section.data?.RydoraBlogNews1),
+  );
+
+const readRydoraBlogPosts = (section: SectionItem) => {
+  const stored =
+    (section.data?.RydoraBlogNews1 as Record<string, unknown> | undefined) ??
+    (section.data?.[section.variant] as Record<string, unknown> | undefined);
+  const data = (withRydoraContent("RydoraBlogNews1", stored) ??
+    stored ??
+    {}) as Record<string, unknown>;
+  const posts = Array.isArray(data.posts) ? data.posts : [];
+  const usable = posts.some(
+    (post) =>
+      post &&
+      typeof post === "object" &&
+      typeof (post as { title?: unknown }).title === "string" &&
+      String((post as { title?: string }).title).trim(),
+  );
+  return usable ? posts : rydoraDefaultBlogs;
+};
+
+const rydoraBlogLinksFromPosts = (posts: unknown[]): EditorPageLink[] =>
+  posts.flatMap((item, index) => {
+    if (!item || typeof item !== "object") return [];
+    const record = item as Record<string, unknown>;
+    const title = typeof record.title === "string" ? record.title.trim() : "";
+    if (!title) return [];
+    const slug =
+      (typeof record.slug === "string" && record.slug.trim()) ||
+      createPageSlug(title) ||
+      `post-${index + 1}`;
+    return [
+      {
+        label: title,
+        href: `#page-blog-${slug}`,
+        kind: "blog" as const,
+        slug,
+        image: typeof record.image === "string" ? record.image : "",
+        shortDescription:
+          typeof record.description === "string" ? record.description : "",
+        longDescription: typeof record.intro === "string" ? record.intro : "",
+        category: typeof record.category === "string" ? record.category : "",
+        createdAt: typeof record.date === "string" ? record.date : "",
+        order: index + 1,
+        hidden: record.hidden === true,
+        layout: "BlogPage-1",
+      },
+    ];
+  });
+
 const resolveEditorPageLabel = (
   raw: string | null | undefined,
   pageLinks: EditorPageLink[],
@@ -834,7 +894,18 @@ const resolveEditorPageLabel = (
     const hrefSlug = getMultiPageSlugFromHref(link.href || "");
     return hrefSlug === slug || normalizePageSlug(link.label) === slug;
   });
-  return match?.label || value;
+  if (match?.label) return match.label;
+  if (slug === "cars" || slug === "car") {
+    const portfolio = flattenPageLinks(pageLinks).find((link) => {
+      const hrefSlug = getMultiPageSlugFromHref(link.href || "");
+      return (
+        hrefSlug === "portfolio" ||
+        normalizePageSlug(link.label) === "portfolio"
+      );
+    });
+    if (portfolio?.label) return portfolio.label;
+  }
+  return value;
 };
 
 const isEventsPageLink = (link: {
@@ -1119,6 +1190,14 @@ const buildTemplateMultiPageMenu = (
 ): EditorPageLink[] => {
   const template = getBuilderTemplate(templateId, category);
   const definitions = getTemplatePages(template);
+  if (String(template.sectionVariants?.Header || "").startsWith("Rydora")) {
+    currentLinks = currentLinks.filter((link) => {
+      const slug =
+        getMultiPageSlugFromHref(link.href || "") ||
+        normalizePageSlug(link.label || "");
+      return slug !== "cars" && slug !== "car";
+    });
+  }
   const flattenedLinks = flattenPageLinks(currentLinks);
   const navigationLinks = flattenedLinks.filter(
     (link) => link.kind !== "blog",
@@ -1945,6 +2024,9 @@ const alignTemplatePageSections = (
 
     const pageSectionType = pageDefinition.sectionType;
     const targetVariant = template.sectionVariants[pageSectionType];
+    if (String(targetVariant || section.variant || "").startsWith("Rydora")) {
+      return [section];
+    }
     const freshSection = createFreshPageSection(pageSectionType);
     if (!targetVariant || !freshSection) return [section];
 
@@ -2853,6 +2935,55 @@ function hairPageBannerForTemplatePage(
   };
 }
 
+const isRydoraCarsLink = (href: string, label: string) => {
+  const path = href.trim().toLowerCase().replace(/\/+$/, "");
+  const slug =
+    getMultiPageSlugFromHref(href) ||
+    normalizePageSlug(path.replace(/^\//, "")) ||
+    normalizePageSlug(label);
+  return slug === "cars" || slug === "car" || path === "/cars" || path === "/car";
+};
+
+const rewriteRydoraCarsLinks = <T extends { label?: string; href?: string; children?: T[] }>(
+  links: T[],
+): T[] => {
+  let seenPortfolio = false;
+  return links.flatMap((link) => {
+    const children = Array.isArray(link.children)
+      ? rewriteRydoraCarsLinks(link.children)
+      : link.children;
+    const href = String(link.href || "");
+    const next = isRydoraCarsLink(href, String(link.label || ""))
+      ? {
+          ...link,
+          label: "Portfolio",
+          href: href.trim().toLowerCase().startsWith("#page-")
+            ? "#page-portfolio"
+            : "/portfolio",
+          children,
+        }
+      : { ...link, children };
+    if (isPortfolioPageLink(next)) {
+      if (seenPortfolio) return [];
+      seenPortfolio = true;
+    }
+    return [next];
+  });
+};
+
+const remapRydoraCarsSections = (sections: SectionItem[]): SectionItem[] =>
+  sections.map((section) => {
+    const page = normalizePageSlug(section.page || "");
+    if (page !== "cars" && page !== "car") return section;
+    const isFleetBody =
+      section.type === "Fleet" || section.variant === "RydoraFleet1";
+    return {
+      ...section,
+      page: "portfolio",
+      ...(isFleetBody ? { type: "PortfolioPage", id: "PortfolioPage" } : {}),
+    };
+  });
+
 /** CoolFix inner pages must keep their own component, even if a draft stored About there. */
 const ensureDedicatedThemePageBodies = (
   sections: SectionItem[],
@@ -2870,6 +3001,124 @@ const ensureDedicatedThemePageBodies = (
 
   let next = sections;
   let changed = false;
+
+  if (String(template.sectionVariants?.Header || "").startsWith("Rydora")) {
+    const remapped = remapRydoraCarsSections(next);
+    if (remapped.some((section, index) => section !== next[index])) {
+      next = remapped;
+      changed = true;
+    }
+    next = next.map((section) => {
+      if (section.type !== "Header" && section.type !== "Footer") return section;
+      if (!section.data) return section;
+      let sectionChanged = false;
+      const nextData = Object.fromEntries(
+        Object.entries(section.data).map(([variant, variantData]) => {
+          if (!variantData || typeof variantData !== "object") {
+            return [variant, variantData];
+          }
+          const data = variantData as SectionData & {
+            quickLinks?: { list?: EditorPageLink[] };
+          };
+          let rowChanged = false;
+          let menu = data.menu;
+          let quickLinks = data.quickLinks;
+          if (Array.isArray(data.menu)) {
+            const rewritten = rewriteRydoraCarsLinks(data.menu as EditorPageLink[]);
+            if (JSON.stringify(rewritten) !== JSON.stringify(data.menu)) {
+              menu = rewritten;
+              rowChanged = true;
+            }
+          }
+          if (Array.isArray(data.quickLinks?.list)) {
+            const rewritten = rewriteRydoraCarsLinks(data.quickLinks.list);
+            if (JSON.stringify(rewritten) !== JSON.stringify(data.quickLinks.list)) {
+              quickLinks = { ...data.quickLinks, list: rewritten };
+              rowChanged = true;
+            }
+          }
+          if (!rowChanged) return [variant, variantData];
+          sectionChanged = true;
+          return [variant, { ...data, menu, quickLinks }];
+        }),
+      ) as SectionItem["data"];
+      if (!sectionChanged) return section;
+      changed = true;
+      return { ...section, data: nextData };
+    });
+    const samePageBody = (left: string, right: string) =>
+      left === right ||
+      (left === "AboutPage" && right === "About") ||
+      (left === "About" && right === "AboutPage") ||
+      (left === "ServicePage" && right === "Service") ||
+      (left === "Service" && right === "ServicePage") ||
+      (left === "GalleryPage" && right === "Gallery") ||
+      (left === "Gallery" && right === "GalleryPage") ||
+      (left === "ContactPage" && right === "Contact") ||
+      (left === "Contact" && right === "ContactPage") ||
+      (left === "PortfolioPage" && right === "Fleet") ||
+      (left === "Fleet" && right === "PortfolioPage");
+    getTemplatePages(template).forEach((pageDefinition) => {
+      const order = Array.isArray(pageDefinition.sectionOrder)
+        ? pageDefinition.sectionOrder
+        : [];
+      const slug = normalizePageSlug(pageDefinition.id);
+      for (const type of order) {
+        if (type === "Header" || type === "Footer" || type === "Topbar") continue;
+        const variant = template.sectionVariants[type];
+        if (!variant || !String(variant).startsWith("Rydora")) continue;
+        const exists = next.some((section) => {
+          if (normalizePageSlug(section.page || "") !== slug) return false;
+          if (section.variant === variant) return true;
+          return samePageBody(section.type, type);
+        });
+        if (exists) continue;
+        const body: SectionItem = {
+          id: `${type}-${pageDefinition.id}`,
+          page: pageDefinition.id,
+          type,
+          variant,
+          data: { [variant]: {} as SectionData },
+        };
+        const footerIndex = next.findIndex((section) => section.type === "Footer");
+        next =
+          footerIndex === -1
+            ? [...next, body]
+            : [...next.slice(0, footerIndex), body, ...next.slice(footerIndex)];
+        changed = true;
+      }
+    });
+    const seenVariant = new Set<string>();
+    const deduped = next.filter((section) => {
+      const variant = String(section.variant || "");
+      if (!variant.startsWith("Rydora")) return true;
+      const slug = normalizePageSlug(section.page || "") || "home";
+      const key = `${slug}::${variant}`;
+      if (seenVariant.has(key)) {
+        changed = true;
+        return false;
+      }
+      seenVariant.add(key);
+      return true;
+    });
+    next = deduped.filter((section) => {
+      const variant = String(section.variant || "");
+      if (variant.startsWith("Rydora")) return true;
+      const genericService =
+        section.type === "ServicePage" ||
+        section.id === "ServicePage" ||
+        variant.startsWith("ServicePage-") ||
+        section.type === "GalleryPage" ||
+        section.id === "GalleryPage" ||
+        variant.startsWith("GalleryPage-") ||
+        variant.startsWith("PortfolioPage-") ||
+        (section.type === "Breadcrumb" &&
+          normalizePageSlug(section.page || "") === "portfolio");
+      if (!genericService) return true;
+      changed = true;
+      return false;
+    });
+  }
 
   getTemplatePages(template).forEach((pageDefinition) => {
     const variant = template.sectionVariants[pageDefinition.sectionType];
@@ -3992,6 +4241,9 @@ const addAboutPageSection = (sections: SectionItem[], category: string) => {
 };
 
 const addGalleryPageSection = (sections: SectionItem[], category: string) => {
+  if (sections.some((section) => String(section.variant || "").startsWith("Rydora"))) {
+    return sections;
+  }
   if (
     sections.some(
       (section) => section.id === "GalleryPage" || section.type === "GalleryPage",
@@ -4051,6 +4303,9 @@ const addContactPageSection = (sections: SectionItem[], category: string) => {
 };
 
 const addServicePageSection = (sections: SectionItem[], category: string) => {
+  if (sections.some((section) => String(section.variant || "").startsWith("Rydora"))) {
+    return sections;
+  }
   if (
     sections.some(
       (section) =>
@@ -4145,6 +4400,7 @@ const readServiceItemsFromData = (data: SectionData): ServiceItem[] => {
           desc:
             (typeof record.description === "string" && record.description) ||
             (typeof record.desc === "string" && record.desc) ||
+            (typeof record.text === "string" && record.text) ||
             "",
           content:
           typeof record.content === "string"
@@ -4291,11 +4547,12 @@ const resolveManagerForSection = (
     return "Teams";
   }
   if (
-    id === "PortfolioPage" ||
-    type === "PortfolioPage" ||
-    type === "Cities" ||
-    (type === "Portfolio" &&
-      (page === "portfolio" || page === "projects" || page === "project"))
+    !String(section.variant || "").startsWith("Rydora") &&
+    (id === "PortfolioPage" ||
+      type === "PortfolioPage" ||
+      type === "Cities" ||
+      (type === "Portfolio" &&
+        (page === "portfolio" || page === "projects" || page === "project")))
   ) {
     return "Portfolio";
   }
@@ -5018,6 +5275,21 @@ const addPortfolioPageSection = (
   category: string,
   templateId?: string | null,
 ) => {
+  const template = getBuilderTemplate(templateId, category);
+  if (String(template.sectionVariants?.Header || "").startsWith("Rydora")) {
+    return remapRydoraCarsSections(sections).filter((section) => {
+      const variant = String(section.variant || "");
+      if (variant.startsWith("PortfolioPage-")) return false;
+      if (
+        section.type === "Breadcrumb" &&
+        normalizePageSlug(section.page || "") === "portfolio"
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }
+
   let next = sections;
   const pageSlug = resolveThemePortfolioNavLink(templateId, category).slug;
 
@@ -5147,6 +5419,66 @@ const addPortfolioPageSection = (
 };
 
 const readPortfolioItemsFromData = (data: SectionData): PortfolioItem[] => {
+  const fleetList = (data as SectionData & { list?: unknown[] }).list;
+  if (
+    Array.isArray(fleetList) &&
+    fleetList.some(
+      (item) =>
+        Boolean(item) &&
+        typeof item === "object" &&
+        ("name" in (item as Record<string, unknown>) ||
+          "seats" in (item as Record<string, unknown>)),
+    )
+  ) {
+    return fleetList
+      .map((item, index) => {
+        const record = item as Record<string, unknown>;
+        const title =
+          (typeof record.name === "string" && record.name) ||
+          (typeof record.title === "string" && record.title) ||
+          "";
+        const seats = typeof record.seats === "number" ? record.seats : undefined;
+        const transmission =
+          typeof record.transmission === "string" ? record.transmission : "";
+        const fuel = typeof record.fuel === "string" ? record.fuel : "";
+        const spec = [seats ? `${seats} Seats` : "", transmission, fuel]
+          .filter(Boolean)
+          .join(" | ");
+        return {
+          id:
+            (typeof record.id === "string" && record.id) ||
+            `card-${index}-${title || "portfolio"}`,
+          title,
+          category:
+            (typeof record.category === "string" && record.category) ||
+            transmission ||
+            "Cars",
+          desc:
+            (typeof record.desc === "string" && record.desc) ||
+            spec,
+          content: typeof record.content === "string" ? record.content : "",
+          image: (typeof record.image === "string" && record.image) || "/bg1.jpg",
+          alt: (typeof record.alt === "string" && record.alt) || title,
+          slug:
+            (typeof record.slug === "string" && record.slug.trim()) ||
+            createPageSlug(title) ||
+            `portfolio-${index + 1}`,
+          order: typeof record.order === "number" ? record.order : index + 1,
+          active: record.hidden !== true && record.active !== false,
+          featured: record.featured === true,
+          layout: typeof record.layout === "string" ? record.layout : "",
+          seoTitle: typeof record.seoTitle === "string" ? record.seoTitle : "",
+          seoDescription:
+            typeof record.seoDescription === "string" ? record.seoDescription : "",
+          seoKeywords:
+            typeof record.seoKeywords === "string" ? record.seoKeywords : "",
+          status: typeof record.status === "string" ? record.status : "",
+          location: typeof record.location === "string" ? record.location : "",
+        };
+      })
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
   const extra = data as SectionData & { projectItems?: unknown[] };
   const source = Array.isArray(data.productItems) && data.productItems.length
     ? data.productItems
@@ -5230,6 +5562,53 @@ const buildPortfolioPageState = (data: SectionData): PortfolioPageState => ({
       : undefined,
   portfolioItems: readPortfolioItemsFromData(data),
 });
+
+const applyRydoraFleetPortfolioState = (
+  current: SectionData,
+  state: PortfolioPageState,
+): SectionData => {
+  const existing = Array.isArray((current as { list?: unknown[] }).list)
+    ? ((current as { list?: Array<Record<string, unknown>> }).list || [])
+    : [];
+  const list = [...state.portfolioItems]
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((item, index) => {
+      const prev =
+        existing.find(
+          (entry) =>
+            (typeof entry.id === "string" && entry.id === item.id) ||
+            (typeof entry.name === "string" && entry.name === item.title),
+        ) || existing[index] || {};
+      return {
+        ...prev,
+        id: item.id,
+        name: item.title,
+        title: item.title,
+        image: item.image || (typeof prev.image === "string" ? prev.image : ""),
+        seats: typeof prev.seats === "number" ? prev.seats : 5,
+        transmission:
+          (typeof prev.transmission === "string" && prev.transmission) ||
+          "Automatic",
+        fuel: (typeof prev.fuel === "string" && prev.fuel) || "Petrol",
+        category: item.category || "Cars",
+        desc: item.desc || "",
+        content: item.content || "",
+        alt: item.alt || item.title,
+        slug: item.slug || "",
+        order: item.order ?? index + 1,
+        hidden: item.active === false,
+        active: item.active !== false,
+        featured: item.featured === true,
+        status: item.status || "",
+        location: item.location || "",
+        layout: item.layout || "",
+        seoTitle: item.seoTitle || "",
+        seoDescription: item.seoDescription || "",
+        seoKeywords: item.seoKeywords || "",
+      };
+    });
+  return { ...current, list };
+};
 
 const applyPortfolioPageStateToData = (
   current: SectionData,
@@ -7393,10 +7772,19 @@ const ensurePortfolioInHeaderMenu = (
         const data = variantData as SectionData;
         if (!Array.isArray(data.menu)) return [variant, variantData];
 
-        const hasPortfolio = flattenPageLinks(
-          data.menu as EditorPageLink[],
-        ).some(isPortfolioPageLink);
-        if (hasPortfolio) return [variant, variantData];
+        let menu = data.menu as EditorPageLink[];
+        if (String(variant).startsWith("Rydora")) {
+          const rewritten = rewriteRydoraCarsLinks(menu);
+          if (JSON.stringify(rewritten) !== JSON.stringify(menu)) {
+            menu = rewritten;
+            changed = true;
+          }
+        }
+
+        const hasPortfolio = flattenPageLinks(menu).some(isPortfolioPageLink);
+        if (hasPortfolio) {
+          return changed ? [variant, { ...data, menu }] : [variant, variantData];
+        }
 
         changed = true;
         return [
@@ -7404,7 +7792,7 @@ const ensurePortfolioInHeaderMenu = (
           {
             ...data,
             menu: [
-              ...(data.menu as EditorPageLink[]),
+              ...menu,
               {
                 label: nav.label,
                 href: nav.href,
@@ -9428,7 +9816,7 @@ function EditorPage({
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [editingSectionInitialTab, setEditingSectionInitialTab] = useState<string | undefined>();
   const [masterDetailView, setMasterDetailView] = useState<{
-    master: "service" | "event" | "portfolio" | "team" | "property" | "country";
+    master: "service" | "event" | "portfolio" | "team" | "property" | "country" | "blog";
     slug: string;
   } | null>(null);
   const [masterGroupFilter, setMasterGroupFilter] = useState<{
@@ -9478,7 +9866,8 @@ function EditorPage({
           master !== "portfolio" &&
           master !== "team" &&
           master !== "property" &&
-          master !== "country")
+          master !== "country" &&
+          master !== "blog")
       ) {
         return;
       }
@@ -9609,6 +9998,22 @@ function EditorPage({
             (link) => !existing.has(link.href) && !existing.has(link.slug || ""),
           );
           if (missing.length) return [...current, ...missing];
+        }
+        const rydoraSection = findRydoraBlogSection(sectionsRef.current);
+        if (rydoraSection) {
+          const existing = new Set(
+            flattenPageLinks(current)
+              .filter((link) => link.kind === "blog")
+              .flatMap((link) => [link.href, link.slug || ""])
+              .filter(Boolean),
+          );
+          const missing = rydoraBlogLinksFromPosts(
+            readRydoraBlogPosts(rydoraSection),
+          ).filter(
+            (link) => !existing.has(link.href) && !existing.has(link.slug || ""),
+          );
+          if (missing.length) return [...current, ...missing];
+          return current;
         }
         if (flattenPageLinks(current).some((link) => link.kind === "blog")) {
           return current;
@@ -9880,6 +10285,103 @@ function EditorPage({
   }, [pageLinks]);
 
   useEffect(() => {
+    const blogs = flattenPageLinks(pageLinks).filter(
+      (link) => link.kind === "blog",
+    );
+    if (!blogs.length || !findRydoraBlogSection(sectionsRef.current)) return;
+
+    const orderedBlogs = [...blogs].sort((left, right) => {
+      const leftOrder = Number(left.order);
+      const rightOrder = Number(right.order);
+      const leftRank =
+        Number.isFinite(leftOrder) && leftOrder > 0
+          ? leftOrder
+          : Number.MAX_SAFE_INTEGER;
+      const rightRank =
+        Number.isFinite(rightOrder) && rightOrder > 0
+          ? rightOrder
+          : Number.MAX_SAFE_INTEGER;
+      return leftRank - rightRank;
+    });
+
+    setSections((current) => {
+      let changed = false;
+      const next = current.map((section) => {
+        if (
+          section.variant !== "RydoraBlogNews1" &&
+          !section.data?.RydoraBlogNews1
+        ) {
+          return section;
+        }
+        const stored =
+          (section.data?.RydoraBlogNews1 as Record<string, unknown> | undefined) ??
+          (section.data?.[section.variant] as Record<string, unknown> | undefined);
+        const data = (withRydoraContent("RydoraBlogNews1", stored) ??
+          stored ??
+          {}) as Record<string, unknown>;
+        const sourcePosts = readRydoraBlogPosts({
+          ...section,
+          data: { ...section.data, RydoraBlogNews1: data },
+        });
+        const bySlug = new Map<string, Record<string, unknown>>();
+        sourcePosts.forEach((post) => {
+          if (!post || typeof post !== "object") return;
+          const record = post as Record<string, unknown>;
+          const slug = typeof record.slug === "string" ? record.slug : "";
+          if (slug) bySlug.set(slug, record);
+        });
+        const nextPosts = orderedBlogs.map((blog, index) => {
+          const slug = blogSlugFromLink(blog) || `post-${index + 1}`;
+          const existing = bySlug.get(slug) ?? {};
+          const longText =
+            typeof blog.longDescription === "string"
+              ? blog.longDescription.trim()
+              : "";
+          return {
+            ...existing,
+            slug,
+            title: blog.label,
+            description:
+              blog.shortDescription ??
+              (typeof existing.description === "string"
+                ? existing.description
+                : ""),
+            category:
+              blog.category ||
+              (typeof existing.category === "string" ? existing.category : ""),
+            date:
+              blog.createdAt ||
+              (typeof existing.date === "string" ? existing.date : ""),
+            image:
+              blog.image ||
+              (typeof existing.image === "string" ? existing.image : ""),
+            intro:
+              longText ||
+              (typeof existing.intro === "string" ? existing.intro : ""),
+            hidden: blog.hidden === true,
+          };
+        });
+        const currentPosts = Array.isArray(data.posts) ? data.posts : [];
+        if (JSON.stringify(currentPosts) === JSON.stringify(nextPosts)) {
+          return section;
+        }
+        changed = true;
+        return {
+          ...section,
+          data: {
+            ...section.data,
+            RydoraBlogNews1: {
+              ...data,
+              posts: nextPosts,
+            },
+          },
+        };
+      });
+      return changed ? next : current;
+    });
+  }, [pageLinks]);
+
+  useEffect(() => {
     const findServiceSection = (items: SectionItem[]) => {
       const matches = items.filter(
         (section) =>
@@ -9985,8 +10487,32 @@ function EditorPage({
       const homeServices = readHomePetServices(items);
       const hairServices = readHomeHairServices(items);
       const medicareServices = readHomeMediCareServices(items);
+      const rydoraSection = items.find(
+        (item) =>
+          item.variant === "RydoraServices1" || Boolean(item.data?.RydoraServices1),
+      );
+      const rydoraStored =
+        (rydoraSection?.data?.[rydoraSection.variant] as SectionData | undefined) ??
+        (rydoraSection?.data?.RydoraServices1 as SectionData | undefined);
+      const rydoraFilled = rydoraStored
+        ? ((withRydoraContent(
+            "RydoraServices1",
+            rydoraStored as Record<string, unknown>,
+          ) ?? rydoraStored) as SectionData & { productItems?: unknown; list?: unknown })
+        : undefined;
+      if (
+        rydoraFilled &&
+        Array.isArray(rydoraFilled.productItems) &&
+        rydoraFilled.productItems.length === 0 &&
+        Array.isArray(rydoraFilled.list)
+      ) {
+        delete rydoraFilled.productItems;
+      }
+      const rydoraServices = rydoraFilled ? readServiceItemsFromData(rydoraFilled) : [];
       const services =
-        state.services.length > 0
+        rydoraServices.length > 0
+          ? rydoraServices
+          : state.services.length > 0
           ? state.services
           : hairServices.length > 0
             ? hairServices
@@ -10399,6 +10925,67 @@ function EditorPage({
               },
             };
           }
+          if (String(section.variant || "").startsWith("Rydora")) {
+            if (section.variant !== "RydoraServices1") return section;
+            const variant = section.variant;
+            const storedData =
+              (section.data?.[variant] as SectionData | undefined) ??
+              ({} as SectionData);
+            const currentData = (withRydoraContent(
+              variant,
+              storedData as Record<string, unknown>,
+            ) ?? storedData) as SectionData;
+            const existing = Array.isArray((currentData as { list?: unknown }).list)
+              ? ((currentData as { list: unknown[] }).list)
+              : [];
+            const list = [...detail.services]
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((service, index) => {
+                const previous =
+                  existing.find(
+                    (item) =>
+                      item &&
+                      typeof item === "object" &&
+                      (String((item as { slug?: unknown }).slug ?? "") ===
+                        String(service.slug ?? "") ||
+                        String((item as { id?: unknown }).id ?? "") ===
+                          String(service.id)),
+                  ) || existing[index];
+                const previousRecord =
+                  previous && typeof previous === "object"
+                    ? (previous as Record<string, unknown>)
+                    : {};
+                const slug =
+                  service.slug?.trim() ||
+                  (typeof previousRecord.slug === "string" && previousRecord.slug) ||
+                  createPageSlug(service.title) ||
+                  service.id;
+                const image =
+                  service.image && service.image !== "/bg1.jpg"
+                    ? service.image
+                    : typeof previousRecord.image === "string"
+                      ? previousRecord.image
+                      : "";
+                return {
+                  ...previousRecord,
+                  title: service.title,
+                  text: service.desc,
+                  slug,
+                  ...(image ? { image } : {}),
+                };
+              });
+            return {
+              ...section,
+              variant,
+              data: {
+                ...section.data,
+                [variant]: {
+                  ...currentData,
+                  list,
+                },
+              },
+            };
+          }
           if (
             section.id !== "ServicePage" &&
             section.type !== "ServicePage" &&
@@ -10485,7 +11072,14 @@ function EditorPage({
   }, [category, setCurrentPage, setPageLinks]);
 
   useEffect(() => {
+    const isRydoraFleetSection = (section: SectionItem) =>
+      section.variant === "RydoraFleet1" || Boolean(section.data?.RydoraFleet1);
+
     const findPortfolioSection = (items: SectionItem[]) =>
+      items.find(
+        (section) => isRydoraFleetSection(section) && !section.page,
+      ) ||
+      items.find(isRydoraFleetSection) ||
       items.find(
         (section) =>
           section.id === "PortfolioPage" ||
@@ -10497,10 +11091,19 @@ function EditorPage({
     const emitPortfolioState = (items: SectionItem[]) => {
       const section = findPortfolioSection(items);
       if (!section) return;
-      const data =
-        (section.data[section.variant] as SectionData | undefined) ??
-        (section.data["PortfolioPage-1"] as SectionData | undefined) ??
+      const variant = isRydoraFleetSection(section)
+        ? "RydoraFleet1"
+        : section.variant;
+      const stored =
+        (section.data?.[variant] as SectionData | undefined) ??
+        (section.data?.[section.variant] as SectionData | undefined) ??
+        (section.data?.["PortfolioPage-1"] as SectionData | undefined) ??
         ({} as SectionData);
+      const data = (
+        isRydoraFleetSection(section)
+          ? withRydoraContent("RydoraFleet1", stored)
+          : stored
+      ) as SectionData;
       window.dispatchEvent(
         new CustomEvent("ai-builder-portfolio-page-state", {
           detail: {
@@ -10583,6 +11186,23 @@ function EditorPage({
           templateId,
         );
         const next = withSection.map((section) => {
+          if (isRydoraFleetSection(section)) {
+            const variant = "RydoraFleet1";
+            const stored =
+              (section.data?.[variant] as SectionData | undefined) ??
+              (section.data?.[section.variant] as SectionData | undefined) ??
+              ({} as SectionData);
+            const currentData = (withRydoraContent(variant, stored) ||
+              stored) as SectionData;
+            return {
+              ...section,
+              variant,
+              data: {
+                ...section.data,
+                [variant]: applyRydoraFleetPortfolioState(currentData, detail),
+              },
+            };
+          }
           if (
             section.id !== "PortfolioPage" &&
             section.type !== "PortfolioPage" &&
@@ -10994,10 +11614,16 @@ function EditorPage({
     };
 
     const emitGalleryState = (items: SectionItem[]) => {
-      const section = findGallerySection(items);
+      const section =
+        findGallerySection(items) ||
+        items.find(
+          (item) =>
+            item.variant === "RydoraGallery1" || Boolean(item.data?.RydoraGallery1),
+        );
       if (!section) return;
       const stored =
         (section.data[section.variant] as SectionData | undefined) ??
+        (section.data?.RydoraGallery1 as SectionData | undefined) ??
         (section.data["GalleryPage-1"] as SectionData | undefined) ??
         ({} as SectionData);
       const variantName = String(section.variant || "");
@@ -11009,6 +11635,11 @@ function EditorPage({
         : variantName.startsWith("CoolFix")
         ? ((withCoolFixContent(
             section.variant,
+            stored as Record<string, unknown>,
+          ) ?? stored) as SectionData)
+        : variantName.startsWith("Rydora") || section.data?.RydoraGallery1
+        ? ((withRydoraContent(
+            "RydoraGallery1",
             stored as Record<string, unknown>,
           ) ?? stored) as SectionData)
         : stored;
@@ -11076,7 +11707,8 @@ function EditorPage({
           const nextVariant =
             currentVariant.startsWith("Pet") ||
             currentVariant.startsWith("CoolFix") ||
-            currentVariant.startsWith("HairAtelier")
+            currentVariant.startsWith("HairAtelier") ||
+            currentVariant.startsWith("Rydora")
               ? currentVariant
               : detail.layout && /^GalleryPage-[1-5]$/.test(detail.layout)
                 ? detail.layout
@@ -11088,6 +11720,11 @@ function EditorPage({
             ({} as SectionData);
           const currentData = nextVariant.startsWith("HairAtelier")
             ? ((withHairAtelierContent(
+                nextVariant,
+                storedData as Record<string, unknown>,
+              ) ?? storedData) as SectionData)
+            : nextVariant.startsWith("Rydora")
+            ? ((withRydoraContent(
                 nextVariant,
                 storedData as Record<string, unknown>,
               ) ?? storedData) as SectionData)
@@ -12022,6 +12659,13 @@ function EditorPage({
 
         // Blog posts: body only (no page breadcrumb strip).
         if (detail.kind === "blog") {
+          if (
+            prevSections.some((section) =>
+              String(section.variant || "").startsWith("Rydora"),
+            )
+          ) {
+            return prevSections;
+          }
           const hasBody = prevSections.some(
             (section) =>
               section.type === "BlogPage" &&
@@ -12358,7 +13002,8 @@ function EditorPage({
     const blogsOff = isHiddenBlogsPage(pageLinks);
     const galleryOff = isHiddenGalleryPage(pageLinks);
     const teamsOff = isHiddenTeamsPage(pageLinks);
-    if (!servicesOff && !blogsOff && !galleryOff && !teamsOff) return;
+    const portfolioOff = isHiddenPortfolioPage(pageLinks);
+    if (!servicesOff && !blogsOff && !galleryOff && !teamsOff && !portfolioOff) return;
     const current = flattenPageLinks(pageLinks).find(
       (link) => normalizePageSlug(link.label) === normalizePageSlug(page),
     );
@@ -12390,10 +13035,20 @@ function EditorPage({
         slug === "team" ||
         slug === "our-team" ||
         isTeamPageLink(current || { label: page }));
+    const onPortfolioPage =
+      portfolioOff &&
+      (slug === "portfolio" ||
+        slug === "portfolios" ||
+        slug === "projects" ||
+        slug === "project" ||
+        isPortfolioPageLink(current || { label: page }));
     if (servicesOff && masterDetailView?.master === "service") {
       setMasterDetailView(null);
     }
-    if (onServicePage || onBlogPage || onGalleryPage || onTeamPage) {
+    if (portfolioOff && masterDetailView?.master === "portfolio") {
+      setMasterDetailView(null);
+    }
+    if (onServicePage || onBlogPage || onGalleryPage || onTeamPage || onPortfolioPage) {
       setCurrentPage("Home");
     }
   }, [masterDetailView, page, pageLinks, setCurrentPage]);
@@ -18686,11 +19341,15 @@ function EditorPage({
     editorTemplate?.sectionVariants?.BlogPage === "PetBlogPage1";
   const hairOwnsBlogListing =
     editorTemplate?.sectionVariants?.BlogPage === "HairAtelierBlogPage1";
+  const rydoraOwnsBlogListing =
+    editorTemplate?.sectionVariants?.Blog === "RydoraBlogNews1" ||
+    editorTemplate?.sectionVariants?.Header === "RydoraHeader1";
   const isViewingBlogIndex = Boolean(
     currentPageLink &&
       isBlogIndexPageLink(currentPageLink) &&
       !petOwnsBlogListing &&
-      !hairOwnsBlogListing,
+      !hairOwnsBlogListing &&
+      !rydoraOwnsBlogListing,
   );
   const pageScopedSlug = getMultiPageSlugFromHref(currentPageLink?.href || "");
   const currentPageSlug =
@@ -18701,6 +19360,7 @@ function EditorPage({
   const blogsWebsiteOff = isHiddenBlogsPage(pageLinks);
   const galleryWebsiteOff = isHiddenGalleryPage(pageLinks);
   const teamsWebsiteOff = isHiddenTeamsPage(pageLinks);
+  const portfolioWebsiteOff = isHiddenPortfolioPage(pageLinks);
   const viewingHiddenServicePage =
     servicesWebsiteOff &&
     (currentPageSlug === "services" ||
@@ -18725,11 +19385,19 @@ function EditorPage({
     (currentPageSlug === "teams" ||
       currentPageSlug === "team" ||
       currentPageSlug === "our-team");
+  const viewingHiddenPortfolioPage =
+    portfolioWebsiteOff &&
+    (currentPageSlug === "portfolio" ||
+      currentPageSlug === "portfolios" ||
+      currentPageSlug === "projects" ||
+      currentPageSlug === "project" ||
+      masterDetailView?.master === "portfolio");
   const canvasPageSlug =
     viewingHiddenServicePage ||
     viewingHiddenBlogPage ||
     viewingHiddenGalleryPage ||
-    viewingHiddenTeamPage
+    viewingHiddenTeamPage ||
+    viewingHiddenPortfolioPage
       ? "home"
       : currentPageSlug;
   const themePageForCanvas = getTemplatePages(editorTemplate).find(
@@ -18739,10 +19407,11 @@ function EditorPage({
     ? editorTemplate.sectionVariants?.[themePageForCanvas.sectionType] || ""
     : "";
   const hideGeneratedPageScaffold =
-    /^(MediCare|HairAtelier|CoolFix|Pet|Plumbing)/.test(dedicatedCanvasVariant);
+    /^(MediCare|HairAtelier|CoolFix|Pet|Plumbing|Rydora)/.test(dedicatedCanvasVariant);
   const petTheme = editorTemplate?.sectionVariants?.Header === "PetHeader1";
   const coolFixTheme = editorTemplate?.sectionVariants?.Header === "CoolFixHeader1";
   const mediCareTheme = editorTemplate?.sectionVariants?.Header === "MediCareHeader1";
+  const rydoraTheme = editorTemplate?.sectionVariants?.Header === "RydoraHeader1";
   const countriesServeSection = petTheme
     ? null
     : findEnabledCountriesServeSection(syncedSections);
@@ -18773,12 +19442,13 @@ function EditorPage({
       if (blogsWebsiteOff && isBlogOwnedSection(section)) return false;
       if (galleryWebsiteOff && isGalleryOwnedSection(section)) return false;
       if (teamsWebsiteOff && isTeamOwnedSection(section)) return false;
+      if (portfolioWebsiteOff && isPortfolioOwnedSection(section)) return false;
       if (hideGeneratedPageScaffold) {
         const sectionId = section.id || "";
         if (/^CustomPage/i.test(sectionId)) return false;
         if (
           section.type === "Breadcrumb" &&
-          !/^(MediCare|HairAtelier|CoolFix|Pet|Plumbing)/.test(section.variant || "")
+          !/^(MediCare|HairAtelier|CoolFix|Pet|Plumbing|Rydora)/.test(section.variant || "")
         ) {
           return false;
         }
@@ -18892,19 +19562,87 @@ function EditorPage({
     const matchSlug = (value?: string) =>
       (value || "").trim().toLowerCase() === slug.trim().toLowerCase();
 
-    if (master === "service") {
-      const section = sectionsRef.current.find(
-        (item) =>
-          item.id === "ServicePage" ||
-          item.type === "ServicePage" ||
-          (item.type === "Service" &&
-            ["service", "services"].includes(normalizePageSlug(item.page || ""))),
+    if (master === "blog") {
+      const section = findRydoraBlogSection(sectionsRef.current);
+      const posts = section ? readRydoraBlogPosts(section) : rydoraDefaultBlogs;
+      const post = posts.find((item) => {
+        if (!item || typeof item !== "object") return false;
+        const record = item as { slug?: unknown; title?: unknown };
+        const postSlug = typeof record.slug === "string" ? record.slug : "";
+        const title = typeof record.title === "string" ? record.title : "";
+        return matchSlug(postSlug) || matchSlug(createPageSlug(title));
+      }) as Record<string, unknown> | undefined;
+      if (!post) return null;
+      const title = typeof post.title === "string" ? post.title : "Blog post";
+      const excerpt =
+        typeof post.description === "string" ? post.description : "";
+      const steps = Array.isArray(post.steps)
+        ? post.steps
+            .map((step) => {
+              if (!step || typeof step !== "object") return "";
+              const row = step as { title?: unknown; text?: unknown };
+              const heading = typeof row.title === "string" ? row.title : "";
+              const text = typeof row.text === "string" ? row.text : "";
+              return [heading, text].filter(Boolean).join("\n");
+            })
+            .filter(Boolean)
+        : [];
+      const content = [
+        typeof post.intro === "string" ? post.intro : "",
+        ...steps,
+        typeof post.note === "string" ? post.note : "",
+      ]
+        .filter(Boolean)
+        .join("\n\n");
+      return (
+        <BlogDetailArticle
+          key={`master-detail-blog-${slug}`}
+          post={{
+            title,
+            category: typeof post.category === "string" ? post.category : "",
+            excerpt,
+            content: content || excerpt,
+            image: typeof post.image === "string" ? post.image : "",
+            layout: "BlogPage-1",
+          }}
+        />
       );
+    }
+
+    if (master === "service") {
+      const section =
+        sectionsRef.current.find(
+          (item) =>
+            item.id === "ServicePage" ||
+            item.type === "ServicePage" ||
+            (item.type === "Service" &&
+              ["service", "services"].includes(normalizePageSlug(item.page || ""))),
+        ) ||
+        sectionsRef.current.find(
+          (item) =>
+            item.variant === "RydoraServices1" || Boolean(item.data?.RydoraServices1),
+        );
       if (!section) return null;
-      const data =
+      const stored =
+        (section.data?.RydoraServices1 as SectionData | undefined) ||
         (section.data[section.variant] as SectionData | undefined) ||
         (section.data["ServicePage-1"] as SectionData | undefined) ||
         ({} as SectionData);
+      const data = (
+        String(section.variant || "").startsWith("Rydora") || section.data?.RydoraServices1
+          ? ((withRydoraContent(
+              "RydoraServices1",
+              stored as Record<string, unknown>,
+            ) ?? stored) as SectionData)
+          : stored
+      ) as SectionData & { productItems?: unknown; list?: unknown };
+      if (
+        Array.isArray(data.productItems) &&
+        data.productItems.length === 0 &&
+        Array.isArray(data.list)
+      ) {
+        delete data.productItems;
+      }
       const item = buildServicePageState(data).services.find(
         (row) => matchSlug(row.slug) || matchSlug(createPageSlug(row.title)),
       );
@@ -19339,7 +20077,7 @@ function EditorPage({
     <main
       data-editor-live-surface
       data-site-theme-root
-      className={`editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere] ${coolFixTheme ? "coolfix-theme" : ""} ${mediCareTheme ? "medicare-theme" : ""}`}
+      className={`editor-smooth-surface w-full max-w-full overflow-x-clip [overflow-wrap:anywhere] ${coolFixTheme ? "coolfix-theme" : ""} ${mediCareTheme ? "medicare-theme" : ""} ${rydoraTheme ? "rydora-theme" : ""}`}
       style={
         {
           ...templateVariables,
@@ -19428,11 +20166,14 @@ function EditorPage({
           section.data?.[defaultVariant];
 
         const storedVariantData = isRecord(variantData) ? variantData : undefined;
-        const filledVariantData = withMediCareContent(
+        const filledVariantData = withRydoraContent(
           renderVariant,
-          withHairAtelierContent(
+          withMediCareContent(
             renderVariant,
-            withCoolFixContent(renderVariant, storedVariantData),
+            withHairAtelierContent(
+              renderVariant,
+              withCoolFixContent(renderVariant, storedVariantData),
+            ),
           ),
         );
         const rawVariantData = isRecord(filledVariantData)
@@ -19598,11 +20339,16 @@ function EditorPage({
                   ? "Services"
                   : renderVariant === "PetTeam1" || section.variant === "PetTeam1"
                     ? "Teams"
-                    : renderVariant === "PetBlog1" ||
+                      : renderVariant === "PetBlog1" ||
                         section.variant === "PetBlog1" ||
                         renderVariant === "PetBlogPage1" ||
-                        section.variant === "PetBlogPage1"
+                        section.variant === "PetBlogPage1" ||
+                        renderVariant === "RydoraBlogNews1" ||
+                        section.variant === "RydoraBlogNews1"
                       ? "Blogs"
+                      : renderVariant === "RydoraFleet1" ||
+                          section.variant === "RydoraFleet1"
+                        ? "Portfolio"
                       : resolveManagerForSection(section);
               const coolFixPageSlug = normalizePageSlug(section.page || "");
               const coolFixServicePage =

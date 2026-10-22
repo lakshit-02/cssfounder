@@ -274,6 +274,7 @@ function SidebarContent({
   const [teamCardOnly, setTeamCardOnly] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+  const [portfolioCardOnly, setPortfolioCardOnly] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [showCountriesModal, setShowCountriesModal] = useState(false);
@@ -493,16 +494,7 @@ function SidebarContent({
     if (enabled) {
       const nextLinks = hasIndex
         ? pageLinks.map((page) =>
-            isBlogIndexPageLink(page)
-              ? {
-                  ...page,
-                  kind: "blogIndex" as const,
-                  href: "#page-blogs",
-                  label: page.label || "Blogs",
-                  hidden: false,
-                  layout: page.layout || blogIndexLayout || "BlogIndex-1",
-                }
-              : page,
+            isBlogIndexPageLink(page) ? { ...page, hidden: false } : page,
           )
         : [
             ...pageLinks,
@@ -523,20 +515,11 @@ function SidebarContent({
       return;
     }
 
-    if (hasIndex) {
-      setPageLinks(
-        pageLinks.map((page) =>
-          isBlogIndexPageLink(page)
-            ? {
-                ...page,
-                kind: "blogIndex" as const,
-                href: "#page-blogs",
-                hidden: true,
-              }
-            : page,
-        ),
-      );
-    }
+    setPageLinks(
+      pageLinks.map((page) =>
+        isBlogIndexPageLink(page) ? { ...page, hidden: true } : page,
+      ),
+    );
     window.dispatchEvent(
       new CustomEvent("ai-builder-blogs-website-visibility", {
         detail: { enabled: false },
@@ -900,6 +883,7 @@ function SidebarContent({
         return;
       }
       if (manager === "Portfolio") {
+        setPortfolioCardOnly(Boolean(detail?.cardOnly));
         setShowPortfolioModal(true);
         return;
       }
@@ -1840,7 +1824,11 @@ function SidebarContent({
         <PortfolioManager
           siteId={searchParams.get("siteId") || "draft"}
           preserveNavigation={managerPreserveNavigation}
-          onClose={() => closeManagerModal(setShowPortfolioModal)}
+          cardOnly={portfolioCardOnly}
+          onClose={() => {
+            setPortfolioCardOnly(false);
+            closeManagerModal(setShowPortfolioModal);
+          }}
         />
       )}
 

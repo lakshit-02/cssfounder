@@ -59,6 +59,7 @@ import {
   withCoolFixContent,
   withHairAtelierContent,
   withMediCareContent,
+  withRydoraContent,
   withTopbarLayoutSkin,
 } from "../../data/templateFlow";
 import { PageLink, usePreview } from "../context/PreviewContext";
@@ -2367,6 +2368,24 @@ const COOLFIX_CONTENT_FIELDS: Record<string, string[]> = {
   CoolFixFooter1: ["logo", "description", "titles", "quickLinks", "services", "contacts", "socials", "copyright"],
 };
 
+const RYDORA_CONTENT_FIELDS: Record<string, string[]> = {
+  RydoraHeader1: ["logo", "menu", "cta"],
+  RydoraHero1: ["badge", "heading", "description", "cta", "image", "slides", "list"],
+  RydoraPageBanner1: ["title", "image", "imageAlt", "breadcrumbs"],
+  RydoraAboutUs1: ["badge", "heading", "description", "cta", "image", "list"],
+  RydoraWorkingProcess1: ["badge", "heading", "description", "cta", "image", "list"],
+  RydoraWhyChooseUs1: ["badge", "heading", "description", "image", "leftFeatures", "rightFeatures"],
+  RydoraServices1: ["badge", "heading", "description", "cta", "list"],
+  RydoraFleet1: ["badge", "heading", "description", "cta", "list"],
+  RydoraBrands1: ["badge", "heading", "description", "list"],
+  RydoraTestimonials1: ["badge", "heading", "description", "list"],
+  RydoraGallery1: ["list"],
+  RydoraBlogNews1: ["badge", "heading", "description", "cta", "readMore", "sidebar"],
+  RydoraEnquiryForm1: ["badge", "heading", "description", "list", "image", "form"],
+  RydoraContactPage1: ["badge", "heading", "description", "form", "infoCards", "image", "mapUrl"],
+  RydoraFooter1: ["bgImage", "logo", "description", "socials", "quickLinks", "services", "contact", "copyright", "legalLinks"],
+};
+
 const withThemeEditorContent = (
   variant: string,
   stored?: Record<string, unknown>,
@@ -2374,6 +2393,7 @@ const withThemeEditorContent = (
   if (variant.startsWith("MediCare")) return withMediCareContent(variant, stored);
   if (variant.startsWith("HairAtelier")) return withHairAtelierContent(variant, stored);
   if (variant.startsWith("CoolFix")) return withCoolFixContent(variant, stored);
+  if (variant.startsWith("Rydora")) return withRydoraContent(variant, stored);
   return stored;
 };
 
@@ -2472,6 +2492,7 @@ const GenericArrayFieldEditor = ({
       contentVariant?.startsWith("CoolFix") ||
       contentVariant?.startsWith("HairAtelier") ||
       contentVariant?.startsWith("MediCare") ||
+      contentVariant?.startsWith("Rydora") ||
       (fieldName === "items" &&
         (sectionType === "FeaturedDev" ||
           sectionType === "InvestmentOpportunities"))) &&
@@ -3180,6 +3201,11 @@ const GenericFieldEditor = ({
               ([key]) => !/^(id|width|height|color|slug)$/i.test(key),
             );
           }
+          if (contentVariant?.startsWith("Rydora")) {
+            entries = entries.filter(
+              ([key]) => !/^(id|width|height|color)$/i.test(key),
+            );
+          }
 
           return entries.map(([childName, childValue]) => (
             <GenericFieldEditor
@@ -3212,7 +3238,8 @@ const GenericFieldEditor = ({
         ? "image"
         : null) ||
       ((contentVariant?.startsWith("CoolFix") ||
-        contentVariant?.startsWith("MediCare")) &&
+        contentVariant?.startsWith("MediCare") ||
+        contentVariant?.startsWith("Rydora")) &&
       (fieldName === "avatar" ||
         fieldName === "src" ||
         fieldName === "thumbnail" ||
@@ -3817,7 +3844,8 @@ export default function EditSectionModal({
   const isPageSection = Boolean(currentSection?.page);
   const activeVariant = currentSection?.variant?.startsWith("CoolFix") ||
     currentSection?.variant?.startsWith("HairAtelier") ||
-    currentSection?.variant?.startsWith("MediCare")
+    currentSection?.variant?.startsWith("MediCare") ||
+    currentSection?.variant?.startsWith("Rydora")
     ? currentSection.variant
     : currentSection?.data?.[currentSection.variant]
     ? currentSection.variant
@@ -3827,8 +3855,14 @@ export default function EditSectionModal({
   const fallbackVariantData =
     currentSection?.data?.[`${activeSectionType}-1`] ??
     Object.values(currentSection?.data ?? {})[0];
-  const visibleSidebarItems =
-    sidebarItemsBySection[activeSectionType] ??
+  const visibleSidebarItems = activeVariant.startsWith("Rydora")
+    ? [
+        `${activeSectionType} Content`,
+        ...(sidebarItemsBySection[activeSectionType]?.filter((item) =>
+          item.endsWith("Layout"),
+        ) ?? []),
+      ]
+    : sidebarItemsBySection[activeSectionType] ??
     (activeVariant.startsWith("Plumbing") ||
     activeVariant.startsWith("Pet") ||
     activeVariant.startsWith("CoolFix") ||
@@ -3843,8 +3877,16 @@ export default function EditSectionModal({
       !activeVariant.startsWith("Pet") &&
       !activeVariant.startsWith("CoolFix") &&
       !activeVariant.startsWith("HairAtelier") &&
-      !activeVariant.startsWith("MediCare")
+      !activeVariant.startsWith("MediCare") &&
+      !activeVariant.startsWith("Rydora")
     ) {
+      return;
+    }
+    if (activeVariant.startsWith("Rydora")) {
+      const contentTab = `${activeSectionType} Content`;
+      if (!visibleSidebarItems.includes(activeTab)) {
+        setActiveTab(contentTab);
+      }
       return;
     }
     if (sidebarItemsBySection[activeSectionType]?.length) return;
@@ -3980,7 +4022,8 @@ export default function EditSectionModal({
   const activeGenericData = (
     activeVariant.startsWith("HairAtelier") ||
     activeVariant.startsWith("CoolFix") ||
-    activeVariant.startsWith("MediCare")
+    activeVariant.startsWith("MediCare") ||
+    activeVariant.startsWith("Rydora")
       ? withThemeEditorContent(
           activeVariant,
           storedGenericData as Record<string, unknown> | undefined,
@@ -4042,7 +4085,8 @@ export default function EditSectionModal({
     const themeRecord = (
       activeVariant.startsWith("HairAtelier") ||
       activeVariant.startsWith("CoolFix") ||
-      activeVariant.startsWith("MediCare")
+      activeVariant.startsWith("MediCare") ||
+      activeVariant.startsWith("Rydora")
         ? withThemeEditorContent(activeVariant, savedRecord)
         : undefined
     ) as Record<string, unknown> | undefined;
@@ -4068,6 +4112,71 @@ export default function EditSectionModal({
         return order
           .filter((field) => field in source)
           .map((field) => [field, source[field]] as [string, unknown]);
+      }
+    }
+    if (activeVariant.startsWith("Rydora")) {
+      const order = RYDORA_CONTENT_FIELDS[activeVariant];
+      if (order) {
+        return order
+          .filter(
+            (field) =>
+              field in source ||
+              activeVariant === "RydoraPageBanner1" ||
+              activeVariant === "RydoraContactPage1",
+          )
+          .map((field) => {
+            if (field in source) {
+              const value = source[field];
+              const blankBannerImage =
+                field === "image" &&
+                activeVariant === "RydoraPageBanner1" &&
+                (typeof value !== "string" || !value.trim());
+              const blankBannerTitle =
+                field === "title" &&
+                activeVariant === "RydoraPageBanner1" &&
+                (typeof value !== "string" || !value.trim());
+              if (!blankBannerImage && !blankBannerTitle) {
+                return [field, value] as [string, unknown];
+              }
+            }
+            if (field === "image" && activeVariant === "RydoraPageBanner1") {
+              return [field, "/automotive/images/page-banner.jpg"] as [string, unknown];
+            }
+            if (field === "title" && activeVariant === "RydoraPageBanner1") {
+              const page = String(currentSection?.page || "").trim().toLowerCase();
+              const titles: Record<string, string> = {
+                about: "About Us",
+                portfolio: "Portfolio",
+                cars: "Portfolio",
+                services: "Services",
+                service: "Services",
+                gallery: "Gallery",
+                blog: "Blogs",
+                blogs: "Blogs",
+                contact: "Contact Us",
+                enquiry: "Enquiry",
+              };
+              return [field, titles[page] || "Rydora"] as [string, unknown];
+            }
+            if (field === "breadcrumbs") {
+              return [field, [{ label: "Home", href: "/" }, { label: "Page" }]] as [string, unknown];
+            }
+            if (field === "infoCards") {
+              return [field, [
+                { title: "Call Us", lines: ["+1 0000000000", "Mon - Sat, 9:00 AM - 8:00 PM"] },
+                { title: "Email Us", lines: ["info@xyz.com", "We reply within 24 hours"] },
+                { title: "Visit Our Office", lines: ["123 Business Avenue,", "New York, NY 10001, USA"] },
+                { title: "Working Hours", lines: ["Mon - Sat: 9:00 AM - 8:00 PM", "Sunday: 10:00 AM - 6:00 PM"] },
+              ]] as [string, unknown];
+            }
+            if (field === "image" && activeVariant === "RydoraContactPage1") {
+              return [field, "/automotive/images/showroom.jpg"] as [string, unknown];
+            }
+            if (field === "mapUrl") {
+              return [field, "https://www.google.com/maps?q=New+York,+NY+10001,+USA&z=13&output=embed"] as [string, unknown];
+            }
+            return [field, ""] as [string, unknown];
+          });
       }
     }
     if (activeVariant === "MediCarePageBanner1") {
@@ -4901,11 +5010,13 @@ export default function EditSectionModal({
     ? databaseLayoutOptions
     : fallbackLayoutOptions;
   const activeLayoutId = currentSection?.variant;
-  const originLayoutId = Object.keys(currentSection?.data || {}).find(
-    (key) =>
+  const originLayoutId = Object.keys(currentSection?.data || {}).find((key) => {
+    if (key.startsWith("Rydora")) return true;
+    return (
       /^(CoolFix|HairAtelier|MediCare|Pet|Plumbing)/.test(key) &&
-      key.toLowerCase().includes(activeSectionType.toLowerCase()),
-  );
+      key.toLowerCase().includes(activeSectionType.toLowerCase())
+    );
+  });
   const layoutOptionsWithOrigin: LayoutOption[] =
     originLayoutId &&
     !unorderedLayoutOptions.some((layout) => layout.id === originLayoutId)
@@ -5434,7 +5545,8 @@ export default function EditSectionModal({
     const baseGenericData = (
       activeVariant.startsWith("HairAtelier") ||
       activeVariant.startsWith("CoolFix") ||
-      activeVariant.startsWith("MediCare")
+      activeVariant.startsWith("MediCare") ||
+      activeVariant.startsWith("Rydora")
         ? withThemeEditorContent(
             activeVariant,
             storedGenericData as Record<string, unknown> | undefined,
@@ -5501,7 +5613,9 @@ export default function EditSectionModal({
 
     const storedItems = activeGenericData?.[field as keyof SectionData];
     const mergedItems =
-      activeVariant.startsWith("CoolFix") || activeVariant.startsWith("MediCare")
+      activeVariant.startsWith("CoolFix") ||
+      activeVariant.startsWith("MediCare") ||
+      activeVariant.startsWith("Rydora")
       ? withThemeEditorContent(
           activeVariant,
           (activeGenericData ?? {}) as Record<string, unknown>,
@@ -5677,7 +5791,8 @@ export default function EditSectionModal({
       newItems[field] ??
       (activeVariant.startsWith("CoolFix") ||
       activeVariant.startsWith("HairAtelier") ||
-      activeVariant.startsWith("MediCare")
+      activeVariant.startsWith("MediCare") ||
+      activeVariant.startsWith("Rydora")
         ? structuredClone(items[items.length - 1] ?? {})
         : undefined);
 
@@ -5694,7 +5809,9 @@ export default function EditSectionModal({
 
     const storedItems = activeGenericData?.[field as keyof SectionData];
     const mergedItems =
-      activeVariant.startsWith("CoolFix") || activeVariant.startsWith("MediCare")
+      activeVariant.startsWith("CoolFix") ||
+      activeVariant.startsWith("MediCare") ||
+      activeVariant.startsWith("Rydora")
       ? withThemeEditorContent(
           activeVariant,
           (activeGenericData ?? {}) as Record<string, unknown>,
@@ -5720,8 +5837,9 @@ export default function EditSectionModal({
 
   const selectSectionVariant = (variant: string) => {
     const isThemeSkin =
-      /^(CoolFix|Pet|Plumbing|HairAtelier|MediCare)/.test(variant) &&
-      variant.toLowerCase().includes(activeSectionType.toLowerCase());
+      (/^(CoolFix|Pet|Plumbing|HairAtelier|MediCare)/.test(variant) &&
+        variant.toLowerCase().includes(activeSectionType.toLowerCase())) ||
+      variant.startsWith("Rydora");
     const isAllowedVariant =
       variant.startsWith(`${activeSectionType}-`) ||
       (isPageSection && variant.startsWith(`${activeSectionType}Page-`)) ||
@@ -5769,6 +5887,7 @@ export default function EditSectionModal({
     if (
       activeSectionType === "Banner" &&
       currentSection &&
+      !variant.startsWith("Rydora") &&
       !currentSection.data[variant]
     ) {
       const defaultBannerData = getDefaultBannerData(
@@ -5787,7 +5906,7 @@ export default function EditSectionModal({
     }
 
     if (currentSection?.variant !== variant) {
-      if (currentSection && !currentSection.data[variant]) {
+      if (currentSection && !currentSection.data[variant] && !variant.startsWith("Rydora")) {
         const sourceData =
           currentSection.data[activeVariant] ?? Object.values(currentSection.data)[0];
 
@@ -7246,7 +7365,8 @@ export default function EditSectionModal({
               activeTab === "Header Content" &&
               !activeVariant.startsWith("Plumbing") &&
               !activeVariant.startsWith("CoolFix") &&
-              !activeVariant.startsWith("MediCare") && (
+              !activeVariant.startsWith("MediCare") &&
+              !activeVariant.startsWith("Rydora") && (
                 <div className="space-y-5">
                   <div className="space-y-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] sm:p-5">
                     <h4 className="text-sm font-bold text-slate-900">
@@ -7632,7 +7752,8 @@ export default function EditSectionModal({
             {activeSectionType === "Banner" &&
               activeTab === "Banner Content" &&
               !activeVariant.startsWith("CoolFix") &&
-              !activeVariant.startsWith("MediCare") && (
+              !activeVariant.startsWith("MediCare") &&
+              !activeVariant.startsWith("Rydora") && (
                 <div className="space-y-4">
                   {petBannerSlides.length > 0 && (
                     <div className="space-y-3">
@@ -9216,6 +9337,8 @@ export default function EditSectionModal({
                 activeTab.endsWith("Content")) ||
               (activeVariant.startsWith("MediCare") &&
                 activeTab.endsWith("Content")) ||
+              (activeVariant.startsWith("Rydora") &&
+                activeTab.endsWith("Content")) ||
               (activeVariant.startsWith("Pet") &&
                 activeTab.endsWith("Content") &&
                 ![
@@ -9472,7 +9595,8 @@ export default function EditSectionModal({
               activeTab === "Footer Content" &&
               !activeVariant.startsWith("Plumbing") &&
               !activeVariant.startsWith("CoolFix") &&
-              !activeVariant.startsWith("MediCare") && (
+              !activeVariant.startsWith("MediCare") &&
+              !activeVariant.startsWith("Rydora") && (
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h3 className="text-xs font-semibold text-slate-800">Footer logo</h3>
@@ -9687,6 +9811,7 @@ export default function EditSectionModal({
             {activeTab.endsWith("Content") &&
               !activeVariant.startsWith("CoolFix") &&
               !activeVariant.startsWith("MediCare") &&
+              !activeVariant.startsWith("Rydora") &&
               activeVariant !== "HairAtelierHeroBanner1" &&
               activeVariant !== "HairAtelierFooter1" &&
               activeSectionType !== "Topbar" &&

@@ -450,6 +450,42 @@ const localHealthTemplateIds: string[] = (
   ).categories?.["Health & Wellness"]?.templates ?? []
 ).filter((id): id is string => typeof id === "string" && id.length > 0);
 
+const rydoraVariants = new Map<string, Record<string, unknown>>();
+const rydoraSections =
+  (
+    categoryContentJson as {
+      categories?: {
+        Automotive?: {
+          Rydora?: {
+            sections?: Record<string, { variants?: Record<string, unknown> }>;
+          };
+        };
+      };
+    }
+  ).categories?.Automotive?.Rydora?.sections || {};
+for (const pack of Object.values(rydoraSections)) {
+  const variants = pack?.variants;
+  if (!variants) continue;
+  for (const [key, value] of Object.entries(variants)) {
+    if (
+      key.startsWith("Rydora") &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      rydoraVariants.set(key, value as Record<string, unknown>);
+    }
+  }
+}
+
+const localAutomotiveTemplateIds: string[] = (
+  (
+    categoryContentJson as {
+      categories?: { Automotive?: { templates?: string[] } };
+    }
+  ).categories?.Automotive?.templates ?? []
+).filter((id): id is string => typeof id === "string" && id.length > 0);
+
 export const PLUMBING_TEMPLATE_ID = "template-plumbing-1";
 const isEmptyCoolFixValue = (value: unknown) => {
   if (value == null || value === "") return true;
@@ -628,6 +664,23 @@ export const withMediCareContent = (
     if (key in merged && !isEmptyCoolFixValue(merged[key])) next[key] = merged[key];
   }
   return next;
+};
+
+/** Rydora canvas content lives in categoryContent.json. A generic draft falls back to it. */
+export const withRydoraContent = (
+  variant: string,
+  stored: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined => {
+  if (!variant.startsWith("Rydora")) return stored;
+  const base = rydoraVariants.get(variant);
+  if (!base) return stored;
+  const overlap =
+    stored &&
+    Object.keys(base).some(
+      (key) => key in stored && !isEmptyCoolFixValue(stored[key]),
+    );
+  if (!overlap) return { ...base };
+  return mergeCoolFixContent(base, stored);
 };
 
 export const COOLFIX_TEMPLATE_ID = "template-coolfix-1";
@@ -879,6 +932,11 @@ export const getTemplatesForCategory = (
     categoryName === "health and wellness"
   ) {
     for (const id of localHealthTemplateIds) {
+      if (!templateIds.includes(id)) templateIds.push(id);
+    }
+  }
+  if (categoryName === "automotive") {
+    for (const id of localAutomotiveTemplateIds) {
       if (!templateIds.includes(id)) templateIds.push(id);
     }
   }
@@ -1281,6 +1339,10 @@ const mergeCategoryData = (
         ? medicareVariants.get(variant)
         : undefined;
       if (medicare) return [variant, medicare as SectionData];
+      const rydora = variant.startsWith("Rydora")
+        ? rydoraVariants.get(variant)
+        : undefined;
+      if (rydora) return [variant, rydora as SectionData];
 
       const merged = sanitizeSectionListFields(
         {
@@ -2304,6 +2366,32 @@ export const createCustomPageDetailSection = (
   };
 };
 
+/** Rydora's cars listing is the Portfolio page. Keeps the fleet cards. */
+const asRydoraPortfolioTemplate = (template: BuilderTemplate): BuilderTemplate => {
+  if (!String(template.sectionVariants?.Header || "").startsWith("Rydora")) {
+    return template;
+  }
+  const sectionVariants = {
+    ...template.sectionVariants,
+    PortfolioPage:
+      template.sectionVariants.PortfolioPage ||
+      template.sectionVariants.Fleet ||
+      "RydoraFleet1",
+  };
+  const pages = (template.pages || []).map((page) => {
+    const id = String(page.id || "").trim().toLowerCase();
+    if (id !== "cars" && id !== "car") return page;
+    return {
+      ...page,
+      id: "portfolio",
+      label: "Portfolio",
+      sectionType: "PortfolioPage",
+      sectionOrder: ["PageBanner", "PortfolioPage"],
+    };
+  });
+  return { ...template, sectionVariants, pages };
+};
+
 export const getBuilderTemplate = (
   templateId?: string | null,
   category?: string | null,
@@ -2317,14 +2405,15 @@ export const getBuilderTemplate = (
   // Legacy Vercel URLs used template-1/2; map Realestate to premium imports.
   if (isRealestate && requested === "template-1") {
     const premium = templates.find((t) => t.id === "template-realestate-5");
-    if (premium) return premium;
+    if (premium) return asRydoraPortfolioTemplate(premium);
   }
   if (isRealestate && requested === "template-2") {
     const premium = templates.find((t) => t.id === "template-realestate-6");
-    if (premium) return premium;
+    if (premium) return asRydoraPortfolioTemplate(premium);
   }
 
-  return templates.find((template) => template.id === requested) ?? templates[0];
+  const found = templates.find((template) => template.id === requested) ?? templates[0];
+  return found ? asRydoraPortfolioTemplate(found) : found;
 };
 
 export const isSameBuilderTemplate = (
@@ -2744,6 +2833,7 @@ export function dropExtraPageBreadcrumbs<
     const variant = section.variant || "";
     return (
       pageBodyHasOwnBreadcrumb(variant) ||
+      String(variant).startsWith("Rydora") ||
       pageBodyHasOwnBreadcrumb(
         resolveTemplateSectionVariant(
           {
@@ -2974,7 +3064,7 @@ export const scopeTemplatePageBodies = (
 
 function variantsToCsv(variants: Record<string, string>) {
   const values = Object.values(variants);
-  if (values.length && values.every((key) => key.startsWith("MediCare"))) {
+  if (values.length && (values.every((key) => key.startsWith("MediCare")) || values.every((key) => key.startsWith("Rydora")))) {
     return values.join(",");
   }
   const ordered = SECTION_ORDER_PREVIEW.map((s) => variants[s]).filter(
@@ -2999,13 +3089,17 @@ function pageVariantsFor(
     if (source.Topbar) next.Topbar = source.Topbar;
     if (source.Header) next.Header = source.Header;
     if (
-      String(pageBodyKey || "").startsWith("MediCare") &&
+      (String(pageBodyKey || "").startsWith("MediCare") ||
+        String(pageBodyKey || "").startsWith("Rydora")) &&
       source.PageBanner &&
       pageBodyType !== "ThankYouPage"
     ) {
       next.PageBanner = source.PageBanner;
     }
-    if (!pageBodyHasOwnBreadcrumb(pageBodyKey)) {
+    if (
+      !pageBodyHasOwnBreadcrumb(pageBodyKey) &&
+      !String(pageBodyKey || "").startsWith("Rydora")
+    ) {
       next.Breadcrumb = source.Breadcrumb || "Breadcrumb-1";
     }
     next[pageBodyType] = pageBodyKey;
@@ -3260,6 +3354,15 @@ export const resolveLayoutPreview = (
       };
     }
   }
+  if (variantKey.startsWith("Rydora")) {
+    const rydora = rydoraVariants.get(variantKey);
+    if (rydora) {
+      return {
+        sectionType: variantKey.replace(/\d+$/, "") || variantKey,
+        data: rydora as SectionData,
+      };
+    }
+  }
 
   const match = variantKey.match(/^(.+)-(\d+)$/);
   if (!match) return null;
@@ -3489,7 +3592,14 @@ export const buildSelectedConfig = (
     // Home visibility is `!section.page` — give each page body its slug.
     const extras = getTemplatePages(builderTemplate).flatMap((page) => {
       const variant = builderTemplate.sectionVariants[page.sectionType];
-      if (!variant || homeTypes.includes(page.sectionType)) return [];
+      if (!variant) return [];
+      // Rydora reuses home section types on inner pages, so those still need a page copy.
+      if (
+        homeTypes.includes(page.sectionType) &&
+        !String(variant).startsWith("Rydora")
+      ) {
+        return [];
+      }
       const pageBody = {
         ...makeSection(page.sectionType, variant),
         id: page.sectionType,

@@ -106,6 +106,32 @@ export function isHiddenTeamsPage(pageLinks: NavLinkLike[] | undefined | null) {
   });
 }
 
+const PORTFOLIO_PAGE_SLUGS = new Set([
+  "portfolio",
+  "portfolios",
+  "projects",
+  "project",
+]);
+
+const PORTFOLIO_SECTION_TYPES = new Set([
+  "Portfolio",
+  "PortfolioPage",
+  "LatestProject",
+]);
+
+/** Home portfolio listing and the Portfolio page, including Rydora's fleet. */
+export function isPortfolioOwnedSection(section: {
+  type?: string;
+  page?: string;
+  variant?: string;
+}): boolean {
+  const type = section.type || "";
+  if (type === "Topbar" || type === "Header" || type === "Footer") return false;
+  if (PORTFOLIO_PAGE_SLUGS.has(sectionPageSlug(section.page))) return true;
+  if (PORTFOLIO_SECTION_TYPES.has(type)) return true;
+  return section.variant === "RydoraFleet1";
+}
+
 const GALLERY_PAGE_SLUGS = new Set(["gallery"]);
 
 const GALLERY_SECTION_TYPES = new Set(["Gallery", "GalleryPage"]);
@@ -186,6 +212,30 @@ export function isHiddenBlogsPage(pageLinks: NavLinkLike[] | undefined | null) {
 export function isHiddenGalleryPage(pageLinks: NavLinkLike[] | undefined | null) {
   const flat = flattenLinks(Array.isArray(pageLinks) ? pageLinks : []);
   return flat.some((link) => link.hidden === true && isGalleryLink(link));
+}
+
+const isPortfolioLink = (link: NavLinkLike) => {
+  const href = normalizeHref(link.href);
+  const label = (link.label || "").trim().toLowerCase();
+  const slug = linkSlug(link);
+  return (
+    PORTFOLIO_PAGE_SLUGS.has(slug) ||
+    href === "#page-portfolio" ||
+    href === "#page-portfolios" ||
+    href === "#page-projects" ||
+    href === "#page-project" ||
+    href === "#portfolio" ||
+    href === "#projects" ||
+    label === "portfolio" ||
+    label === "portfolios" ||
+    label === "projects" ||
+    label === "project"
+  );
+};
+
+export function isHiddenPortfolioPage(pageLinks: NavLinkLike[] | undefined | null) {
+  const flat = flattenLinks(Array.isArray(pageLinks) ? pageLinks : []);
+  return flat.some((link) => link.hidden === true && isPortfolioLink(link));
 }
 
 export function isHiddenServicesPage(pageLinks: NavLinkLike[] | undefined | null) {

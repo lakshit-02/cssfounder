@@ -239,6 +239,11 @@ const FONT_FAMILIES = [
     value: '"Plus Jakarta Sans", Arial, Helvetica, sans-serif',
   },
   {
+    id: "manrope",
+    label: "Manrope",
+    value: '"Manrope", Arial, Helvetica, sans-serif',
+  },
+  {
     id: "system",
     label: "System UI",
     value: 'system-ui, -apple-system, "Segoe UI", sans-serif',

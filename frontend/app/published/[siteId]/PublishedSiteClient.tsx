@@ -44,6 +44,7 @@ import {
   filterMenuByHiddenPageLinks,
   isBlogOwnedSection,
   isGalleryOwnedSection,
+  isPortfolioOwnedSection,
   isServiceOwnedSection,
 } from "../../editor/layout/src/lib/navVisibility";
 import {
@@ -4176,10 +4177,7 @@ function PublishedSiteContent({
 
     if (!hasPublishedPortfolioPage(payload)) {
       pageSections = pageSections.filter(
-        (section) =>
-          section.type !== "LatestProject" &&
-          section.type !== "PortfolioPage" &&
-          section.type !== "Portfolio",
+        (section) => !isPortfolioOwnedSection(section),
       );
     }
 

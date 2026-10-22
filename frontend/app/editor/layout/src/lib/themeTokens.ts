@@ -41,7 +41,7 @@ export function resolveThemeColor(
 }
 
 export const GOOGLE_FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap";
+  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap";
 
 export function ensureThemeGoogleFontsLoaded() {
   if (typeof document === "undefined") return;
@@ -550,5 +550,144 @@ export const SITE_THEME_GLOBAL_CSS = `
 .medicare-theme button,
 .medicare-theme a {
   font-family: var(--font-button, var(--font-body, "Plus Jakarta Sans", Arial, Helvetica, sans-serif)) !important;
+}
+.rydora-theme,
+.rydora-theme .font-sans {
+  font-family: var(--font-body, "Manrope", Arial, Helvetica, sans-serif) !important;
+}
+.rydora-theme :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading, "Manrope", Arial, Helvetica, sans-serif) !important;
+}
+.rydora-theme button,
+.rydora-theme a {
+  font-family: var(--font-button, var(--font-body, "Manrope", Arial, Helvetica, sans-serif)) !important;
+}
+/* Rydora copper follows Theme Color. Original primary is #c0703a. */
+.rydora-theme [class~="text-copper"],
+.rydora-theme [class~="text-copper-light"],
+.rydora-theme [class~="text-copper-dark"],
+.rydora-theme [class~="text-[#c85a17]"],
+.rydora-theme [class~="text-[#a8521f]"],
+.rydora-theme [class~="text-[#b25724]"],
+.rydora-theme [class~="text-[#b5683a]"],
+.rydora-theme [class~="text-[#b8461f]"],
+.rydora-theme [class~="text-[#b84518]"],
+.rydora-theme [class~="text-[#9c4c1f]"],
+.rydora-theme [class~="text-[#e5a881]"] {
+  color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="text-[#c85a17]/20"] {
+  color: color-mix(in srgb, var(--primary-bg, #c0703a) 20%, transparent) !important;
+}
+.rydora-theme [class~="bg-copper"],
+.rydora-theme [class~="bg-[#c85a17]"],
+.rydora-theme [class~="bg-[#a8521f]"],
+.rydora-theme [class~="bg-[#b25724]"],
+.rydora-theme [class~="bg-[#b5683a]"],
+.rydora-theme [class~="bg-[#b84518]"] {
+  background-color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="bg-[#140b06]"] {
+  background-color: var(--header-bg, #140b06) !important;
+}
+.rydora-theme [class~="bg-[#140b06]/90"] {
+  background-color: color-mix(in srgb, var(--header-bg, #140b06) 90%, transparent) !important;
+}
+.rydora-theme [class~="bg-[#faefe9]"],
+.rydora-theme [class~="bg-[#f6e3d6]"],
+.rydora-theme [class~="bg-[#f8e6da]"],
+.rydora-theme [class~="bg-[#f5dccb]"],
+.rydora-theme [class~="bg-[#fbe7dc]"],
+.rydora-theme [class~="bg-[#fdeee4]"],
+.rydora-theme [class~="bg-[#fbebe3]"],
+.rydora-theme [class~="bg-[#faf3ee]"],
+.rydora-theme [class~="bg-[#f3d9c7]"],
+.rydora-theme [class~="bg-[#fcd8c4]"] {
+  background-color: color-mix(in srgb, var(--primary-bg, #c0703a) 16%, white) !important;
+}
+.rydora-theme [class*="border-copper"],
+.rydora-theme [class~="border-[#e2b99c]"],
+.rydora-theme [class~="border-[#f0dccd]"],
+.rydora-theme [class~="border-[#ead8cb]"] {
+  border-color: color-mix(in srgb, var(--primary-bg, #c0703a) 55%, white) !important;
+}
+.rydora-theme [class~="hover:bg-copper"]:hover,
+.rydora-theme [class~="hover:bg-[#b25724]"]:hover,
+.rydora-theme [class~="hover:bg-[#9c4c1f]"]:hover,
+.rydora-theme [class~="hover:bg-[#b04f14]"]:hover,
+.rydora-theme [class~="hover:bg-[#a03b14]"]:hover,
+.rydora-theme [class~="hover:bg-[#c85a17]/50"]:hover {
+  background-color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="hover:bg-[#fbdcd0]"]:hover,
+.rydora-theme [class~="hover:bg-[#e9bfa2]"]:hover,
+.rydora-theme [class~="hover:bg-[#f1d3bf]"]:hover {
+  background-color: color-mix(in srgb, var(--primary-bg, #c0703a) 24%, white) !important;
+}
+.rydora-theme [class*="hover:text-copper"]:hover,
+.rydora-theme [class~="hover:text-[#9c4c1f]"]:hover {
+  color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="after:bg-copper"]::after {
+  background-color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme a[class*="from-copper"],
+.rydora-theme button[class*="from-copper"],
+.rydora-theme a[class*="from-[#b8461f]"],
+.rydora-theme button[class*="from-[#b8461f]"] {
+  background-color: var(--primary-bg, #c0703a) !important;
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary-bg, #c0703a) 78%, white),
+    color-mix(in srgb, var(--primary-bg, #c0703a) 62%, black)
+  ) !important;
+  color: #ffffff !important;
+}
+.rydora-theme [class*="from-[#140b06]"] {
+  --tw-gradient-from: color-mix(in srgb, var(--header-bg, #140b06) 90%, transparent) var(--tw-gradient-from-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position)) !important;
+}
+.rydora-theme [class*="via-[#140b06]"] {
+  --tw-gradient-via: color-mix(in srgb, var(--header-bg, #140b06) 70%, transparent) var(--tw-gradient-via-position) !important;
+}
+.rydora-theme [class*="focus:border-copper"]:focus,
+.rydora-theme [class~="focus:border-[#b84518]"]:focus {
+  border-color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class*="focus:ring-copper"]:focus,
+.rydora-theme [class~="focus:ring-[#b84518]"]:focus,
+.rydora-theme [class*="focus:ring-[#c85a17]"]:focus {
+  --tw-ring-color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="group/card"]:hover [class~="group-hover/card:bg-[#b25724]"],
+.rydora-theme [class~="group/item"]:hover [class~="group-hover/item:bg-[#a8521f]"] {
+  background-color: var(--primary-bg, #c0703a) !important;
+  color: #ffffff !important;
+}
+.rydora-theme [class~="group/card"]:hover [class~="group-hover/card:text-[#c85a17]"],
+.rydora-theme [class~="group/card"]:hover [class~="group-hover/card:text-[#b25724]"],
+.rydora-theme [class~="group/card"]:hover [class~="group-hover/card:text-[#c85a17]/40"] {
+  color: var(--primary-bg, #c0703a) !important;
+}
+.rydora-theme [class~="group/step"]:hover [class~="group-hover/step:text-[#e9cdb5]"] {
+  color: color-mix(in srgb, var(--primary-bg, #c0703a) 28%, white) !important;
+}
+.rydora-theme svg [fill="#d98a4e"],
+.rydora-theme svg [fill="#a8521f"] {
+  fill: var(--primary-bg, #c0703a);
+}
+/* Let the navbar pin to the editor canvas instead of scrolling away. */
+.rydora-theme { overflow: visible !important; }
+.rydora-theme [data-section-type="Header"] {
+  position: relative;
+  z-index: 120;
+  height: 0;
+  min-height: 0;
+  overflow: visible;
+  isolation: auto;
+}
+.rydora-theme [data-section-type="Banner"] section {
+  height: calc(100vh - 5.5rem);
+  min-height: calc(100vh - 5.5rem);
 }
 `.trim();

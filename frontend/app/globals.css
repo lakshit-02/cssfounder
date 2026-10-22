@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-copper: #c0703a;
+  --color-copper-light: #d98a4e;
+  --color-copper-dark: #8f4a1f;
+}
+
 html {
   scroll-behavior: smooth;
   font-size: clamp(16px, calc(10px + 0.4167vw), 18px);

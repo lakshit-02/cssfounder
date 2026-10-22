@@ -1388,6 +1388,128 @@
         { "id": "book-appointment", "label": "Book Appointment", "sectionType": "AppointmentPage", "sectionOrder": ["PageBanner", "AppointmentPage", "WorkingProcess"] },
         { "id": "thank-you", "label": "Thank You", "sectionType": "ThankYouPage", "sectionOrder": ["ThankYouPage"] }
       ]
+    },
+    {
+      "id": "template-rydora-1",
+      "numericId": 18,
+      "title": "Rydora",
+      "type": "Multiple Pages Website",
+      "image": "/automotive/images/hero-car.jpg",
+      "previewimage": "/automotive/images/hero-car.jpg",
+      "preview_description": "Luxury car rental website.",
+      "prebuilt_pages": 7,
+      "sectionVariants": {
+        "Header": "RydoraHeader1",
+        "Footer": "RydoraFooter1",
+        "Banner": "RydoraHero1",
+        "Fleet": "RydoraFleet1",
+        "PortfolioPage": "RydoraFleet1",
+        "About": "RydoraAboutUs1",
+        "Service": "RydoraServices1",
+        "WorkingProcess": "RydoraWorkingProcess1",
+        "Testimonial": "RydoraTestimonials1",
+        "Brands": "RydoraBrands1",
+        "Blog": "RydoraBlogNews1",
+        "PageBanner": "RydoraPageBanner1",
+        "WhyChooseUs": "RydoraWhyChooseUs1",
+        "Gallery": "RydoraGallery1",
+        "ContactPage": "RydoraContactPage1",
+        "EnquiryPage": "RydoraEnquiryForm1"
+      },
+      "variables": {
+        "--font-body": "\"Manrope\", Arial, Helvetica, sans-serif",
+        "--font-heading": "\"Manrope\", Arial, Helvetica, sans-serif",
+        "--primary-bg": "#c0703a",
+        "--primary-text": "#ffffff",
+        "--secondary-bg": "#140b06",
+        "--secondary-text": "#ffffff",
+        "--header-bg": "#140b06",
+        "--header-text": "#ffffff",
+        "--hero-bg": "#140b06",
+        "--hero-title": "#ffffff",
+        "--blue-bg": "#8f4a1f",
+        "--lightcream-bg": "#faf3ee"
+      },
+      "homeSectionOrder": [
+        "Header",
+        "Banner",
+        "Fleet",
+        "About",
+        "Service",
+        "WorkingProcess",
+        "Testimonial",
+        "Brands",
+        "Blog",
+        "Footer"
+      ],
+      "pages": [
+        {
+          "id": "about",
+          "label": "About Us",
+          "sectionType": "About",
+          "sectionOrder": [
+            "PageBanner",
+            "About",
+            "WorkingProcess",
+            "WhyChooseUs"
+          ]
+        },
+        {
+          "id": "portfolio",
+          "label": "Portfolio",
+          "sectionType": "PortfolioPage",
+          "sectionOrder": [
+            "PageBanner",
+            "PortfolioPage"
+          ]
+        },
+        {
+          "id": "services",
+          "label": "Services",
+          "sectionType": "Service",
+          "sectionOrder": [
+            "PageBanner",
+            "Service",
+            "Brands"
+          ]
+        },
+        {
+          "id": "gallery",
+          "label": "Gallery",
+          "sectionType": "Gallery",
+          "sectionOrder": [
+            "PageBanner",
+            "Gallery"
+          ]
+        },
+        {
+          "id": "blog",
+          "label": "Blogs",
+          "sectionType": "Blog",
+          "sectionOrder": [
+            "PageBanner",
+            "Blog"
+          ]
+        },
+        {
+          "id": "contact",
+          "label": "Contact Us",
+          "sectionType": "ContactPage",
+          "sectionOrder": [
+            "PageBanner",
+            "ContactPage"
+          ]
+        },
+        {
+          "id": "enquiry",
+          "label": "Enquiry",
+          "sectionType": "EnquiryPage",
+          "sectionOrder": [
+            "PageBanner",
+            "EnquiryPage"
+          ]
+        }
+      ]
     }
   ],
   "common": {
@@ -27724,6 +27846,903 @@
                 }
               },
               "copyright": "Copyright © 2026. All Rights Reserved. Powered By Lestow."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "Automotive": {
+    "slug": "automotive",
+    "description": "Luxury car rental websites.",
+    "templates": [
+      "template-rydora-1"
+    ],
+    "Rydora": {
+      "templateComponents": {
+        "template-1": {
+          "shared": {
+            "Header": "RydoraHeader1",
+            "Footer": "RydoraFooter1"
+          },
+          "pages": {
+            "home": {
+              "components": [
+                {
+                  "key": "Hero",
+                  "component": "RydoraHero1"
+                },
+                {
+                  "key": "About",
+                  "component": "RydoraAboutUs1"
+                },
+                {
+                  "key": "Services",
+                  "component": "RydoraServices1"
+                },
+                {
+                  "key": "WorkingProcess",
+                  "component": "RydoraWorkingProcess1"
+                },
+                {
+                  "key": "WhyChooseUs",
+                  "component": "RydoraWhyChooseUs1"
+                },
+                {
+                  "key": "Fleet",
+                  "component": "RydoraFleet1"
+                },
+                {
+                  "key": "Brands",
+                  "component": "RydoraBrands1"
+                },
+                {
+                  "key": "Testimonials",
+                  "component": "RydoraTestimonials1"
+                },
+                {
+                  "key": "Blog",
+                  "component": "RydoraBlogNews1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "sections": {
+        "Global": {
+          "variants": {
+            "RydoraGlobal1": {
+              "companyName": "Rydora Car Rental Services",
+              "logo": {
+                "src": "/automotive/images/logo-white.png",
+                "alt": "Rydora Car Rental Services"
+              },
+              "contact": {
+                "address": "123 Business Avenue, New York, NY 10001, USA",
+                "phone": "+1 0000000000",
+                "phoneHref": "tel:+10000000000",
+                "email": "info@xyz.com",
+                "emailHref": "mailto:info@xyz.com",
+                "hours": "Mon - Sun: 9:00 AM - 8:00 PM"
+              },
+              "socials": [
+                {
+                  "name": "Facebook",
+                  "url": "https://facebook.com/",
+                  "icon": "FacebookIcon"
+                },
+                {
+                  "name": "Instagram",
+                  "url": "https://instagram.com/",
+                  "icon": "InstagramIcon"
+                },
+                {
+                  "name": "X",
+                  "url": "https://x.com/",
+                  "icon": "XIcon"
+                },
+                {
+                  "name": "LinkedIn",
+                  "url": "https://linkedin.com/",
+                  "icon": "LinkedInIcon"
+                }
+              ]
+            }
+          }
+        },
+        "Header": {
+          "variants": {
+            "RydoraHeader1": {
+              "logo": {
+                "src": "/automotive/images/logo-white.png",
+                "alt": "Rydora Car Rental Services"
+              },
+              "menu": [
+                {
+                  "label": "Home",
+                  "href": "/"
+                },
+                {
+                  "label": "About Us",
+                  "href": "/about"
+                },
+                {
+                  "label": "Portfolio",
+                  "href": "/portfolio"
+                },
+                {
+                  "label": "Services",
+                  "href": "/services"
+                },
+                {
+                  "label": "Gallery",
+                  "href": "/gallery"
+                },
+                {
+                  "label": "Blogs",
+                  "href": "/blog"
+                },
+                {
+                  "label": "Contact Us",
+                  "href": "/contact"
+                }
+              ],
+              "cta": {
+                "label": "Enquire Now",
+                "href": "/enquiry",
+                "hrefMobile": "/contact"
+              }
+            }
+          }
+        },
+        "Hero": {
+          "variants": {
+            "RydoraHero1": {
+              "badge": "Luxury Car Rental",
+              "heading": {
+                "main": "Make Every Mile Feel Truly Extraordinary"
+              },
+              "description": "Experience the art of luxury driving with an exceptional collection of premium vehicles. Whether for business or leisure, Rydora brings elegance, comfort, and distinction to every mile.",
+              "cta": {
+                "label": "Enquire Now",
+                "href": "/enquiry"
+              },
+              "image": {
+                "src": "/automotive/images/hero-car.jpg",
+                "alt": "Black luxury sedan parked at dusk with a city skyline"
+              },
+              "slides": [
+                {
+                  "src": "/automotive/images/hero-car.jpg",
+                  "alt": "Black luxury sedan parked at dusk with a city skyline"
+                },
+                {
+                  "src": "/automotive/images/about-car.jpg",
+                  "alt": "Black Rydora SUV on a coastal mountain road at sunset"
+                },
+                {
+                  "src": "/automotive/images/showroom.jpg",
+                  "alt": "Exclusive Rydora luxury showroom cars"
+                }
+              ],
+              "list": [
+                {
+                  "title": "Premium Fleet",
+                  "text": "The finest cars. Always.",
+                  "icon": "DiamondIcon"
+                },
+                {
+                  "title": "24/7 Support",
+                  "text": "We're here, always.",
+                  "icon": "HeadsetIcon"
+                },
+                {
+                  "title": "Trusted & Secure",
+                  "text": "Your journey, our priority.",
+                  "icon": "BadgeIcon"
+                }
+              ]
+            }
+          }
+        },
+        "AboutUs": {
+          "variants": {
+            "RydoraAboutUs1": {
+              "badge": "About RYDORA",
+              "heading": {
+                "main": "Your Journey",
+                "highlight": "Our Commitment"
+              },
+              "description": "At RYDORA, we make travel easy, comfortable and unforgettable with our premium car rental services. Whether you're planning a local trip, an outstation getaway, or an airport transfer, we provide well-maintained vehicles, professional chauffeurs and flexible rental options tailored to your needs. Our focus is on safety, reliability and a seamless travel experience, so you can enjoy every journey with complete peace of mind.",
+              "cta": {
+                "label": "About Us",
+                "href": "/about"
+              },
+              "image": {
+                "src": "/automotive/images/about-car.jpg",
+                "alt": "Black Rydora SUV on a coastal mountain road at sunset"
+              },
+              "list": [
+                {
+                  "title": "Well-Maintained Cars",
+                  "text": "A wide range of clean, comfortable and regularly serviced vehicles.",
+                  "icon": "CarFrontIcon"
+                },
+                {
+                  "title": "Professional Chauffeurs",
+                  "text": "Experienced and courteous drivers for a safe and hassle-free journey.",
+                  "icon": "ChauffeurIcon"
+                }
+              ]
+            }
+          }
+        },
+        "WorkingProcess": {
+          "variants": {
+            "RydoraWorkingProcess1": {
+              "badge": "How It Works",
+              "heading": {
+                "main": "Luxury, Made Effortless"
+              },
+              "description": "From choosing your vehicle to turning the key, Rydora keeps every step simple, seamless, and tailored to the way you travel.",
+              "cta": {
+                "label": "Enquire Now",
+                "href": "/enquiry"
+              },
+              "image": {
+                "src": "/automotive/images/how-it-works.jpg",
+                "alt": "Camper van parked on a seaside cliff at sunset"
+              },
+              "list": [
+                {
+                  "title": "Choose Your Car",
+                  "text": "Explore our fleet and find your perfect ride."
+                },
+                {
+                  "title": "Set Your Details",
+                  "text": "Select your dates, locations & preferences."
+                },
+                {
+                  "title": "Confirm Your Ride",
+                  "text": "Review your booking & confirm your reservation."
+                },
+                {
+                  "title": "Enjoy The Drive",
+                  "text": "Collect your car and enjoy every moment."
+                }
+              ]
+            }
+          }
+        },
+        "WhyChooseUs": {
+          "variants": {
+            "RydoraWhyChooseUs1": {
+              "badge": "Why Choose Us",
+              "heading": {
+                "main": "Your Trusted",
+                "highlight": "Car Rental Partner"
+              },
+              "description": "We go beyond just rentals — delivering comfort, reliability and a premium travel experience on every journey.",
+              "image": {
+                "src": "/automotive/images/why-choose.jpg",
+                "alt": "Premium SUV on a coastal road at sunset"
+              },
+              "leftFeatures": [
+                {
+                  "title": "Curated Luxury Fleet",
+                  "text": "Discover an exceptional collection of premium vehicles for every journey.",
+                  "icon": "FleetIcon"
+                },
+                {
+                  "title": "Seamless Experience",
+                  "text": "Enjoy effortless booking and a smooth rental experience from start to finish.",
+                  "icon": "BookingIcon"
+                },
+                {
+                  "title": "Personal Concierge",
+                  "text": "Receive personalized assistance tailored to your preferences and travel plans.",
+                  "icon": "ConciergeIcon"
+                }
+              ],
+              "rightFeatures": [
+                {
+                  "title": "Flexible Rentals",
+                  "text": "Choose flexible rental durations that fit your schedule and lifestyle.",
+                  "icon": "FlexibleIcon"
+                },
+                {
+                  "title": "Premium Standards",
+                  "text": "Experience exceptional vehicle care, comfort, and attention to every detail.",
+                  "icon": "PremiumIcon"
+                },
+                {
+                  "title": "Always Ready",
+                  "text": "Get dedicated reservation assistance whenever your next journey calls.",
+                  "icon": "ReadyIcon"
+                }
+              ]
+            }
+          }
+        },
+        "Services": {
+          "variants": {
+            "RydoraServices1": {
+              "badge": "Our Services",
+              "heading": {
+                "main": "Explore Our",
+                "highlight": "Car Rental Services"
+              },
+              "description": "From local rides to outstation trips, airport transfers to luxury rentals – RYDORA offers reliable and comfortable travel solutions for every journey.",
+              "cta": {
+                "label": "View All Services",
+                "href": "/services"
+              },
+              "list": [
+                {
+                  "slug": "local-car-rental",
+                  "title": "Local Car Rental",
+                  "text": "Convenient and budget-friendly car rental options for your daily travel needs.",
+                  "image": "/automotive/images/cars/city.jpg",
+                  "icon": "CarIcon"
+                },
+                {
+                  "slug": "outstation-car-rental",
+                  "title": "Outstation Car Rental",
+                  "text": "Comfortable and reliable vehicles for long-distance trips across cities.",
+                  "image": "/automotive/images/cars/fortuner.jpg",
+                  "icon": "RoadIcon"
+                },
+                {
+                  "slug": "airport-transfer",
+                  "title": "Airport Transfer",
+                  "text": "Hassle-free pickup and drop services to make your airport journey smooth.",
+                  "image": "/automotive/images/cars/van.jpg",
+                  "icon": "PlaneIcon"
+                },
+                {
+                  "slug": "luxury-car-rental",
+                  "title": "Luxury Car Rental",
+                  "text": "Experience premium comfort and style with our exclusive luxury car collection.",
+                  "image": "/automotive/images/cars/luxury.jpg",
+                  "icon": "CrownIcon"
+                },
+                {
+                  "slug": "corporate-car-rental",
+                  "title": "Corporate Car Rental",
+                  "text": "Professional and reliable transportation solutions for your business needs.",
+                  "image": "/automotive/images/cars/innova.jpg",
+                  "icon": "TeamIcon"
+                },
+                {
+                  "slug": "wedding-car-rental",
+                  "title": "Wedding Car Rental",
+                  "text": "Add elegance to your special day with our premium wedding cars.",
+                  "image": "/automotive/images/cars/wedding.jpg",
+                  "icon": "CalendarIcon"
+                },
+                {
+                  "slug": "city-tour-packages",
+                  "title": "City Tour Packages",
+                  "text": "Explore popular destinations in comfort with our customized city tour packages.",
+                  "image": "/automotive/images/cars/creta.jpg",
+                  "icon": "PinIcon"
+                },
+                {
+                  "slug": "self-drive-car-rental",
+                  "title": "Self Drive Car Rental",
+                  "text": "Enjoy the freedom to drive with our well-maintained self-drive cars.",
+                  "image": "/automotive/images/cars/xuv700.jpg",
+                  "icon": "SteeringIcon"
+                }
+              ]
+            }
+          }
+        },
+        "Fleet": {
+          "variants": {
+            "RydoraFleet1": {
+              "badge": "Our Portfolio",
+              "heading": {
+                "main": "Our",
+                "highlight": "Popular Cars"
+              },
+              "description": "Choose from a wide range of well-maintained vehicles for your local and outstation trips.",
+              "cta": {
+                "label": "Enquire Now",
+                "href": "/enquiry"
+              },
+              "list": [
+                {
+                  "name": "Maruti Swift",
+                  "image": "/automotive/images/cars/swift.jpg",
+                  "seats": 5,
+                  "transmission": "Manual",
+                  "fuel": "Petrol"
+                },
+                {
+                  "name": "Hyundai Creta",
+                  "image": "/automotive/images/cars/creta.jpg",
+                  "seats": 5,
+                  "transmission": "Automatic",
+                  "fuel": "Petrol"
+                },
+                {
+                  "name": "Toyota Innova",
+                  "image": "/automotive/images/cars/innova.jpg",
+                  "seats": 7,
+                  "transmission": "Manual",
+                  "fuel": "Diesel"
+                },
+                {
+                  "name": "Toyota Fortuner",
+                  "image": "/automotive/images/cars/fortuner.jpg",
+                  "seats": 7,
+                  "transmission": "Automatic",
+                  "fuel": "Diesel"
+                },
+                {
+                  "name": "Honda City",
+                  "image": "/automotive/images/cars/city.jpg",
+                  "seats": 5,
+                  "transmission": "Automatic",
+                  "fuel": "Petrol"
+                },
+                {
+                  "name": "Mahindra XUV700",
+                  "image": "/automotive/images/cars/xuv700.jpg",
+                  "seats": 7,
+                  "transmission": "Automatic",
+                  "fuel": "Diesel"
+                },
+                {
+                  "name": "Mercedes-Benz E-Class",
+                  "image": "/automotive/images/cars/luxury.jpg",
+                  "seats": 5,
+                  "transmission": "Automatic",
+                  "fuel": "Petrol"
+                },
+                {
+                  "name": "Luxury Urbania Van",
+                  "image": "/automotive/images/cars/van.jpg",
+                  "seats": 12,
+                  "transmission": "Manual",
+                  "fuel": "Diesel"
+                }
+              ]
+            }
+          }
+        },
+        "Brands": {
+          "variants": {
+            "RydoraBrands1": {
+              "badge": "Our Car Brands",
+              "heading": {
+                "main": "Drive Your",
+                "highlight": "Favourite Brand"
+              },
+              "description": "Choose from a wide range of top car brands and enjoy a comfortable, reliable and premium travel experience with us.",
+              "list": [
+                {
+                  "name": "Jeep",
+                  "logo": "jeep"
+                },
+                {
+                  "name": "Ford",
+                  "logo": "ford"
+                },
+                {
+                  "name": "Mazda",
+                  "logo": "mazda"
+                },
+                {
+                  "name": "BMW",
+                  "logo": "bmw"
+                },
+                {
+                  "name": "Honda",
+                  "logo": "honda"
+                },
+                {
+                  "name": "Toyota",
+                  "logo": "toyota"
+                },
+                {
+                  "name": "Audi",
+                  "logo": "audi"
+                },
+                {
+                  "name": "Hyundai",
+                  "logo": "hyundai"
+                },
+                {
+                  "name": "Kia",
+                  "logo": "kia"
+                },
+                {
+                  "name": "Tata",
+                  "logo": "tata"
+                },
+                {
+                  "name": "Mahindra",
+                  "logo": "mahindra"
+                },
+                {
+                  "name": "Suzuki",
+                  "logo": "suzuki"
+                },
+                {
+                  "name": "Volkswagen",
+                  "logo": "volkswagen"
+                },
+                {
+                  "name": "Skoda",
+                  "logo": "skoda"
+                },
+                {
+                  "name": "Nissan",
+                  "logo": "nissan"
+                },
+                {
+                  "name": "Volvo",
+                  "logo": "volvo"
+                }
+              ]
+            }
+          }
+        },
+        "Testimonials": {
+          "variants": {
+            "RydoraTestimonials1": {
+              "badge": "Testimonials",
+              "heading": {
+                "main": "Every Journey",
+                "highlight": "Leaves an Impression."
+              },
+              "description": "From local rides to outstation trips, airport transfers to luxury rentals – RYDORA delivers refined vehicles, seamless service, and experiences our clients are happy to remember.",
+              "list": [
+                {
+                  "id": 1,
+                  "name": "Rahul Mehta",
+                  "role": "Business Traveller",
+                  "rating": 5,
+                  "quote": "\"Excellent service! The car was clean, comfortable and delivered on time. The entire booking process was smooth and hassle-free. Highly recommended!\""
+                },
+                {
+                  "id": 2,
+                  "name": "Priya Sharma",
+                  "role": "Family Traveller",
+                  "rating": 5,
+                  "quote": "\"I booked a car for our family trip and had a wonderful experience. The vehicle was in great condition and the driver was very polite and professional.\""
+                },
+                {
+                  "id": 3,
+                  "name": "Amit Verma",
+                  "role": "Corporate Client",
+                  "rating": 5,
+                  "quote": "\"Reliable and punctual service. I used RYDORA for an airport transfer and everything was perfect. Will definitely book again for my future trips.\""
+                },
+                {
+                  "id": 4,
+                  "name": "Sneha Kapoor",
+                  "role": "Solo Traveller",
+                  "rating": 5,
+                  "quote": "\"Booking was effortless and the support team was very responsive. The chauffeur was experienced and made the outstation trip super relaxing.\""
+                },
+                {
+                  "id": 5,
+                  "name": "Vikram Malhotra",
+                  "role": "Business Executive",
+                  "rating": 5,
+                  "quote": "\"Top notch fleet and punctual pickups every time. Perfect choice for corporate visits and airport travel without any delays.\""
+                }
+              ]
+            }
+          }
+        },
+        "Gallery": {
+          "variants": {
+            "RydoraGallery1": {
+              "list": [
+                {
+                  "id": 1,
+                  "src": "/automotive/images/cars_01.jpg",
+                  "alt": "Luxury Sedan City Sunset"
+                },
+                {
+                  "id": 2,
+                  "src": "/automotive/images/cars_02.jpg",
+                  "alt": "White SUV Mountain Road"
+                },
+                {
+                  "id": 3,
+                  "src": "/automotive/images/cars_03.jpg",
+                  "alt": "Luxury Car Rear Interior"
+                },
+                {
+                  "id": 4,
+                  "src": "/automotive/images/cars_04.jpg",
+                  "alt": "Silver Executive Sedan"
+                },
+                {
+                  "id": 5,
+                  "src": "/automotive/images/cars_05.jpg",
+                  "alt": "Black SUV Sunset Drive"
+                },
+                {
+                  "id": 6,
+                  "src": "/automotive/images/cars_06.jpg",
+                  "alt": "Car Cockpit Steering Wheel"
+                },
+                {
+                  "id": 7,
+                  "src": "/automotive/images/cars_07.jpg",
+                  "alt": "Fleet of White SUVs"
+                },
+                {
+                  "id": 8,
+                  "src": "/automotive/images/cars_08.jpg",
+                  "alt": "Car Key on Leather Seat"
+                },
+                {
+                  "id": 9,
+                  "src": "/automotive/images/cars_10.jpg",
+                  "alt": "Premium Leather Interior"
+                },
+                {
+                  "id": 10,
+                  "src": "/automotive/images/cars_11.jpg",
+                  "alt": "Silver Crossover on Motion"
+                },
+                {
+                  "id": 11,
+                  "src": "/automotive/images/cars_12.jpg",
+                  "alt": "Dashboard Navigation Cockpit"
+                },
+                {
+                  "id": 12,
+                  "src": "/automotive/images/cars_01.jpg",
+                  "alt": "Luxury Black Passenger Van"
+                },
+                {
+                  "id": 13,
+                  "src": "/automotive/images/cars_02.jpg",
+                  "alt": "Beige Leather Rear Cabin"
+                },
+                {
+                  "id": 14,
+                  "src": "/automotive/images/cars_03.jpg",
+                  "alt": "SUV Road Journey"
+                },
+                {
+                  "id": 15,
+                  "src": "/automotive/images/cars_04.jpg",
+                  "alt": "Luxury Ambient Cabin Cockpit"
+                },
+                {
+                  "id": 16,
+                  "src": "/automotive/images/cars_05.jpg",
+                  "alt": "VIP Travel Luxury Van"
+                }
+              ]
+            }
+          }
+        },
+        "BlogNews": {
+          "variants": {
+            "RydoraBlogNews1": {
+              "badge": "From Our Blog",
+              "heading": {
+                "main": "Tips, Guides &",
+                "highlight": "Travel Stories"
+              },
+              "description": "Explore our latest blogs for travel tips, destination guides, and helpful insights to make your journey better.",
+              "cta": {
+                "label": "View All Blogs",
+                "href": "/blog"
+              },
+              "readMore": "Read More",
+              "sidebar": {
+                "categoriesTitle": "Categories",
+                "recentBlogsTitle": "Recent Blogs",
+                "cta": {
+                  "image": "/automotive/images/blog/cta.jpg",
+                  "badge": "Plan Your Next Journey",
+                  "heading": {
+                    "main": "Need a Car",
+                    "highlight": "for Your Trip?"
+                  },
+                  "description": "Get the best rental options at affordable rates.",
+                  "button": {
+                    "label": "Enquire Now",
+                    "href": "/enquiry"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "EnquiryForm": {
+          "variants": {
+            "RydoraEnquiryForm1": {
+              "badge": "Car Rental Enquiry",
+              "heading": {
+                "main": "Get Your Perfect Car",
+                "middle": "for",
+                "highlight": "Your Journey"
+              },
+              "description": "Fill in your requirements and our team will get back to you with the best car rental options, availability and rates.",
+              "list": [
+                {
+                  "icon": "Car",
+                  "title": "Wide Vehicle Range",
+                  "description": "Hatchbacks, Sedans, SUVs & Luxury Cars"
+                },
+                {
+                  "icon": "Tag",
+                  "title": "Best Rental Rates",
+                  "description": "Transparent and competitive pricing"
+                },
+                {
+                  "icon": "Headphones",
+                  "title": "Quick Assistance",
+                  "description": "Dedicated support from our team"
+                },
+                {
+                  "icon": "ShieldCheck",
+                  "title": "Safe & Reliable",
+                  "description": "Well-maintained and insured vehicles"
+                }
+              ],
+              "image": {
+                "src": "/automotive/images/cars_06.jpg",
+                "alt": "Luxury SUV on mountain road at sunset"
+              },
+              "form": {
+                "namePlaceholder": "Your Name *",
+                "phonePlaceholder": "Phone Number *",
+                "emailPlaceholder": "Email Address *",
+                "carTypePlaceholder": "Select Car Type *",
+                "durationPlaceholder": "Rental Duration *",
+                "pickupPlaceholder": "Pickup Location *",
+                "dropoffPlaceholder": "Drop-off Location *",
+                "pickupDatePlaceholder": "Pickup Date *",
+                "returnDatePlaceholder": "Return Date *",
+                "messagePlaceholder": "Your Message (Optional)",
+                "submitText": "Submit Enquiry",
+                "privacyText": "Your information is safe with us. We respect your privacy."
+              }
+            }
+          }
+        },
+        "ContactPage": {
+          "variants": {
+            "RydoraContactPage1": {
+              "badge": "Get In Touch",
+              "heading": {
+                "main": "Send Us a",
+                "highlight": "Message"
+              },
+              "description": "Have a question or need assistance? Fill out the form and our team will get back to you shortly.",
+              "form": {
+                "namePlaceholder": "Your Name *",
+                "phonePlaceholder": "Phone Number *",
+                "emailPlaceholder": "Email Address *",
+                "carTypePlaceholder": "Select Car Type",
+                "durationPlaceholder": "Rental Duration",
+                "pickupPlaceholder": "Pick-up Location",
+                "dropoffPlaceholder": "Drop-off Location",
+                "messagePlaceholder": "Your Message (Optional)",
+                "submitText": "Send Message",
+                "successMessage": "Thank you! Your message has been sent. We'll get back to you shortly."
+              }
+            }
+          }
+        },
+        "Footer": {
+          "variants": {
+            "RydoraFooter1": {
+              "bgImage": "/automotive/images/footer-bg.jpg",
+              "logo": {
+                "src": "/automotive/images/logo-white.png",
+                "alt": "Rydora Car Rental Services"
+              },
+              "description": "Rydora Car Rental Services offers a wide range of well-maintained vehicles for your every journey. Experience comfort, style and reliability with us.",
+              "socials": [
+                {
+                  "label": "Facebook",
+                  "href": "https://facebook.com/",
+                  "icon": "FacebookIcon"
+                },
+                {
+                  "label": "Instagram",
+                  "href": "https://instagram.com/",
+                  "icon": "InstagramIcon"
+                },
+                {
+                  "label": "X",
+                  "href": "https://x.com/",
+                  "icon": "XIcon"
+                },
+                {
+                  "label": "LinkedIn",
+                  "href": "https://linkedin.com/",
+                  "icon": "LinkedInIcon"
+                }
+              ],
+              "quickLinks": {
+                "title": "Quick Links",
+                "list": [
+                  {
+                    "label": "Home",
+                    "href": "/"
+                  },
+                  {
+                    "label": "About Us",
+                    "href": "/about"
+                  },
+                  {
+                    "label": "Portfolio",
+                    "href": "/portfolio"
+                  },
+                  {
+                    "label": "Services",
+                    "href": "/services"
+                  },
+                  {
+                    "label": "Gallery",
+                    "href": "/gallery"
+                  },
+                  {
+                    "label": "Blogs",
+                    "href": "/blog"
+                  },
+                  {
+                    "label": "Contact Us",
+                    "href": "/contact"
+                  }
+                ]
+              },
+              "services": {
+                "title": "Our Services",
+                "list": [
+                  "Local Car Rental",
+                  "Outstation Car Rental",
+                  "Airport Transfer",
+                  "Luxury Car Rental",
+                  "Corporate Car Rental",
+                  "Wedding Car Rental",
+                  "City Tour Packages"
+                ]
+              },
+              "contact": {
+                "title": "Contact Us",
+                "list": [
+                  {
+                    "icon": "PinIcon",
+                    "html": "123 Business Avenue, New York, NY 10001, USA"
+                  },
+                  {
+                    "icon": "PhoneIcon",
+                    "html": "<a href=\"tel:+10000000000\">+1 0000000000</a>"
+                  },
+                  {
+                    "icon": "MailIcon",
+                    "html": "<a href=\"mailto:info@xyz.com\">info@xyz.com</a>"
+                  },
+                  {
+                    "icon": "ClockIcon",
+                    "html": "Mon - Sun: 9:00 AM - 8:00 PM"
+                  }
+                ]
+              },
+              "copyright": "Copyright 2026 . All Rights Reserved. Powered By Lestow.",
+              "legalLinks": [
+                "Privacy Policy",
+                "Terms & Conditions",
+                "Sitemap"
+              ]
             }
           }
         }
