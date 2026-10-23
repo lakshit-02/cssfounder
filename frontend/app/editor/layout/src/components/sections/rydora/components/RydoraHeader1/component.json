@@ -1,0 +1,54 @@
+{
+  "key": "RydoraHeader1",
+  "sectionType": "Header",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraHeader1",
+  "folder": "header",
+  "editorFields": [
+    "logo",
+    "menu",
+    "cta"
+  ],
+  "defaultContent": {
+    "logo": {
+      "src": "assets/main-logo/logo-white.png",
+      "alt": "Rydora Car Rental Services"
+    },
+    "menu": [
+      {
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "label": "About Us",
+        "href": "/about"
+      },
+      {
+        "label": "Portfolio",
+        "href": "/portfolio"
+      },
+      {
+        "label": "Services",
+        "href": "/services"
+      },
+      {
+        "label": "Gallery",
+        "href": "/gallery"
+      },
+      {
+        "label": "Blogs",
+        "href": "/blog"
+      },
+      {
+        "label": "Contact Us",
+        "href": "/contact"
+      }
+    ],
+    "cta": {
+      "label": "Enquire Now",
+      "href": "/enquiry",
+      "hrefMobile": "/contact"
+    }
+  }
+}

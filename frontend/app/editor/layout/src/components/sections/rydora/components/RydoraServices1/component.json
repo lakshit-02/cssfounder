@@ -1,0 +1,85 @@
+{
+  "key": "RydoraServices1",
+  "sectionType": "Services",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraServices1",
+  "folder": "service",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "Our Services",
+    "heading": {
+      "main": "Explore Our",
+      "highlight": "Car Rental Services"
+    },
+    "description": "From local rides to outstation trips, airport transfers to luxury rentals – RYDORA offers reliable and comfortable travel solutions for every journey.",
+    "cta": {
+      "label": "View All Services",
+      "href": "/services"
+    },
+    "list": [
+      {
+        "slug": "local-car-rental",
+        "title": "Local Car Rental",
+        "text": "Convenient and budget-friendly car rental options for your daily travel needs.",
+        "image": "assets/fleet/city.jpg",
+        "icon": "CarIcon"
+      },
+      {
+        "slug": "outstation-car-rental",
+        "title": "Outstation Car Rental",
+        "text": "Comfortable and reliable vehicles for long-distance trips across cities.",
+        "image": "assets/fleet/fortuner.jpg",
+        "icon": "RoadIcon"
+      },
+      {
+        "slug": "airport-transfer",
+        "title": "Airport Transfer",
+        "text": "Hassle-free pickup and drop services to make your airport journey smooth.",
+        "image": "assets/fleet/van.jpg",
+        "icon": "PlaneIcon"
+      },
+      {
+        "slug": "luxury-car-rental",
+        "title": "Luxury Car Rental",
+        "text": "Experience premium comfort and style with our exclusive luxury car collection.",
+        "image": "assets/fleet/luxury.jpg",
+        "icon": "CrownIcon"
+      },
+      {
+        "slug": "corporate-car-rental",
+        "title": "Corporate Car Rental",
+        "text": "Professional and reliable transportation solutions for your business needs.",
+        "image": "assets/fleet/innova.jpg",
+        "icon": "TeamIcon"
+      },
+      {
+        "slug": "wedding-car-rental",
+        "title": "Wedding Car Rental",
+        "text": "Add elegance to your special day with our premium wedding cars.",
+        "image": "assets/fleet/wedding.jpg",
+        "icon": "CalendarIcon"
+      },
+      {
+        "slug": "city-tour-packages",
+        "title": "City Tour Packages",
+        "text": "Explore popular destinations in comfort with our customized city tour packages.",
+        "image": "assets/fleet/creta.jpg",
+        "icon": "PinIcon"
+      },
+      {
+        "slug": "self-drive-car-rental",
+        "title": "Self Drive Car Rental",
+        "text": "Enjoy the freedom to drive with our well-maintained self-drive cars.",
+        "image": "assets/fleet/xuv700.jpg",
+        "icon": "SteeringIcon"
+      }
+    ]
+  }
+}

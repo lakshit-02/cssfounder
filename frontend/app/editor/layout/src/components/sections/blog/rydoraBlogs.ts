@@ -22,7 +22,7 @@ export const blogs: BlogPost[] = [
     title: "10 Essential Tips for a Smooth Road Trip",
     description:
       "Planning a road trip? Here are 10 essential tips to ensure a safe, comfortable and memorable journey.",
-    image: "/automotive/images/blog/road-trip.jpg",
+    image: "assets/blog/road-trip.jpg",
     intro:
       "Renting a car is one of the most convenient ways to travel, whether for business, a family vacation, or a weekend getaway. It gives you the freedom to explore at your own pace and reach destinations comfortably. However, to make the most of your rental experience, a little planning goes a long way.",
     steps: [
@@ -58,7 +58,7 @@ export const blogs: BlogPost[] = [
     title: "Top 7 Weekend Getaways Near You",
     description:
       "Discover the best weekend destinations for a quick and refreshing break. Perfect for families, couples and solo travellers.",
-    image: "/automotive/images/blog/getaways.jpg",
+    image: "assets/blog/getaways.jpg",
     intro:
       "A short weekend escape can do wonders to recharge your mind and body. With the right car and a little planning, you can swap the city noise for mountains, lakes or beaches in just a few hours of driving.",
     steps: [
@@ -94,7 +94,7 @@ export const blogs: BlogPost[] = [
     title: "How to Choose the Right Car for Your Trip",
     description:
       "From budget cars to luxury SUVs, learn how to choose the perfect vehicle based on your travel needs and preferences.",
-    image: "/automotive/images/blog/choose-car.jpg",
+    image: "assets/blog/choose-car.jpg",
     intro:
       "The car you choose can make or break your trip. The right vehicle keeps everyone comfortable, fits your luggage and suits the roads you'll be driving on — without stretching your budget.",
     steps: [
@@ -130,7 +130,7 @@ export const blogs: BlogPost[] = [
     title: "Scenic Coastal Drives You Must Experience",
     description:
       "Breathtaking sea views, winding roads and golden sunsets — our favourite coastal routes for an unforgettable drive.",
-    image: "/automotive/images/about-car.jpg",
+    image: "assets/about/about-car.jpg",
     intro:
       "Few experiences beat a drive along the coast with the windows down and the sea stretching to the horizon. Here's how to make the most of your next coastal road trip.",
     steps: [
@@ -166,7 +166,7 @@ export const blogs: BlogPost[] = [
     title: "Planning the Perfect Camping Road Trip",
     description:
       "Everything you need to know about packing, routes and choosing the right vehicle for a relaxing camping getaway.",
-    image: "/automotive/images/how-it-works.jpg",
+    image: "assets/process/how-it-works.jpg",
     intro:
       "Camping road trips combine the freedom of driving with the joy of sleeping under the stars. With good preparation, they can be the most memorable trips of all.",
     steps: [
@@ -202,7 +202,7 @@ export const blogs: BlogPost[] = [
     title: "Why Renting From a Trusted Provider Matters",
     description:
       "Well-maintained cars, transparent pricing and 24/7 support — what to look for before you book your next rental.",
-    image: "/automotive/images/showroom.jpg",
+    image: "assets/contact/showroom.jpg",
     intro:
       "Cheap deals can be tempting, but the rental company you choose affects your safety, comfort and peace of mind. Here's what to look for before you book.",
     steps: [

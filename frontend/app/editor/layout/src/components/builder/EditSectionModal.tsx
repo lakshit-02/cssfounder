@@ -39,6 +39,21 @@ import {
   X,
 } from "lucide-react";
 import { site as plumbingSite } from "../sections/data/plumbing1";
+import rydoraAboutUs1 from "../sections/rydora/components/RydoraAboutUs1/component.json";
+import rydoraBlogNews1 from "../sections/rydora/components/RydoraBlogNews1/component.json";
+import rydoraBrands1 from "../sections/rydora/components/RydoraBrands1/component.json";
+import rydoraContactPage1 from "../sections/rydora/components/RydoraContactPage1/component.json";
+import rydoraEnquiryForm1 from "../sections/rydora/components/RydoraEnquiryForm1/component.json";
+import rydoraFleet1 from "../sections/rydora/components/RydoraFleet1/component.json";
+import rydoraFooter1 from "../sections/rydora/components/RydoraFooter1/component.json";
+import rydoraGallery1 from "../sections/rydora/components/RydoraGallery1/component.json";
+import rydoraHeader1 from "../sections/rydora/components/RydoraHeader1/component.json";
+import rydoraHero1 from "../sections/rydora/components/RydoraHero1/component.json";
+import rydoraPageBanner1 from "../sections/rydora/components/RydoraPageBanner1/component.json";
+import rydoraServices1 from "../sections/rydora/components/RydoraServices1/component.json";
+import rydoraTestimonials1 from "../sections/rydora/components/RydoraTestimonials1/component.json";
+import rydoraWhyChooseUs1 from "../sections/rydora/components/RydoraWhyChooseUs1/component.json";
+import rydoraWorkingProcess1 from "../sections/rydora/components/RydoraWorkingProcess1/component.json";
 import { site as petDefaultSite } from "../sections/data/pet/petDefaults";
 import { agrandirBolt, generalSansMedium } from "@/app/fonts";
 import {
@@ -91,6 +106,61 @@ import {
   type HeaderActiveMenuStyle,
 } from "../sections/header/activeMenuStyles";
 import { PLUMBING_ICON_NAMES } from "../../lib/plumbingIcons";
+
+type RydoraComponentMeta = {
+  key: string;
+  editorFields: readonly string[];
+  defaultContent: Record<string, unknown> & {
+    pages?: Record<string, Record<string, unknown>>;
+  };
+};
+
+const rydoraComponentMeta: Record<string, RydoraComponentMeta> = Object.fromEntries(
+  (
+    [
+      rydoraHeader1,
+      rydoraHero1,
+      rydoraPageBanner1,
+      rydoraAboutUs1,
+      rydoraWorkingProcess1,
+      rydoraWhyChooseUs1,
+      rydoraServices1,
+      rydoraFleet1,
+      rydoraBrands1,
+      rydoraTestimonials1,
+      rydoraBlogNews1,
+      rydoraGallery1,
+      rydoraEnquiryForm1,
+      rydoraContactPage1,
+      rydoraFooter1,
+    ] as RydoraComponentMeta[]
+  ).map((meta) => [meta.key, meta]),
+);
+
+function isEmptyRydoraEditorValue(value: unknown) {
+  if (value == null) return true;
+  if (typeof value === "string") return !value.trim();
+  if (Array.isArray(value)) return value.length === 0;
+  return false;
+}
+
+function rydoraEditorEntries(
+  variant: string,
+  source: Record<string, unknown>,
+  page?: string,
+): [string, unknown][] | null {
+  const meta = rydoraComponentMeta[variant];
+  if (!meta) return null;
+  const pageKey = String(page || "").trim().toLowerCase().replace(/^\//, "");
+  const pageDefaults = meta.defaultContent.pages?.[pageKey] ?? {};
+  return meta.editorFields.map((field) => {
+    const value = source[field];
+    if (field in source && !isEmptyRydoraEditorValue(value)) return [field, value];
+    const fromPage = pageDefaults[field];
+    if (fromPage != null && fromPage !== "") return [field, fromPage];
+    return [field, meta.defaultContent[field] ?? ""];
+  });
+}
 
 type MenuItem = {
   label: string;
@@ -2368,24 +2438,6 @@ const COOLFIX_CONTENT_FIELDS: Record<string, string[]> = {
   CoolFixFooter1: ["logo", "description", "titles", "quickLinks", "services", "contacts", "socials", "copyright"],
 };
 
-const RYDORA_CONTENT_FIELDS: Record<string, string[]> = {
-  RydoraHeader1: ["logo", "menu", "cta"],
-  RydoraHero1: ["badge", "heading", "description", "cta", "image", "slides", "list"],
-  RydoraPageBanner1: ["title", "image", "imageAlt", "breadcrumbs"],
-  RydoraAboutUs1: ["badge", "heading", "description", "cta", "image", "list"],
-  RydoraWorkingProcess1: ["badge", "heading", "description", "cta", "image", "list"],
-  RydoraWhyChooseUs1: ["badge", "heading", "description", "image", "leftFeatures", "rightFeatures"],
-  RydoraServices1: ["badge", "heading", "description", "cta", "list"],
-  RydoraFleet1: ["badge", "heading", "description", "cta", "list"],
-  RydoraBrands1: ["badge", "heading", "description", "list"],
-  RydoraTestimonials1: ["badge", "heading", "description", "list"],
-  RydoraGallery1: ["list"],
-  RydoraBlogNews1: ["badge", "heading", "description", "cta", "readMore", "sidebar"],
-  RydoraEnquiryForm1: ["badge", "heading", "description", "list", "image", "form"],
-  RydoraContactPage1: ["badge", "heading", "description", "form", "infoCards", "image", "mapUrl"],
-  RydoraFooter1: ["bgImage", "logo", "description", "socials", "quickLinks", "services", "contact", "copyright", "legalLinks"],
-};
-
 const withThemeEditorContent = (
   variant: string,
   stored?: Record<string, unknown>,
@@ -4115,69 +4167,8 @@ export default function EditSectionModal({
       }
     }
     if (activeVariant.startsWith("Rydora")) {
-      const order = RYDORA_CONTENT_FIELDS[activeVariant];
-      if (order) {
-        return order
-          .filter(
-            (field) =>
-              field in source ||
-              activeVariant === "RydoraPageBanner1" ||
-              activeVariant === "RydoraContactPage1",
-          )
-          .map((field) => {
-            if (field in source) {
-              const value = source[field];
-              const blankBannerImage =
-                field === "image" &&
-                activeVariant === "RydoraPageBanner1" &&
-                (typeof value !== "string" || !value.trim());
-              const blankBannerTitle =
-                field === "title" &&
-                activeVariant === "RydoraPageBanner1" &&
-                (typeof value !== "string" || !value.trim());
-              if (!blankBannerImage && !blankBannerTitle) {
-                return [field, value] as [string, unknown];
-              }
-            }
-            if (field === "image" && activeVariant === "RydoraPageBanner1") {
-              return [field, "/automotive/images/page-banner.jpg"] as [string, unknown];
-            }
-            if (field === "title" && activeVariant === "RydoraPageBanner1") {
-              const page = String(currentSection?.page || "").trim().toLowerCase();
-              const titles: Record<string, string> = {
-                about: "About Us",
-                portfolio: "Portfolio",
-                cars: "Portfolio",
-                services: "Services",
-                service: "Services",
-                gallery: "Gallery",
-                blog: "Blogs",
-                blogs: "Blogs",
-                contact: "Contact Us",
-                enquiry: "Enquiry",
-              };
-              return [field, titles[page] || "Rydora"] as [string, unknown];
-            }
-            if (field === "breadcrumbs") {
-              return [field, [{ label: "Home", href: "/" }, { label: "Page" }]] as [string, unknown];
-            }
-            if (field === "infoCards") {
-              return [field, [
-                { title: "Call Us", lines: ["+1 0000000000", "Mon - Sat, 9:00 AM - 8:00 PM"] },
-                { title: "Email Us", lines: ["info@xyz.com", "We reply within 24 hours"] },
-                { title: "Visit Our Office", lines: ["123 Business Avenue,", "New York, NY 10001, USA"] },
-                { title: "Working Hours", lines: ["Mon - Sat: 9:00 AM - 8:00 PM", "Sunday: 10:00 AM - 6:00 PM"] },
-              ]] as [string, unknown];
-            }
-            if (field === "image" && activeVariant === "RydoraContactPage1") {
-              return [field, "/automotive/images/showroom.jpg"] as [string, unknown];
-            }
-            if (field === "mapUrl") {
-              return [field, "https://www.google.com/maps?q=New+York,+NY+10001,+USA&z=13&output=embed"] as [string, unknown];
-            }
-            return [field, ""] as [string, unknown];
-          });
-      }
+      const rydoraEntries = rydoraEditorEntries(activeVariant, source, currentSection?.page);
+      if (rydoraEntries) return rydoraEntries;
     }
     if (activeVariant === "MediCarePageBanner1") {
       const sliced = medicarePageBannerEditorData(source, currentSection?.page);

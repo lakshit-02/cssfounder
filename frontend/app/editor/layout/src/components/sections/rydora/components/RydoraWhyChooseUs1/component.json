@@ -1,0 +1,62 @@
+{
+  "key": "RydoraWhyChooseUs1",
+  "sectionType": "WhyChooseUs",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraWhyChooseUs1",
+  "folder": "whychooseus",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "image",
+    "leftFeatures",
+    "rightFeatures"
+  ],
+  "defaultContent": {
+    "badge": "Why Choose Us",
+    "heading": {
+      "main": "Your Trusted",
+      "highlight": "Car Rental Partner"
+    },
+    "description": "We go beyond just rentals — delivering comfort, reliability and a premium travel experience on every journey.",
+    "image": {
+      "src": "assets/whychoose/why-choose.jpg",
+      "alt": "Premium SUV on a coastal road at sunset"
+    },
+    "leftFeatures": [
+      {
+        "title": "Curated Luxury Fleet",
+        "text": "Discover an exceptional collection of premium vehicles for every journey.",
+        "icon": "FleetIcon"
+      },
+      {
+        "title": "Seamless Experience",
+        "text": "Enjoy effortless booking and a smooth rental experience from start to finish.",
+        "icon": "BookingIcon"
+      },
+      {
+        "title": "Personal Concierge",
+        "text": "Receive personalized assistance tailored to your preferences and travel plans.",
+        "icon": "ConciergeIcon"
+      }
+    ],
+    "rightFeatures": [
+      {
+        "title": "Flexible Rentals",
+        "text": "Choose flexible rental durations that fit your schedule and lifestyle.",
+        "icon": "FlexibleIcon"
+      },
+      {
+        "title": "Premium Standards",
+        "text": "Experience exceptional vehicle care, comfort, and attention to every detail.",
+        "icon": "PremiumIcon"
+      },
+      {
+        "title": "Always Ready",
+        "text": "Get dedicated reservation assistance whenever your next journey calls.",
+        "icon": "ReadyIcon"
+      }
+    ]
+  }
+}

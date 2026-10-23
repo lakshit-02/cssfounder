@@ -1,0 +1,65 @@
+{
+  "key": "RydoraEnquiryForm1",
+  "sectionType": "Enquiry",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraEnquiryForm1",
+  "folder": "form",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "list",
+    "image",
+    "form"
+  ],
+  "defaultContent": {
+    "badge": "Car Rental Enquiry",
+    "heading": {
+      "main": "Get Your Perfect Car",
+      "middle": "for",
+      "highlight": "Your Journey"
+    },
+    "description": "Fill in your requirements and our team will get back to you with the best car rental options, availability and rates.",
+    "list": [
+      {
+        "icon": "Car",
+        "title": "Wide Vehicle Range",
+        "description": "Hatchbacks, Sedans, SUVs & Luxury Cars"
+      },
+      {
+        "icon": "Tag",
+        "title": "Best Rental Rates",
+        "description": "Transparent and competitive pricing"
+      },
+      {
+        "icon": "Headphones",
+        "title": "Quick Assistance",
+        "description": "Dedicated support from our team"
+      },
+      {
+        "icon": "ShieldCheck",
+        "title": "Safe & Reliable",
+        "description": "Well-maintained and insured vehicles"
+      }
+    ],
+    "image": {
+      "src": "assets/gallery/cars_06.jpg",
+      "alt": "Luxury SUV on mountain road at sunset"
+    },
+    "form": {
+      "namePlaceholder": "Your Name *",
+      "phonePlaceholder": "Phone Number *",
+      "emailPlaceholder": "Email Address *",
+      "carTypePlaceholder": "Select Car Type *",
+      "durationPlaceholder": "Rental Duration *",
+      "pickupPlaceholder": "Pickup Location *",
+      "dropoffPlaceholder": "Drop-off Location *",
+      "pickupDatePlaceholder": "Pickup Date *",
+      "returnDatePlaceholder": "Return Date *",
+      "messagePlaceholder": "Your Message (Optional)",
+      "submitText": "Submit Enquiry",
+      "privacyText": "Your information is safe with us. We respect your privacy."
+    }
+  }
+}

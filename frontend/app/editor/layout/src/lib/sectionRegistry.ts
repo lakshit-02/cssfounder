@@ -257,21 +257,21 @@ import MediCareWorkingProcess1 from "../components/sections/process/HealthAndWel
 import MediCareContactPage1 from "../components/sections/contact/HealthAndWellnessContactPage1";
 import MediCareThankYouPage1 from "../components/sections/thank-you/HealthAndWellnessThankYouPage1";
 
-import RydoraHeader1 from "../components/sections/header/AutomotiveHeader1";
-import RydoraFooter1 from "../components/sections/footer/AutomotiveFooter1";
-import RydoraPageBanner1 from "../components/sections/breadcrumb/AutomotivePageBanner1";
-import RydoraHero1 from "../components/sections/banner/AutomotiveHero1";
-import RydoraAboutUs1 from "../components/sections/about/AutomotiveAboutUs1";
-import RydoraWorkingProcess1 from "../components/sections/process/AutomotiveWorkingProcess1";
-import RydoraWhyChooseUs1 from "../components/sections/whychooseus/AutomotiveWhyChooseUs1";
-import RydoraServices1 from "../components/sections/service/AutomotiveServices1";
-import RydoraFleet1 from "../components/sections/fleet/AutomotiveFleet1";
-import RydoraBrands1 from "../components/sections/brands/AutomotiveBrands1";
-import RydoraTestimonials1 from "../components/sections/testimonial/AutomotiveTestimonials1";
-import RydoraBlogNews1 from "../components/sections/blog/AutomotiveBlogNews1";
-import RydoraGallery1 from "../components/sections/gallery/AutomotiveGallery1";
-import RydoraEnquiryForm1 from "../components/sections/form/AutomotiveEnquiryForm1";
-import RydoraContactPage1 from "../components/sections/contact/AutomotiveContactPage1";
+import RydoraHeader1 from "../components/sections/rydora/components/RydoraHeader1/RydoraHeader1";
+import RydoraFooter1 from "../components/sections/rydora/components/RydoraFooter1/RydoraFooter1";
+import RydoraPageBanner1 from "../components/sections/rydora/components/RydoraPageBanner1/RydoraPageBanner1";
+import RydoraHero1 from "../components/sections/rydora/components/RydoraHero1/RydoraHero1";
+import RydoraAboutUs1 from "../components/sections/rydora/components/RydoraAboutUs1/RydoraAboutUs1";
+import RydoraWorkingProcess1 from "../components/sections/rydora/components/RydoraWorkingProcess1/RydoraWorkingProcess1";
+import RydoraWhyChooseUs1 from "../components/sections/rydora/components/RydoraWhyChooseUs1/RydoraWhyChooseUs1";
+import RydoraServices1 from "../components/sections/rydora/components/RydoraServices1/RydoraServices1";
+import RydoraFleet1 from "../components/sections/rydora/components/RydoraFleet1/RydoraFleet1";
+import RydoraBrands1 from "../components/sections/rydora/components/RydoraBrands1/RydoraBrands1";
+import RydoraTestimonials1 from "../components/sections/rydora/components/RydoraTestimonials1/RydoraTestimonials1";
+import RydoraBlogNews1 from "../components/sections/rydora/components/RydoraBlogNews1/RydoraBlogNews1";
+import RydoraGallery1 from "../components/sections/rydora/components/RydoraGallery1/RydoraGallery1";
+import RydoraEnquiryForm1 from "../components/sections/rydora/components/RydoraEnquiryForm1/RydoraEnquiryForm1";
+import RydoraContactPage1 from "../components/sections/rydora/components/RydoraContactPage1/RydoraContactPage1";
 
 import { SectionProps } from "../types/section";
 

@@ -1,0 +1,45 @@
+{
+  "key": "RydoraContactPage1",
+  "sectionType": "Contact",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraContactPage1",
+  "folder": "contact",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "form",
+    "infoCards",
+    "image",
+    "mapUrl"
+  ],
+  "defaultContent": {
+    "badge": "Get In Touch",
+    "heading": {
+      "main": "Send Us a",
+      "highlight": "Message"
+    },
+    "description": "Have a question or need assistance? Fill out the form and our team will get back to you shortly.",
+    "form": {
+      "namePlaceholder": "Your Name *",
+      "phonePlaceholder": "Phone Number *",
+      "emailPlaceholder": "Email Address *",
+      "carTypePlaceholder": "Select Car Type",
+      "durationPlaceholder": "Rental Duration",
+      "pickupPlaceholder": "Pick-up Location",
+      "dropoffPlaceholder": "Drop-off Location",
+      "messagePlaceholder": "Your Message (Optional)",
+      "submitText": "Send Message",
+      "successMessage": "Thank you! Your message has been sent. We'll get back to you shortly."
+    },
+    "infoCards": [
+      { "title": "Call Us", "lines": ["+1 0000000000", "Mon - Sat, 9:00 AM - 8:00 PM"] },
+      { "title": "Email Us", "lines": ["info@xyz.com", "We reply within 24 hours"] },
+      { "title": "Visit Our Office", "lines": ["123 Business Avenue,", "New York, NY 10001, USA"] },
+      { "title": "Working Hours", "lines": ["Mon - Sat: 9:00 AM - 8:00 PM", "Sunday: 10:00 AM - 6:00 PM"] }
+    ],
+    "image": "assets/contact/showroom.jpg",
+    "mapUrl": "https://www.google.com/maps?q=New+York,+NY+10001,+USA&z=13&output=embed"
+  }
+}

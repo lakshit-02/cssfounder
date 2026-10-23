@@ -1,0 +1,85 @@
+{
+  "key": "RydoraFleet1",
+  "sectionType": "Fleet",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraFleet1",
+  "folder": "fleet",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "Our Portfolio",
+    "heading": {
+      "main": "Our",
+      "highlight": "Popular Cars"
+    },
+    "description": "Choose from a wide range of well-maintained vehicles for your local and outstation trips.",
+    "cta": {
+      "label": "Enquire Now",
+      "href": "/enquiry"
+    },
+    "list": [
+      {
+        "name": "Maruti Swift",
+        "image": "assets/fleet/swift.jpg",
+        "seats": 5,
+        "transmission": "Manual",
+        "fuel": "Petrol"
+      },
+      {
+        "name": "Hyundai Creta",
+        "image": "assets/fleet/creta.jpg",
+        "seats": 5,
+        "transmission": "Automatic",
+        "fuel": "Petrol"
+      },
+      {
+        "name": "Toyota Innova",
+        "image": "assets/fleet/innova.jpg",
+        "seats": 7,
+        "transmission": "Manual",
+        "fuel": "Diesel"
+      },
+      {
+        "name": "Toyota Fortuner",
+        "image": "assets/fleet/fortuner.jpg",
+        "seats": 7,
+        "transmission": "Automatic",
+        "fuel": "Diesel"
+      },
+      {
+        "name": "Honda City",
+        "image": "assets/fleet/city.jpg",
+        "seats": 5,
+        "transmission": "Automatic",
+        "fuel": "Petrol"
+      },
+      {
+        "name": "Mahindra XUV700",
+        "image": "assets/fleet/xuv700.jpg",
+        "seats": 7,
+        "transmission": "Automatic",
+        "fuel": "Diesel"
+      },
+      {
+        "name": "Mercedes-Benz E-Class",
+        "image": "assets/fleet/luxury.jpg",
+        "seats": 5,
+        "transmission": "Automatic",
+        "fuel": "Petrol"
+      },
+      {
+        "name": "Luxury Urbania Van",
+        "image": "assets/fleet/van.jpg",
+        "seats": 12,
+        "transmission": "Manual",
+        "fuel": "Diesel"
+      }
+    ]
+  }
+}

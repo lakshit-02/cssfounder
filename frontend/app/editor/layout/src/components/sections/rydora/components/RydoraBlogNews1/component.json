@@ -1,0 +1,46 @@
+{
+  "key": "RydoraBlogNews1",
+  "sectionType": "Blog",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraBlogNews1",
+  "folder": "blog",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "readMore",
+    "sidebar"
+  ],
+  "defaultContent": {
+    "badge": "From Our Blog",
+    "heading": {
+      "main": "Tips, Guides &",
+      "highlight": "Travel Stories"
+    },
+    "description": "Explore our latest blogs for travel tips, destination guides, and helpful insights to make your journey better.",
+    "cta": {
+      "label": "View All Blogs",
+      "href": "/blog"
+    },
+    "readMore": "Read More",
+    "sidebar": {
+      "categoriesTitle": "Categories",
+      "recentBlogsTitle": "Recent Blogs",
+      "cta": {
+        "image": "assets/blog/cta.jpg",
+        "badge": "Plan Your Next Journey",
+        "heading": {
+          "main": "Need a Car",
+          "highlight": "for Your Trip?"
+        },
+        "description": "Get the best rental options at affordable rates.",
+        "button": {
+          "label": "Enquire Now",
+          "href": "/enquiry"
+        }
+      }
+    }
+  }
+}

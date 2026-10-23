@@ -1,0 +1,95 @@
+{
+  "key": "RydoraGallery1",
+  "sectionType": "Gallery",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraGallery1",
+  "folder": "gallery",
+  "editorFields": [
+    "list"
+  ],
+  "defaultContent": {
+    "list": [
+      {
+        "id": 1,
+        "src": "assets/gallery/cars_01.jpg",
+        "alt": "Luxury Sedan City Sunset"
+      },
+      {
+        "id": 2,
+        "src": "assets/gallery/cars_02.jpg",
+        "alt": "White SUV Mountain Road"
+      },
+      {
+        "id": 3,
+        "src": "assets/gallery/cars_03.jpg",
+        "alt": "Luxury Car Rear Interior"
+      },
+      {
+        "id": 4,
+        "src": "assets/gallery/cars_04.jpg",
+        "alt": "Silver Executive Sedan"
+      },
+      {
+        "id": 5,
+        "src": "assets/gallery/cars_05.jpg",
+        "alt": "Black SUV Sunset Drive"
+      },
+      {
+        "id": 6,
+        "src": "assets/gallery/cars_06.jpg",
+        "alt": "Car Cockpit Steering Wheel"
+      },
+      {
+        "id": 7,
+        "src": "assets/gallery/cars_07.jpg",
+        "alt": "Fleet of White SUVs"
+      },
+      {
+        "id": 8,
+        "src": "assets/gallery/cars_08.jpg",
+        "alt": "Car Key on Leather Seat"
+      },
+      {
+        "id": 9,
+        "src": "assets/gallery/cars_10.jpg",
+        "alt": "Premium Leather Interior"
+      },
+      {
+        "id": 10,
+        "src": "assets/gallery/cars_11.jpg",
+        "alt": "Silver Crossover on Motion"
+      },
+      {
+        "id": 11,
+        "src": "assets/gallery/cars_12.jpg",
+        "alt": "Dashboard Navigation Cockpit"
+      },
+      {
+        "id": 12,
+        "src": "assets/gallery/cars_01.jpg",
+        "alt": "Luxury Black Passenger Van"
+      },
+      {
+        "id": 13,
+        "src": "assets/gallery/cars_02.jpg",
+        "alt": "Beige Leather Rear Cabin"
+      },
+      {
+        "id": 14,
+        "src": "assets/gallery/cars_03.jpg",
+        "alt": "SUV Road Journey"
+      },
+      {
+        "id": 15,
+        "src": "assets/gallery/cars_04.jpg",
+        "alt": "Luxury Ambient Cabin Cockpit"
+      },
+      {
+        "id": 16,
+        "src": "assets/gallery/cars_05.jpg",
+        "alt": "VIP Travel Luxury Van"
+      }
+    ]
+  }
+}

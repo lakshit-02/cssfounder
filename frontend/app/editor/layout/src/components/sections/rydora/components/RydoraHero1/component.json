@@ -1,0 +1,63 @@
+{
+  "key": "RydoraHero1",
+  "sectionType": "Banner",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraHero1",
+  "folder": "banner",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "image",
+    "slides",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "Luxury Car Rental",
+    "heading": {
+      "main": "Make Every Mile Feel Truly Extraordinary"
+    },
+    "description": "Experience the art of luxury driving with an exceptional collection of premium vehicles. Whether for business or leisure, Rydora brings elegance, comfort, and distinction to every mile.",
+    "cta": {
+      "label": "Enquire Now",
+      "href": "/enquiry"
+    },
+    "image": {
+      "src": "assets/banner/hero-car.jpg",
+      "alt": "Black luxury sedan parked at dusk with a city skyline"
+    },
+    "slides": [
+      {
+        "src": "assets/banner/hero-car.jpg",
+        "alt": "Black luxury sedan parked at dusk with a city skyline"
+      },
+      {
+        "src": "assets/about/about-car.jpg",
+        "alt": "Black Rydora SUV on a coastal mountain road at sunset"
+      },
+      {
+        "src": "assets/contact/showroom.jpg",
+        "alt": "Exclusive Rydora luxury showroom cars"
+      }
+    ],
+    "list": [
+      {
+        "title": "Premium Fleet",
+        "text": "The finest cars. Always.",
+        "icon": "DiamondIcon"
+      },
+      {
+        "title": "24/7 Support",
+        "text": "We're here, always.",
+        "icon": "HeadsetIcon"
+      },
+      {
+        "title": "Trusted & Secure",
+        "text": "Your journey, our priority.",
+        "icon": "BadgeIcon"
+      }
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "key": "RydoraBrands1",
+  "sectionType": "Brands",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraBrands1",
+  "folder": "brands",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "Our Car Brands",
+    "heading": {
+      "main": "Drive Your",
+      "highlight": "Favourite Brand"
+    },
+    "description": "Choose from a wide range of top car brands and enjoy a comfortable, reliable and premium travel experience with us.",
+    "list": [
+      {
+        "name": "Jeep",
+        "logo": "jeep"
+      },
+      {
+        "name": "Ford",
+        "logo": "ford"
+      },
+      {
+        "name": "Mazda",
+        "logo": "mazda"
+      },
+      {
+        "name": "BMW",
+        "logo": "bmw"
+      },
+      {
+        "name": "Honda",
+        "logo": "honda"
+      },
+      {
+        "name": "Toyota",
+        "logo": "toyota"
+      },
+      {
+        "name": "Audi",
+        "logo": "audi"
+      },
+      {
+        "name": "Hyundai",
+        "logo": "hyundai"
+      },
+      {
+        "name": "Kia",
+        "logo": "kia"
+      },
+      {
+        "name": "Tata",
+        "logo": "tata"
+      },
+      {
+        "name": "Mahindra",
+        "logo": "mahindra"
+      },
+      {
+        "name": "Suzuki",
+        "logo": "suzuki"
+      },
+      {
+        "name": "Volkswagen",
+        "logo": "volkswagen"
+      },
+      {
+        "name": "Skoda",
+        "logo": "skoda"
+      },
+      {
+        "name": "Nissan",
+        "logo": "nissan"
+      },
+      {
+        "name": "Volvo",
+        "logo": "volvo"
+      }
+    ]
+  }
+}

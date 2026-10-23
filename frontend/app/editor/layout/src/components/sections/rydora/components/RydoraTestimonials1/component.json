@@ -1,0 +1,59 @@
+{
+  "key": "RydoraTestimonials1",
+  "sectionType": "Testimonial",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraTestimonials1",
+  "folder": "testimonial",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "Testimonials",
+    "heading": {
+      "main": "Every Journey",
+      "highlight": "Leaves an Impression."
+    },
+    "description": "From local rides to outstation trips, airport transfers to luxury rentals – RYDORA delivers refined vehicles, seamless service, and experiences our clients are happy to remember.",
+    "list": [
+      {
+        "id": 1,
+        "name": "Rahul Mehta",
+        "role": "Business Traveller",
+        "rating": 5,
+        "quote": "\"Excellent service! The car was clean, comfortable and delivered on time. The entire booking process was smooth and hassle-free. Highly recommended!\""
+      },
+      {
+        "id": 2,
+        "name": "Priya Sharma",
+        "role": "Family Traveller",
+        "rating": 5,
+        "quote": "\"I booked a car for our family trip and had a wonderful experience. The vehicle was in great condition and the driver was very polite and professional.\""
+      },
+      {
+        "id": 3,
+        "name": "Amit Verma",
+        "role": "Corporate Client",
+        "rating": 5,
+        "quote": "\"Reliable and punctual service. I used RYDORA for an airport transfer and everything was perfect. Will definitely book again for my future trips.\""
+      },
+      {
+        "id": 4,
+        "name": "Sneha Kapoor",
+        "role": "Solo Traveller",
+        "rating": 5,
+        "quote": "\"Booking was effortless and the support team was very responsive. The chauffeur was experienced and made the outstation trip super relaxing.\""
+      },
+      {
+        "id": 5,
+        "name": "Vikram Malhotra",
+        "role": "Business Executive",
+        "rating": 5,
+        "quote": "\"Top notch fleet and punctual pickups every time. Perfect choice for corporate visits and airport travel without any delays.\""
+      }
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 import { selectedConfig } from "./selectedConfig";
 import categoryContentJson from "./categoryContent.json";
+import rydoraTheme from "../components/sections/rydora/theme.json";
 import type { SectionData, SectionItem, SelectedConfig } from "../types/section";
 
 export type CategoryKey = string;
@@ -67,12 +68,47 @@ type CategoryContentRecord = {
   >;
 };
 
+const RYDORA_TEMPLATE_ID = "template-rydora-1";
+
+/** Pages, home order, and variant map for the Rydora template come from its theme.json. */
+function applyRydoraTheme<T extends BuilderTemplate>(template: T): T {
+  if (template.id !== RYDORA_TEMPLATE_ID) return template;
+  const pages = rydoraTheme.pages
+    .filter((page) => page.id !== "home")
+    .map((page) => ({
+      id: page.id,
+      label: page.label,
+      sectionType: page.sectionType,
+      sectionOrder: page.sections.filter(
+        (type) => type !== "Header" && type !== "Footer" && type !== "Topbar",
+      ),
+    }));
+  return {
+    ...template,
+    title: rydoraTheme.title || template.title,
+    type: rydoraTheme.type,
+    image: rydoraTheme.previewImage || template.image,
+    previewimage: rydoraTheme.previewImage || template.previewimage,
+    preview_description: rydoraTheme.previewDescription || template.preview_description,
+    prebuilt_pages: pages.length,
+    homeSectionOrder: [...rydoraTheme.homeSectionOrder],
+    sectionVariants: { ...rydoraTheme.sectionVariants },
+    pages,
+    variables: {
+      ...(template.variables || {}),
+      ...rydoraTheme.variables,
+    },
+  };
+}
+
 /** Mutable store: starts from JSON, can be replaced by Postgres bundle */
+const seededCategoryContent = structuredClone(categoryContentJson) as unknown as Omit<
+  CategoryContentRecord,
+  "layouts"
+>;
 let categoryContent: CategoryContentRecord = {
-  ...(structuredClone(categoryContentJson) as unknown as Omit<
-    CategoryContentRecord,
-    "layouts"
-  >),
+  ...seededCategoryContent,
+  templates: seededCategoryContent.templates.map((template) => applyRydoraTheme(template)),
   layouts: [],
 };
 
@@ -83,7 +119,7 @@ const BUNDLE_REFRESH_TTL_MS = 60_000;
 /** Frozen JSON skins — API bundle must not overwrite premium -5/-6 variants. */
 const jsonBuilderTemplates = (
   structuredClone(categoryContentJson) as unknown as CategoryContentRecord
-).templates;
+).templates.map((template) => applyRydoraTheme(template));
 
 const jsonBuilderCategories = (
   structuredClone(categoryContentJson) as unknown as CategoryContentRecord
@@ -134,7 +170,7 @@ const mergeRemoteTemplates = (remote: BuilderTemplate[]) => {
     const sectionVariants = Object.keys(remoteVariants).length
       ? remoteVariants
       : local.sectionVariants;
-    return {
+    return applyRydoraTheme({
       ...item,
       title: item.title || local.title,
       type: item.type || local.type,
@@ -146,7 +182,7 @@ const mergeRemoteTemplates = (remote: BuilderTemplate[]) => {
         ...(item.variables || {}),
       },
       preview_description: item.preview_description || local.preview_description,
-    };
+    });
   });
   return [
     ...merged,

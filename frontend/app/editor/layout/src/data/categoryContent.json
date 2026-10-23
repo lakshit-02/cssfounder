@@ -1394,8 +1394,8 @@
       "numericId": 18,
       "title": "Rydora",
       "type": "Multiple Pages Website",
-      "image": "/automotive/images/hero-car.jpg",
-      "previewimage": "/automotive/images/hero-car.jpg",
+      "image": "assets/banner/hero-car.jpg",
+      "previewimage": "assets/banner/hero-car.jpg",
       "preview_description": "Luxury car rental website.",
       "prebuilt_pages": 7,
       "sectionVariants": {
@@ -27916,7 +27916,7 @@
             "RydoraGlobal1": {
               "companyName": "Rydora Car Rental Services",
               "logo": {
-                "src": "/automotive/images/logo-white.png",
+                "src": "assets/main-logo/logo-white.png",
                 "alt": "Rydora Car Rental Services"
               },
               "contact": {
@@ -27956,7 +27956,7 @@
           "variants": {
             "RydoraHeader1": {
               "logo": {
-                "src": "/automotive/images/logo-white.png",
+                "src": "assets/main-logo/logo-white.png",
                 "alt": "Rydora Car Rental Services"
               },
               "menu": [
@@ -28010,20 +28010,20 @@
                 "href": "/enquiry"
               },
               "image": {
-                "src": "/automotive/images/hero-car.jpg",
+                "src": "assets/banner/hero-car.jpg",
                 "alt": "Black luxury sedan parked at dusk with a city skyline"
               },
               "slides": [
                 {
-                  "src": "/automotive/images/hero-car.jpg",
+                  "src": "assets/banner/hero-car.jpg",
                   "alt": "Black luxury sedan parked at dusk with a city skyline"
                 },
                 {
-                  "src": "/automotive/images/about-car.jpg",
+                  "src": "assets/about/about-car.jpg",
                   "alt": "Black Rydora SUV on a coastal mountain road at sunset"
                 },
                 {
-                  "src": "/automotive/images/showroom.jpg",
+                  "src": "assets/contact/showroom.jpg",
                   "alt": "Exclusive Rydora luxury showroom cars"
                 }
               ],
@@ -28061,7 +28061,7 @@
                 "href": "/about"
               },
               "image": {
-                "src": "/automotive/images/about-car.jpg",
+                "src": "assets/about/about-car.jpg",
                 "alt": "Black Rydora SUV on a coastal mountain road at sunset"
               },
               "list": [
@@ -28092,7 +28092,7 @@
                 "href": "/enquiry"
               },
               "image": {
-                "src": "/automotive/images/how-it-works.jpg",
+                "src": "assets/process/how-it-works.jpg",
                 "alt": "Camper van parked on a seaside cliff at sunset"
               },
               "list": [
@@ -28126,7 +28126,7 @@
               },
               "description": "We go beyond just rentals — delivering comfort, reliability and a premium travel experience on every journey.",
               "image": {
-                "src": "/automotive/images/why-choose.jpg",
+                "src": "assets/whychoose/why-choose.jpg",
                 "alt": "Premium SUV on a coastal road at sunset"
               },
               "leftFeatures": [
@@ -28184,56 +28184,56 @@
                   "slug": "local-car-rental",
                   "title": "Local Car Rental",
                   "text": "Convenient and budget-friendly car rental options for your daily travel needs.",
-                  "image": "/automotive/images/cars/city.jpg",
+                  "image": "assets/fleet/city.jpg",
                   "icon": "CarIcon"
                 },
                 {
                   "slug": "outstation-car-rental",
                   "title": "Outstation Car Rental",
                   "text": "Comfortable and reliable vehicles for long-distance trips across cities.",
-                  "image": "/automotive/images/cars/fortuner.jpg",
+                  "image": "assets/fleet/fortuner.jpg",
                   "icon": "RoadIcon"
                 },
                 {
                   "slug": "airport-transfer",
                   "title": "Airport Transfer",
                   "text": "Hassle-free pickup and drop services to make your airport journey smooth.",
-                  "image": "/automotive/images/cars/van.jpg",
+                  "image": "assets/fleet/van.jpg",
                   "icon": "PlaneIcon"
                 },
                 {
                   "slug": "luxury-car-rental",
                   "title": "Luxury Car Rental",
                   "text": "Experience premium comfort and style with our exclusive luxury car collection.",
-                  "image": "/automotive/images/cars/luxury.jpg",
+                  "image": "assets/fleet/luxury.jpg",
                   "icon": "CrownIcon"
                 },
                 {
                   "slug": "corporate-car-rental",
                   "title": "Corporate Car Rental",
                   "text": "Professional and reliable transportation solutions for your business needs.",
-                  "image": "/automotive/images/cars/innova.jpg",
+                  "image": "assets/fleet/innova.jpg",
                   "icon": "TeamIcon"
                 },
                 {
                   "slug": "wedding-car-rental",
                   "title": "Wedding Car Rental",
                   "text": "Add elegance to your special day with our premium wedding cars.",
-                  "image": "/automotive/images/cars/wedding.jpg",
+                  "image": "assets/fleet/wedding.jpg",
                   "icon": "CalendarIcon"
                 },
                 {
                   "slug": "city-tour-packages",
                   "title": "City Tour Packages",
                   "text": "Explore popular destinations in comfort with our customized city tour packages.",
-                  "image": "/automotive/images/cars/creta.jpg",
+                  "image": "assets/fleet/creta.jpg",
                   "icon": "PinIcon"
                 },
                 {
                   "slug": "self-drive-car-rental",
                   "title": "Self Drive Car Rental",
                   "text": "Enjoy the freedom to drive with our well-maintained self-drive cars.",
-                  "image": "/automotive/images/cars/xuv700.jpg",
+                  "image": "assets/fleet/xuv700.jpg",
                   "icon": "SteeringIcon"
                 }
               ]
@@ -28256,56 +28256,56 @@
               "list": [
                 {
                   "name": "Maruti Swift",
-                  "image": "/automotive/images/cars/swift.jpg",
+                  "image": "assets/fleet/swift.jpg",
                   "seats": 5,
                   "transmission": "Manual",
                   "fuel": "Petrol"
                 },
                 {
                   "name": "Hyundai Creta",
-                  "image": "/automotive/images/cars/creta.jpg",
+                  "image": "assets/fleet/creta.jpg",
                   "seats": 5,
                   "transmission": "Automatic",
                   "fuel": "Petrol"
                 },
                 {
                   "name": "Toyota Innova",
-                  "image": "/automotive/images/cars/innova.jpg",
+                  "image": "assets/fleet/innova.jpg",
                   "seats": 7,
                   "transmission": "Manual",
                   "fuel": "Diesel"
                 },
                 {
                   "name": "Toyota Fortuner",
-                  "image": "/automotive/images/cars/fortuner.jpg",
+                  "image": "assets/fleet/fortuner.jpg",
                   "seats": 7,
                   "transmission": "Automatic",
                   "fuel": "Diesel"
                 },
                 {
                   "name": "Honda City",
-                  "image": "/automotive/images/cars/city.jpg",
+                  "image": "assets/fleet/city.jpg",
                   "seats": 5,
                   "transmission": "Automatic",
                   "fuel": "Petrol"
                 },
                 {
                   "name": "Mahindra XUV700",
-                  "image": "/automotive/images/cars/xuv700.jpg",
+                  "image": "assets/fleet/xuv700.jpg",
                   "seats": 7,
                   "transmission": "Automatic",
                   "fuel": "Diesel"
                 },
                 {
                   "name": "Mercedes-Benz E-Class",
-                  "image": "/automotive/images/cars/luxury.jpg",
+                  "image": "assets/fleet/luxury.jpg",
                   "seats": 5,
                   "transmission": "Automatic",
                   "fuel": "Petrol"
                 },
                 {
                   "name": "Luxury Urbania Van",
-                  "image": "/automotive/images/cars/van.jpg",
+                  "image": "assets/fleet/van.jpg",
                   "seats": 12,
                   "transmission": "Manual",
                   "fuel": "Diesel"
@@ -28447,82 +28447,82 @@
               "list": [
                 {
                   "id": 1,
-                  "src": "/automotive/images/cars_01.jpg",
+                  "src": "assets/gallery/cars_01.jpg",
                   "alt": "Luxury Sedan City Sunset"
                 },
                 {
                   "id": 2,
-                  "src": "/automotive/images/cars_02.jpg",
+                  "src": "assets/gallery/cars_02.jpg",
                   "alt": "White SUV Mountain Road"
                 },
                 {
                   "id": 3,
-                  "src": "/automotive/images/cars_03.jpg",
+                  "src": "assets/gallery/cars_03.jpg",
                   "alt": "Luxury Car Rear Interior"
                 },
                 {
                   "id": 4,
-                  "src": "/automotive/images/cars_04.jpg",
+                  "src": "assets/gallery/cars_04.jpg",
                   "alt": "Silver Executive Sedan"
                 },
                 {
                   "id": 5,
-                  "src": "/automotive/images/cars_05.jpg",
+                  "src": "assets/gallery/cars_05.jpg",
                   "alt": "Black SUV Sunset Drive"
                 },
                 {
                   "id": 6,
-                  "src": "/automotive/images/cars_06.jpg",
+                  "src": "assets/gallery/cars_06.jpg",
                   "alt": "Car Cockpit Steering Wheel"
                 },
                 {
                   "id": 7,
-                  "src": "/automotive/images/cars_07.jpg",
+                  "src": "assets/gallery/cars_07.jpg",
                   "alt": "Fleet of White SUVs"
                 },
                 {
                   "id": 8,
-                  "src": "/automotive/images/cars_08.jpg",
+                  "src": "assets/gallery/cars_08.jpg",
                   "alt": "Car Key on Leather Seat"
                 },
                 {
                   "id": 9,
-                  "src": "/automotive/images/cars_10.jpg",
+                  "src": "assets/gallery/cars_10.jpg",
                   "alt": "Premium Leather Interior"
                 },
                 {
                   "id": 10,
-                  "src": "/automotive/images/cars_11.jpg",
+                  "src": "assets/gallery/cars_11.jpg",
                   "alt": "Silver Crossover on Motion"
                 },
                 {
                   "id": 11,
-                  "src": "/automotive/images/cars_12.jpg",
+                  "src": "assets/gallery/cars_12.jpg",
                   "alt": "Dashboard Navigation Cockpit"
                 },
                 {
                   "id": 12,
-                  "src": "/automotive/images/cars_01.jpg",
+                  "src": "assets/gallery/cars_01.jpg",
                   "alt": "Luxury Black Passenger Van"
                 },
                 {
                   "id": 13,
-                  "src": "/automotive/images/cars_02.jpg",
+                  "src": "assets/gallery/cars_02.jpg",
                   "alt": "Beige Leather Rear Cabin"
                 },
                 {
                   "id": 14,
-                  "src": "/automotive/images/cars_03.jpg",
+                  "src": "assets/gallery/cars_03.jpg",
                   "alt": "SUV Road Journey"
                 },
                 {
                   "id": 15,
-                  "src": "/automotive/images/cars_04.jpg",
+                  "src": "assets/gallery/cars_04.jpg",
                   "alt": "Luxury Ambient Cabin Cockpit"
                 },
                 {
                   "id": 16,
-                  "src": "/automotive/images/cars_05.jpg",
+                  "src": "assets/gallery/cars_05.jpg",
                   "alt": "VIP Travel Luxury Van"
                 }
               ]
@@ -28547,7 +28547,7 @@
                 "categoriesTitle": "Categories",
                 "recentBlogsTitle": "Recent Blogs",
                 "cta": {
-                  "image": "/automotive/images/blog/cta.jpg",
+                  "image": "assets/blog/cta.jpg",
                   "badge": "Plan Your Next Journey",
                   "heading": {
                     "main": "Need a Car",
@@ -28596,7 +28596,7 @@
                 }
               ],
               "image": {
-                "src": "/automotive/images/cars_06.jpg",
+                "src": "assets/gallery/cars_06.jpg",
                 "alt": "Luxury SUV on mountain road at sunset"
               },
               "form": {
@@ -28643,9 +28643,9 @@
         "Footer": {
           "variants": {
             "RydoraFooter1": {
-              "bgImage": "/automotive/images/footer-bg.jpg",
+              "bgImage": "assets/footer/footer-bg.jpg",
               "logo": {
-                "src": "/automotive/images/logo-white.png",
+                "src": "assets/main-logo/logo-white.png",
                 "alt": "Rydora Car Rental Services"
               },
               "description": "Rydora Car Rental Services offers a wide range of well-maintained vehicles for your every journey. Experience comfort, style and reliability with us.",

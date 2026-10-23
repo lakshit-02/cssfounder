@@ -1,0 +1,44 @@
+{
+  "key": "RydoraAboutUs1",
+  "sectionType": "About",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraAboutUs1",
+  "folder": "about",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "image",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "About RYDORA",
+    "heading": {
+      "main": "Your Journey",
+      "highlight": "Our Commitment"
+    },
+    "description": "At RYDORA, we make travel easy, comfortable and unforgettable with our premium car rental services. Whether you're planning a local trip, an outstation getaway, or an airport transfer, we provide well-maintained vehicles, professional chauffeurs and flexible rental options tailored to your needs. Our focus is on safety, reliability and a seamless travel experience, so you can enjoy every journey with complete peace of mind.",
+    "cta": {
+      "label": "About Us",
+      "href": "/about"
+    },
+    "image": {
+      "src": "assets/about/about-car.jpg",
+      "alt": "Black Rydora SUV on a coastal mountain road at sunset"
+    },
+    "list": [
+      {
+        "title": "Well-Maintained Cars",
+        "text": "A wide range of clean, comfortable and regularly serviced vehicles.",
+        "icon": "CarFrontIcon"
+      },
+      {
+        "title": "Professional Chauffeurs",
+        "text": "Experienced and courteous drivers for a safe and hassle-free journey.",
+        "icon": "ChauffeurIcon"
+      }
+    ]
+  }
+}

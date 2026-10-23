@@ -1,0 +1,1347 @@
+{
+  "generator": {
+    "name": "ThemeForge",
+    "version": "0.1.0",
+    "generatedAt": "2026-10-23T05:23:50.132Z",
+    "spec": "default-theme",
+    "specVersion": 1
+  },
+  "input": {
+    "repoUrl": "",
+    "category": "automotive",
+    "categorySlug": "automotive",
+    "template": "rydora",
+    "templateSlug": "rydora"
+  },
+  "source": {
+    "cloneUrl": "",
+    "commit": "",
+    "branch": "",
+    "project": {
+      "framework": "Next.js",
+      "frameworkVersion": "16.2.11",
+      "languages": [
+        "TypeScript",
+        "JSON"
+      ],
+      "styling": [
+        "Tailwind CSS",
+        "react-icons",
+        "lucide-react",
+        "framer-motion"
+      ],
+      "packageManager": "npm",
+      "packageName": "rydora",
+      "sourceRoots": [
+        "components",
+        "assets",
+        "addons"
+      ],
+      "hasAppRouter": true,
+      "hasPagesRouter": false,
+      "dependencies": {
+        "next": "16.2.11",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+        "react-icons": "^5.6.0",
+        "lucide-react": "^1.21.0",
+        "framer-motion": "^11.18.2",
+        "typescript": "^5"
+      },
+      "counts": {
+        "component": 15,
+        "page": 8,
+        "layout": 0,
+        "style": 0,
+        "image": 39,
+        "icon": 16,
+        "font": 0,
+        "data": 1,
+        "config": 0,
+        "script": 0,
+        "type": 0,
+        "doc": 0,
+        "media": 0,
+        "other": 2
+      },
+      "totalFiles": 89,
+      "totalBytes": 9998602
+    }
+  },
+  "theme": {
+    "key": "rydora",
+    "outputDir": "frontend/app/editor/layout/src/components/sections/rydora",
+    "zipFile": ""
+  },
+  "included": [
+    {
+      "source": "components/RydoraAboutUs1/RydoraAboutUs1.tsx",
+      "target": "components/RydoraAboutUs1/RydoraAboutUs1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 5525,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraBlogNews1/RydoraBlogNews1.tsx",
+      "target": "components/RydoraBlogNews1/RydoraBlogNews1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 7561,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraBrands1/RydoraBrands1.tsx",
+      "target": "components/RydoraBrands1/RydoraBrands1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 5012,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraContactPage1/RydoraContactPage1.tsx",
+      "target": "components/RydoraContactPage1/RydoraContactPage1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 10024,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraEnquiryForm1/RydoraEnquiryForm1.tsx",
+      "target": "components/RydoraEnquiryForm1/RydoraEnquiryForm1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 16034,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraFleet1/RydoraFleet1.tsx",
+      "target": "components/RydoraFleet1/RydoraFleet1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 10228,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraFooter1/RydoraFooter1.tsx",
+      "target": "components/RydoraFooter1/RydoraFooter1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 8761,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraGallery1/RydoraGallery1.tsx",
+      "target": "components/RydoraGallery1/RydoraGallery1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 6735,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraHeader1/RydoraHeader1.tsx",
+      "target": "components/RydoraHeader1/RydoraHeader1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 6953,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraHero1/RydoraHero1.tsx",
+      "target": "components/RydoraHero1/RydoraHero1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 3759,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraPageBanner1/RydoraPageBanner1.tsx",
+      "target": "components/RydoraPageBanner1/RydoraPageBanner1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 3904,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraServices1/RydoraServices1.tsx",
+      "target": "components/RydoraServices1/RydoraServices1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 6865,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraTestimonials1/RydoraTestimonials1.tsx",
+      "target": "components/RydoraTestimonials1/RydoraTestimonials1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 7807,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraWhyChooseUs1/RydoraWhyChooseUs1.tsx",
+      "target": "components/RydoraWhyChooseUs1/RydoraWhyChooseUs1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 6341,
+      "action": "copy"
+    },
+    {
+      "source": "components/RydoraWorkingProcess1/RydoraWorkingProcess1.tsx",
+      "target": "components/RydoraWorkingProcess1/RydoraWorkingProcess1.tsx",
+      "kind": "component",
+      "rule": "components",
+      "size": 4095,
+      "action": "copy"
+    },
+    {
+      "source": "theme.json",
+      "target": "theme.json",
+      "kind": "data",
+      "rule": "theme",
+      "size": 3434,
+      "action": "copy"
+    },
+    {
+      "source": "assets/about/about-car.jpg",
+      "target": "assets/about/about-car.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 379872,
+      "action": "copy",
+      "outputSize": 379872,
+      "resized": false
+    },
+    {
+      "source": "assets/banner/hero-car.jpg",
+      "target": "assets/banner/hero-car.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 239563,
+      "action": "copy",
+      "outputSize": 239563,
+      "resized": false
+    },
+    {
+      "source": "assets/banner/page-banner.jpg",
+      "target": "assets/banner/page-banner.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 156346,
+      "action": "copy",
+      "outputSize": 156346,
+      "resized": false
+    },
+    {
+      "source": "assets/blog/choose-car.jpg",
+      "target": "assets/blog/choose-car.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 262632,
+      "action": "copy",
+      "outputSize": 262632,
+      "resized": false
+    },
+    {
+      "source": "assets/blog/cta.jpg",
+      "target": "assets/blog/cta.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 295647,
+      "action": "copy",
+      "outputSize": 295647,
+      "resized": false
+    },
+    {
+      "source": "assets/blog/getaways.jpg",
+      "target": "assets/blog/getaways.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 333221,
+      "action": "copy",
+      "outputSize": 333221,
+      "resized": false
+    },
+    {
+      "source": "assets/blog/road-trip.jpg",
+      "target": "assets/blog/road-trip.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 389175,
+      "action": "copy",
+      "outputSize": 389175,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/audi.svg",
+      "target": "assets/brands/audi.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 2128,
+      "action": "copy",
+      "outputSize": 2128,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/bmw.svg",
+      "target": "assets/brands/bmw.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1613,
+      "action": "copy",
+      "outputSize": 1613,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/ford.svg",
+      "target": "assets/brands/ford.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 4177,
+      "action": "copy",
+      "outputSize": 4177,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/honda.svg",
+      "target": "assets/brands/honda.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1773,
+      "action": "copy",
+      "outputSize": 1773,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/hyundai.svg",
+      "target": "assets/brands/hyundai.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1656,
+      "action": "copy",
+      "outputSize": 1656,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/jeep.svg",
+      "target": "assets/brands/jeep.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1811,
+      "action": "copy",
+      "outputSize": 1811,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/kia.svg",
+      "target": "assets/brands/kia.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1016,
+      "action": "copy",
+      "outputSize": 1016,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/mahindra.svg",
+      "target": "assets/brands/mahindra.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1382,
+      "action": "copy",
+      "outputSize": 1382,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/mazda.svg",
+      "target": "assets/brands/mazda.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1566,
+      "action": "copy",
+      "outputSize": 1566,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/nissan.svg",
+      "target": "assets/brands/nissan.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1831,
+      "action": "copy",
+      "outputSize": 1831,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/skoda.svg",
+      "target": "assets/brands/skoda.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1145,
+      "action": "copy",
+      "outputSize": 1145,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/suzuki.svg",
+      "target": "assets/brands/suzuki.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 364,
+      "action": "copy",
+      "outputSize": 364,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/tata.svg",
+      "target": "assets/brands/tata.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 954,
+      "action": "copy",
+      "outputSize": 954,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/toyota.svg",
+      "target": "assets/brands/toyota.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 989,
+      "action": "copy",
+      "outputSize": 989,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/volkswagen.svg",
+      "target": "assets/brands/volkswagen.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1103,
+      "action": "copy",
+      "outputSize": 1103,
+      "resized": false
+    },
+    {
+      "source": "assets/brands/volvo.svg",
+      "target": "assets/brands/volvo.svg",
+      "kind": "icon",
+      "rule": "images",
+      "size": 1384,
+      "action": "copy",
+      "outputSize": 1384,
+      "resized": false
+    },
+    {
+      "source": "assets/contact/showroom.jpg",
+      "target": "assets/contact/showroom.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 361032,
+      "action": "copy",
+      "outputSize": 361032,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/city.jpg",
+      "target": "assets/fleet/city.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 162160,
+      "action": "copy",
+      "outputSize": 162160,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/creta.jpg",
+      "target": "assets/fleet/creta.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 196408,
+      "action": "copy",
+      "outputSize": 196408,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/fortuner.jpg",
+      "target": "assets/fleet/fortuner.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 196286,
+      "action": "copy",
+      "outputSize": 196286,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/innova.jpg",
+      "target": "assets/fleet/innova.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 179083,
+      "action": "copy",
+      "outputSize": 179083,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/luxury.jpg",
+      "target": "assets/fleet/luxury.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 191646,
+      "action": "copy",
+      "outputSize": 191646,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/swift.jpg",
+      "target": "assets/fleet/swift.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 145634,
+      "action": "copy",
+      "outputSize": 145634,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/van.jpg",
+      "target": "assets/fleet/van.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 182951,
+      "action": "copy",
+      "outputSize": 182951,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/wedding.jpg",
+      "target": "assets/fleet/wedding.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 190475,
+      "action": "copy",
+      "outputSize": 190475,
+      "resized": false
+    },
+    {
+      "source": "assets/fleet/xuv700.jpg",
+      "target": "assets/fleet/xuv700.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 163879,
+      "action": "copy",
+      "outputSize": 163879,
+      "resized": false
+    },
+    {
+      "source": "assets/footer/footer-bg.jpg",
+      "target": "assets/footer/footer-bg.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 130542,
+      "action": "copy",
+      "outputSize": 130542,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_01.jpg",
+      "target": "assets/gallery/cars_01.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 145795,
+      "action": "copy",
+      "outputSize": 145795,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_02.jpg",
+      "target": "assets/gallery/cars_02.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 135638,
+      "action": "copy",
+      "outputSize": 135638,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_03.jpg",
+      "target": "assets/gallery/cars_03.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 75535,
+      "action": "copy",
+      "outputSize": 75535,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_04.jpg",
+      "target": "assets/gallery/cars_04.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 145148,
+      "action": "copy",
+      "outputSize": 145148,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_05.jpg",
+      "target": "assets/gallery/cars_05.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 112052,
+      "action": "copy",
+      "outputSize": 112052,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_06.jpg",
+      "target": "assets/gallery/cars_06.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 123302,
+      "action": "copy",
+      "outputSize": 123302,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_07.jpg",
+      "target": "assets/gallery/cars_07.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 102064,
+      "action": "copy",
+      "outputSize": 102064,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_08.jpg",
+      "target": "assets/gallery/cars_08.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 140052,
+      "action": "copy",
+      "outputSize": 140052,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_09",
+      "target": "assets/gallery/cars_09",
+      "kind": "media",
+      "rule": "images",
+      "size": 73279,
+      "action": "copy",
+      "outputSize": 73279,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_10.jpg",
+      "target": "assets/gallery/cars_10.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 226200,
+      "action": "copy",
+      "outputSize": 226200,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_11.jpg",
+      "target": "assets/gallery/cars_11.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 33980,
+      "action": "copy",
+      "outputSize": 33980,
+      "resized": false
+    },
+    {
+      "source": "assets/gallery/cars_12.jpg",
+      "target": "assets/gallery/cars_12.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 28317,
+      "action": "copy",
+      "outputSize": 28317,
+      "resized": false
+    },
+    {
+      "source": "assets/main-logo/logo-white.png",
+      "target": "assets/main-logo/logo-white.png",
+      "kind": "image",
+      "rule": "images",
+      "size": 994309,
+      "action": "copy",
+      "outputSize": 994309,
+      "resized": false
+    },
+    {
+      "source": "assets/main-logo/logo.png",
+      "target": "assets/main-logo/logo.png",
+      "kind": "image",
+      "rule": "images",
+      "size": 995039,
+      "action": "copy",
+      "outputSize": 995039,
+      "resized": false
+    },
+    {
+      "source": "assets/process/how-it-works.jpg",
+      "target": "assets/process/how-it-works.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 288163,
+      "action": "copy",
+      "outputSize": 288163,
+      "resized": false
+    },
+    {
+      "source": "assets/service/airport.jpg",
+      "target": "assets/service/airport.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 265768,
+      "action": "copy",
+      "outputSize": 265768,
+      "resized": false
+    },
+    {
+      "source": "assets/service/chauffeur.jpg",
+      "target": "assets/service/chauffeur.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 317852,
+      "action": "copy",
+      "outputSize": 317852,
+      "resized": false
+    },
+    {
+      "source": "assets/service/cta.jpg",
+      "target": "assets/service/cta.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 155997,
+      "action": "copy",
+      "outputSize": 155997,
+      "resized": false
+    },
+    {
+      "source": "assets/service/interior.jpg",
+      "target": "assets/service/interior.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 271743,
+      "action": "copy",
+      "outputSize": 271743,
+      "resized": false
+    },
+    {
+      "source": "assets/service/occasion.jpg",
+      "target": "assets/service/occasion.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 308974,
+      "action": "copy",
+      "outputSize": 308974,
+      "resized": false
+    },
+    {
+      "source": "assets/service/wedding.jpg",
+      "target": "assets/service/wedding.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 418128,
+      "action": "copy",
+      "outputSize": 418128,
+      "resized": false
+    },
+    {
+      "source": "assets/whychoose/why-choose.jpg",
+      "target": "assets/whychoose/why-choose.jpg",
+      "kind": "image",
+      "rule": "images",
+      "size": 310837,
+      "action": "copy",
+      "outputSize": 310837,
+      "resized": false
+    }
+  ],
+  "excluded": [
+    {
+      "path": "addons/motion.tsx",
+      "reason": "animation helper, not an editable section"
+    },
+    {
+      "path": "addons/shared.tsx",
+      "reason": "image and link helper, not an editable section"
+    }
+  ],
+  "components": [
+    {
+      "source": "components/RydoraAboutUs1/RydoraAboutUs1.tsx",
+      "baseName": "RydoraAboutUs",
+      "sectionType": "About",
+      "sectionNumber": 1,
+      "name": "RydoraAboutUs1",
+      "folder": "about",
+      "scope": "shared",
+      "targetDir": "components/RydoraAboutUs1",
+      "targetFile": "components/RydoraAboutUs1/RydoraAboutUs1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "image",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraAboutUs1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraBlogNews1/RydoraBlogNews1.tsx",
+      "baseName": "RydoraBlogNews",
+      "sectionType": "Blog",
+      "sectionNumber": 1,
+      "name": "RydoraBlogNews1",
+      "folder": "blog",
+      "scope": "shared",
+      "targetDir": "components/RydoraBlogNews1",
+      "targetFile": "components/RydoraBlogNews1/RydoraBlogNews1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "readMore",
+        "sidebar"
+      ],
+      "defaultContentSource": "components/RydoraBlogNews1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraBrands1/RydoraBrands1.tsx",
+      "baseName": "RydoraBrands",
+      "sectionType": "Brands",
+      "sectionNumber": 1,
+      "name": "RydoraBrands1",
+      "folder": "brands",
+      "scope": "shared",
+      "targetDir": "components/RydoraBrands1",
+      "targetFile": "components/RydoraBrands1/RydoraBrands1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraBrands1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraContactPage1/RydoraContactPage1.tsx",
+      "baseName": "RydoraContactPage",
+      "sectionType": "Contact",
+      "sectionNumber": 1,
+      "name": "RydoraContactPage1",
+      "folder": "contact",
+      "scope": "shared",
+      "targetDir": "components/RydoraContactPage1",
+      "targetFile": "components/RydoraContactPage1/RydoraContactPage1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "form",
+        "infoCards",
+        "image",
+        "mapUrl"
+      ],
+      "defaultContentSource": "components/RydoraContactPage1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraEnquiryForm1/RydoraEnquiryForm1.tsx",
+      "baseName": "RydoraEnquiryForm",
+      "sectionType": "Enquiry",
+      "sectionNumber": 1,
+      "name": "RydoraEnquiryForm1",
+      "folder": "form",
+      "scope": "shared",
+      "targetDir": "components/RydoraEnquiryForm1",
+      "targetFile": "components/RydoraEnquiryForm1/RydoraEnquiryForm1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "list",
+        "image",
+        "form"
+      ],
+      "defaultContentSource": "components/RydoraEnquiryForm1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraFleet1/RydoraFleet1.tsx",
+      "baseName": "RydoraFleet",
+      "sectionType": "Fleet",
+      "sectionNumber": 1,
+      "name": "RydoraFleet1",
+      "folder": "fleet",
+      "scope": "shared",
+      "targetDir": "components/RydoraFleet1",
+      "targetFile": "components/RydoraFleet1/RydoraFleet1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraFleet1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraFooter1/RydoraFooter1.tsx",
+      "baseName": "RydoraFooter",
+      "sectionType": "Footer",
+      "sectionNumber": 1,
+      "name": "RydoraFooter1",
+      "folder": "footer",
+      "scope": "shared",
+      "targetDir": "components/RydoraFooter1",
+      "targetFile": "components/RydoraFooter1/RydoraFooter1.tsx",
+      "editorFields": [
+        "bgImage",
+        "logo",
+        "description",
+        "socials",
+        "quickLinks",
+        "services",
+        "contact",
+        "copyright",
+        "legalLinks"
+      ],
+      "defaultContentSource": "components/RydoraFooter1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraGallery1/RydoraGallery1.tsx",
+      "baseName": "RydoraGallery",
+      "sectionType": "Gallery",
+      "sectionNumber": 1,
+      "name": "RydoraGallery1",
+      "folder": "gallery",
+      "scope": "shared",
+      "targetDir": "components/RydoraGallery1",
+      "targetFile": "components/RydoraGallery1/RydoraGallery1.tsx",
+      "editorFields": [
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraGallery1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraHeader1/RydoraHeader1.tsx",
+      "baseName": "RydoraHeader",
+      "sectionType": "Header",
+      "sectionNumber": 1,
+      "name": "RydoraHeader1",
+      "folder": "header",
+      "scope": "shared",
+      "targetDir": "components/RydoraHeader1",
+      "targetFile": "components/RydoraHeader1/RydoraHeader1.tsx",
+      "editorFields": [
+        "logo",
+        "menu",
+        "cta"
+      ],
+      "defaultContentSource": "components/RydoraHeader1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraHero1/RydoraHero1.tsx",
+      "baseName": "RydoraHero",
+      "sectionType": "Banner",
+      "sectionNumber": 1,
+      "name": "RydoraHero1",
+      "folder": "banner",
+      "scope": "shared",
+      "targetDir": "components/RydoraHero1",
+      "targetFile": "components/RydoraHero1/RydoraHero1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "image",
+        "slides",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraHero1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraPageBanner1/RydoraPageBanner1.tsx",
+      "baseName": "RydoraPageBanner",
+      "sectionType": "Breadcrumb",
+      "sectionNumber": 1,
+      "name": "RydoraPageBanner1",
+      "folder": "breadcrumb",
+      "scope": "shared",
+      "targetDir": "components/RydoraPageBanner1",
+      "targetFile": "components/RydoraPageBanner1/RydoraPageBanner1.tsx",
+      "editorFields": [
+        "title",
+        "image",
+        "imageAlt",
+        "breadcrumbs"
+      ],
+      "defaultContentSource": "components/RydoraPageBanner1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraServices1/RydoraServices1.tsx",
+      "baseName": "RydoraServices",
+      "sectionType": "Services",
+      "sectionNumber": 1,
+      "name": "RydoraServices1",
+      "folder": "service",
+      "scope": "shared",
+      "targetDir": "components/RydoraServices1",
+      "targetFile": "components/RydoraServices1/RydoraServices1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraServices1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraTestimonials1/RydoraTestimonials1.tsx",
+      "baseName": "RydoraTestimonials",
+      "sectionType": "Testimonial",
+      "sectionNumber": 1,
+      "name": "RydoraTestimonials1",
+      "folder": "testimonial",
+      "scope": "shared",
+      "targetDir": "components/RydoraTestimonials1",
+      "targetFile": "components/RydoraTestimonials1/RydoraTestimonials1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraTestimonials1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraWhyChooseUs1/RydoraWhyChooseUs1.tsx",
+      "baseName": "RydoraWhyChooseUs",
+      "sectionType": "WhyChooseUs",
+      "sectionNumber": 1,
+      "name": "RydoraWhyChooseUs1",
+      "folder": "whychooseus",
+      "scope": "shared",
+      "targetDir": "components/RydoraWhyChooseUs1",
+      "targetFile": "components/RydoraWhyChooseUs1/RydoraWhyChooseUs1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "image",
+        "leftFeatures",
+        "rightFeatures"
+      ],
+      "defaultContentSource": "components/RydoraWhyChooseUs1/component.json#defaultContent",
+      "fieldRenames": []
+    },
+    {
+      "source": "components/RydoraWorkingProcess1/RydoraWorkingProcess1.tsx",
+      "baseName": "RydoraWorkingProcess",
+      "sectionType": "Process",
+      "sectionNumber": 1,
+      "name": "RydoraWorkingProcess1",
+      "folder": "process",
+      "scope": "shared",
+      "targetDir": "components/RydoraWorkingProcess1",
+      "targetFile": "components/RydoraWorkingProcess1/RydoraWorkingProcess1.tsx",
+      "editorFields": [
+        "badge",
+        "heading",
+        "description",
+        "cta",
+        "image",
+        "list"
+      ],
+      "defaultContentSource": "components/RydoraWorkingProcess1/component.json#defaultContent",
+      "fieldRenames": []
+    }
+  ],
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "sectionType": "Home",
+      "route": "/",
+      "source": "app/page.tsx",
+      "sections": [
+        "Header",
+        "Banner",
+        "Fleet",
+        "About",
+        "Service",
+        "WorkingProcess",
+        "Testimonial",
+        "Brands",
+        "Blog",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "about",
+      "label": "About Us",
+      "sectionType": "About",
+      "route": "/about",
+      "source": "app/about/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "About",
+        "WorkingProcess",
+        "WhyChooseUs",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio",
+      "sectionType": "PortfolioPage",
+      "route": "/portfolio",
+      "source": "app/portfolio/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "PortfolioPage",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "sectionType": "Service",
+      "route": "/services",
+      "source": "app/services/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Service",
+        "Brands",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "gallery",
+      "label": "Gallery",
+      "sectionType": "Gallery",
+      "route": "/gallery",
+      "source": "app/gallery/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Gallery",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "blog",
+      "label": "Blogs",
+      "sectionType": "Blog",
+      "route": "/blog",
+      "source": "app/blog/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Blog",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "contact",
+      "label": "Contact Us",
+      "sectionType": "ContactPage",
+      "route": "/contact",
+      "source": "app/contact/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "ContactPage",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    },
+    {
+      "id": "enquiry",
+      "label": "Enquiry",
+      "sectionType": "EnquiryPage",
+      "route": "/enquiry",
+      "source": "app/enquiry/page.tsx",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "EnquiryPage",
+        "Footer"
+      ],
+      "unresolvedComponents": []
+    }
+  ],
+  "dependencies": {
+    "react-icons": "^5.6.0",
+    "lucide-react": "^1.21.0",
+    "framer-motion": "^11.18.2"
+  },
+  "unresolvedImports": [],
+  "imageOptimization": {
+    "enabled": false,
+    "optimized": 0,
+    "copied": 55,
+    "resized": 0,
+    "originalBytes": 9849616,
+    "finalBytes": 9849616
+  },
+  "cssVariables": {
+    "--font-body": "\"Manrope\", Arial, Helvetica, sans-serif",
+    "--font-heading": "\"Manrope\", Arial, Helvetica, sans-serif",
+    "--primary-bg": "#c0703a",
+    "--primary-text": "#ffffff",
+    "--secondary-bg": "#140b06",
+    "--secondary-text": "#ffffff",
+    "--header-bg": "#140b06",
+    "--header-text": "#ffffff",
+    "--hero-bg": "#140b06",
+    "--hero-title": "#ffffff",
+    "--blue-bg": "#8f4a1f",
+    "--lightcream-bg": "#faf3ee"
+  },
+  "warnings": [
+    "addons/motion.tsx is a motion helper and is not an editable section.",
+    "addons/shared.tsx resolves image paths and in-editor links. It is not an editable section.",
+    "RydoraFleet1 is used for both Fleet and PortfolioPage.",
+    "components/RydoraContactPage1: sectionType \"Contact\" is not a theme.json sectionVariants key. The editor uses the component key RydoraContactPage1.",
+    "components/RydoraEnquiryForm1: sectionType \"Enquiry\" is not a theme.json sectionVariants key. The editor uses the component key RydoraEnquiryForm1.",
+    "components/RydoraPageBanner1: sectionType \"Breadcrumb\" is not a theme.json sectionVariants key. The editor uses the component key RydoraPageBanner1.",
+    "components/RydoraServices1: sectionType \"Services\" is not a theme.json sectionVariants key. The editor uses the component key RydoraServices1.",
+    "components/RydoraWorkingProcess1: sectionType \"Process\" is not a theme.json sectionVariants key. The editor uses the component key RydoraWorkingProcess1."
+  ],
+  "errors": [],
+  "validation": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "required directory: addons",
+        "ok": true
+      },
+      {
+        "name": "required directory: assets",
+        "ok": true
+      },
+      {
+        "name": "required directory: components",
+        "ok": true
+      },
+      {
+        "name": "required file: theme.json",
+        "ok": true
+      },
+      {
+        "name": "all paths are traversal-free",
+        "ok": true
+      },
+      {
+        "name": "no symlinks",
+        "ok": true
+      },
+      {
+        "name": "no forbidden file types",
+        "ok": true
+      },
+      {
+        "name": "theme.json parses",
+        "ok": true
+      },
+      {
+        "name": "component folders well-formed (15)",
+        "ok": true
+      },
+      {
+        "name": "editorFields ⊆ defaultContent keys (host contract)",
+        "ok": true
+      },
+      {
+        "name": "section types known to host editor, no hollow fields",
+        "ok": false,
+        "detail": "5 warning(s)"
+      },
+      {
+        "name": "at least one component",
+        "ok": true
+      },
+      {
+        "name": "sectionVariants resolve to component folders",
+        "ok": true
+      },
+      {
+        "name": "page sections reference known variants",
+        "ok": true
+      },
+      {
+        "name": "previewImage exists",
+        "ok": true,
+        "detail": "assets/banner/hero-car.jpg"
+      },
+      {
+        "name": "no unexpected top-level entries",
+        "ok": true
+      }
+    ],
+    "issues": [
+      {
+        "level": "warning",
+        "code": "HOST_SECTION_TYPE",
+        "message": "components/RydoraContactPage1: sectionType \"Contact\" is not a theme.json sectionVariants key. The editor uses the component key RydoraContactPage1.",
+        "path": "components/RydoraContactPage1/component.json"
+      },
+      {
+        "level": "warning",
+        "code": "HOST_SECTION_TYPE",
+        "message": "components/RydoraEnquiryForm1: sectionType \"Enquiry\" is not a theme.json sectionVariants key. The editor uses the component key RydoraEnquiryForm1.",
+        "path": "components/RydoraEnquiryForm1/component.json"
+      },
+      {
+        "level": "warning",
+        "code": "HOST_SECTION_TYPE",
+        "message": "components/RydoraPageBanner1: sectionType \"Breadcrumb\" is not a theme.json sectionVariants key. The editor uses the component key RydoraPageBanner1.",
+        "path": "components/RydoraPageBanner1/component.json"
+      },
+      {
+        "level": "warning",
+        "code": "HOST_SECTION_TYPE",
+        "message": "components/RydoraServices1: sectionType \"Services\" is not a theme.json sectionVariants key. The editor uses the component key RydoraServices1.",
+        "path": "components/RydoraServices1/component.json"
+      },
+      {
+        "level": "warning",
+        "code": "HOST_SECTION_TYPE",
+        "message": "components/RydoraWorkingProcess1: sectionType \"Process\" is not a theme.json sectionVariants key. The editor uses the component key RydoraWorkingProcess1.",
+        "path": "components/RydoraWorkingProcess1/component.json"
+      }
+    ]
+  }
+}

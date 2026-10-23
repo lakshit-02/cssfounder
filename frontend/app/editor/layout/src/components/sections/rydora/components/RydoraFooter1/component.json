@@ -1,0 +1,121 @@
+{
+  "key": "RydoraFooter1",
+  "sectionType": "Footer",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraFooter1",
+  "folder": "footer",
+  "editorFields": [
+    "bgImage",
+    "logo",
+    "description",
+    "socials",
+    "quickLinks",
+    "services",
+    "contact",
+    "copyright",
+    "legalLinks"
+  ],
+  "defaultContent": {
+    "bgImage": "assets/footer/footer-bg.jpg",
+    "logo": {
+      "src": "assets/main-logo/logo-white.png",
+      "alt": "Rydora Car Rental Services"
+    },
+    "description": "Rydora Car Rental Services offers a wide range of well-maintained vehicles for your every journey. Experience comfort, style and reliability with us.",
+    "socials": [
+      {
+        "label": "Facebook",
+        "href": "https://facebook.com/",
+        "icon": "FacebookIcon"
+      },
+      {
+        "label": "Instagram",
+        "href": "https://instagram.com/",
+        "icon": "InstagramIcon"
+      },
+      {
+        "label": "X",
+        "href": "https://x.com/",
+        "icon": "XIcon"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://linkedin.com/",
+        "icon": "LinkedInIcon"
+      }
+    ],
+    "quickLinks": {
+      "title": "Quick Links",
+      "list": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "About Us",
+          "href": "/about"
+        },
+        {
+          "label": "Portfolio",
+          "href": "/portfolio"
+        },
+        {
+          "label": "Services",
+          "href": "/services"
+        },
+        {
+          "label": "Gallery",
+          "href": "/gallery"
+        },
+        {
+          "label": "Blogs",
+          "href": "/blog"
+        },
+        {
+          "label": "Contact Us",
+          "href": "/contact"
+        }
+      ]
+    },
+    "services": {
+      "title": "Our Services",
+      "list": [
+        "Local Car Rental",
+        "Outstation Car Rental",
+        "Airport Transfer",
+        "Luxury Car Rental",
+        "Corporate Car Rental",
+        "Wedding Car Rental",
+        "City Tour Packages"
+      ]
+    },
+    "contact": {
+      "title": "Contact Us",
+      "list": [
+        {
+          "icon": "PinIcon",
+          "html": "123 Business Avenue, New York, NY 10001, USA"
+        },
+        {
+          "icon": "PhoneIcon",
+          "html": "<a href=\"tel:+10000000000\">+1 0000000000</a>"
+        },
+        {
+          "icon": "MailIcon",
+          "html": "<a href=\"mailto:info@xyz.com\">info@xyz.com</a>"
+        },
+        {
+          "icon": "ClockIcon",
+          "html": "Mon - Sun: 9:00 AM - 8:00 PM"
+        }
+      ]
+    },
+    "copyright": "Copyright 2026 . All Rights Reserved. Powered By Lestow.",
+    "legalLinks": [
+      "Privacy Policy",
+      "Terms & Conditions",
+      "Sitemap"
+    ]
+  }
+}

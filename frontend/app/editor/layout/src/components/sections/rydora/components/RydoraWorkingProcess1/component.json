@@ -1,0 +1,49 @@
+{
+  "key": "RydoraWorkingProcess1",
+  "sectionType": "Process",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraWorkingProcess1",
+  "folder": "process",
+  "editorFields": [
+    "badge",
+    "heading",
+    "description",
+    "cta",
+    "image",
+    "list"
+  ],
+  "defaultContent": {
+    "badge": "How It Works",
+    "heading": {
+      "main": "Luxury, Made Effortless"
+    },
+    "description": "From choosing your vehicle to turning the key, Rydora keeps every step simple, seamless, and tailored to the way you travel.",
+    "cta": {
+      "label": "Enquire Now",
+      "href": "/enquiry"
+    },
+    "image": {
+      "src": "assets/process/how-it-works.jpg",
+      "alt": "Camper van parked on a seaside cliff at sunset"
+    },
+    "list": [
+      {
+        "title": "Choose Your Car",
+        "text": "Explore our fleet and find your perfect ride."
+      },
+      {
+        "title": "Set Your Details",
+        "text": "Select your dates, locations & preferences."
+      },
+      {
+        "title": "Confirm Your Ride",
+        "text": "Review your booking & confirm your reservation."
+      },
+      {
+        "title": "Enjoy The Drive",
+        "text": "Collect your car and enjoy every moment."
+      }
+    ]
+  }
+}

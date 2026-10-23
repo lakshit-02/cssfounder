@@ -1,0 +1,70 @@
+{
+  "key": "RydoraPageBanner1",
+  "sectionType": "Breadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "RydoraPageBanner1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "image",
+    "imageAlt",
+    "breadcrumbs"
+  ],
+  "defaultContent": {
+    "title": "About Us",
+    "image": "assets/banner/page-banner.jpg",
+    "imageAlt": "Rydora page banner",
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "label": "About Us"
+      }
+    ],
+    "pages": {
+      "about": {
+        "title": "About Us",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "About Us" }]
+      },
+      "portfolio": {
+        "title": "Portfolio",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Portfolio" }]
+      },
+      "cars": {
+        "title": "Portfolio",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Portfolio" }]
+      },
+      "services": {
+        "title": "Services",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Services" }]
+      },
+      "service": {
+        "title": "Services",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Services" }]
+      },
+      "gallery": {
+        "title": "Gallery",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Gallery" }]
+      },
+      "blog": {
+        "title": "Blogs",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Blogs" }]
+      },
+      "blogs": {
+        "title": "Blogs",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Blogs" }]
+      },
+      "contact": {
+        "title": "Contact Us",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Contact Us" }]
+      },
+      "enquiry": {
+        "title": "Enquiry",
+        "breadcrumbs": [{ "label": "Home", "href": "/" }, { "label": "Enquiry" }]
+      }
+    }
+  }
+}

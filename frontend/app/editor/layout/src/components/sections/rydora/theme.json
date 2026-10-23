@@ -1,0 +1,152 @@
+{
+  "key": "rydora",
+  "title": "Rydora",
+  "type": "Multiple Pages Website",
+  "categorySlug": "automotive",
+  "category": "automotive",
+  "previewImage": "assets/banner/hero-car.jpg",
+  "previewDescription": "Luxury car rental website.",
+  "homeSectionOrder": [
+    "Header",
+    "Banner",
+    "Fleet",
+    "About",
+    "Service",
+    "WorkingProcess",
+    "Testimonial",
+    "Brands",
+    "Blog",
+    "Footer"
+  ],
+  "sectionVariants": {
+    "Header": "RydoraHeader1",
+    "Footer": "RydoraFooter1",
+    "Banner": "RydoraHero1",
+    "PageBanner": "RydoraPageBanner1",
+    "About": "RydoraAboutUs1",
+    "WorkingProcess": "RydoraWorkingProcess1",
+    "WhyChooseUs": "RydoraWhyChooseUs1",
+    "Service": "RydoraServices1",
+    "Fleet": "RydoraFleet1",
+    "PortfolioPage": "RydoraFleet1",
+    "Brands": "RydoraBrands1",
+    "Testimonial": "RydoraTestimonials1",
+    "Blog": "RydoraBlogNews1",
+    "Gallery": "RydoraGallery1",
+    "EnquiryPage": "RydoraEnquiryForm1",
+    "ContactPage": "RydoraContactPage1"
+  },
+  "variables": {
+    "--font-body": "\"Manrope\", Arial, Helvetica, sans-serif",
+    "--font-heading": "\"Manrope\", Arial, Helvetica, sans-serif",
+    "--primary-bg": "#c0703a",
+    "--primary-text": "#ffffff",
+    "--secondary-bg": "#140b06",
+    "--secondary-text": "#ffffff",
+    "--header-bg": "#140b06",
+    "--header-text": "#ffffff",
+    "--hero-bg": "#140b06",
+    "--hero-title": "#ffffff",
+    "--blue-bg": "#8f4a1f",
+    "--lightcream-bg": "#faf3ee"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "sectionType": "Home",
+      "sections": [
+        "Header",
+        "Banner",
+        "Fleet",
+        "About",
+        "Service",
+        "WorkingProcess",
+        "Testimonial",
+        "Brands",
+        "Blog",
+        "Footer"
+      ]
+    },
+    {
+      "id": "about",
+      "label": "About Us",
+      "sectionType": "About",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "About",
+        "WorkingProcess",
+        "WhyChooseUs",
+        "Footer"
+      ]
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio",
+      "sectionType": "PortfolioPage",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "PortfolioPage",
+        "Footer"
+      ]
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "sectionType": "Service",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Service",
+        "Brands",
+        "Footer"
+      ]
+    },
+    {
+      "id": "gallery",
+      "label": "Gallery",
+      "sectionType": "Gallery",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Gallery",
+        "Footer"
+      ]
+    },
+    {
+      "id": "blog",
+      "label": "Blogs",
+      "sectionType": "Blog",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "Blog",
+        "Footer"
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "Contact Us",
+      "sectionType": "ContactPage",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "ContactPage",
+        "Footer"
+      ]
+    },
+    {
+      "id": "enquiry",
+      "label": "Enquiry",
+      "sectionType": "EnquiryPage",
+      "sections": [
+        "Header",
+        "PageBanner",
+        "EnquiryPage",
+        "Footer"
+      ]
+    }
+  ]
+}
